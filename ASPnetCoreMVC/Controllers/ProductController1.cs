@@ -18,7 +18,6 @@ namespace ASPnetCoreMVC.Controllers
             _productService = productService;
         }
 
-        // Hiển thị danh sách sản phẩm
         public IActionResult GetAllProduct()
         {
             var products = _productService.GetAllProducts();
@@ -105,21 +104,6 @@ namespace ASPnetCoreMVC.Controllers
             return RedirectToAction("GetAllProduct");
         }
 
-        //[HttpGet]
-        //public IActionResult GetProductbyName(string name)
-        //{
-        //    var products = _productService.GetAllProducts()
-        //                                  .Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-        //                                  .Select(p => new ProductViewModel
-        //                                  {
-        //                                      ID = p.ID,
-        //                                      Name = p.Name,
-        //                                      Price = p.Price,
-        //                                      Stock = p.Stock
-        //                                  }).ToList();
-
-        //    return View("ProductList", products);
-        //}
         [HttpGet]
         public IActionResult GetProductbyName(string name, string priceFilter)
         {
@@ -143,7 +127,7 @@ namespace ASPnetCoreMVC.Controllers
                 Stock = p.Stock
             }).ToList();
 
-            return View("ProductList", productViewModels);
+            return PartialView("_ProductListPartial", productViewModels);
         }
 
         [HttpPost]
