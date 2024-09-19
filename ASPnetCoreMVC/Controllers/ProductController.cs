@@ -65,7 +65,7 @@ namespace ASPnetCoreMVC.Controllers
                 Stock = product.Stock
             };
 
-            return View(productViewModel);
+            return PartialView("_EditProductPartial", productViewModel);
         }
 
         [HttpPost]
@@ -95,7 +95,7 @@ namespace ASPnetCoreMVC.Controllers
 
         public IActionResult CreateProduct()
         {
-            return View();
+            return PartialView("_CreateProductPartial");
         }
 
      
@@ -105,7 +105,7 @@ namespace ASPnetCoreMVC.Controllers
             if (!ModelState.IsValid)
             {
                 return View(productViewModel);
-            }
+            }   
 
             var product = new Product
             {
@@ -119,31 +119,7 @@ namespace ASPnetCoreMVC.Controllers
             return RedirectToAction("GetAllProduct");
         }
 
-        //[HttpGet]
-        //public IActionResult GetProductbyName(string name, string priceFilter)
-        //{
-        //    var products = _productService.GetAllProducts()
-        //                                  .Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
 
-        //    if (priceFilter == "above100")
-        //    {
-        //        products = products.Where(p => p.Price > 100);
-        //    }
-        //    else if (priceFilter == "below100")
-        //    {
-        //        products = products.Where(p => p.Price <= 100);
-        //    }
-
-        //    var productViewModels = products.Select(p => new ProductViewModel
-        //    {
-        //        ID = p.ID,
-        //        Name = p.Name,
-        //        Price = p.Price,
-        //        Stock = p.Stock
-        //    }).ToList();
-
-        //    return PartialView("_ProductListPartial", productViewModels);
-        //}
 
         [HttpPost]
         public IActionResult DeleteProduct(int id)
