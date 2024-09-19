@@ -18,10 +18,24 @@ namespace ASPnetCoreMVC.Controllers
             _productService = productService;
         }
 
-        // Hiển thị danh sách sản phẩm
-        public IActionResult GetAllProduct()
+        public IActionResult GetAllProduct(string name, string priceFilter)
         {
+
             var products = _productService.GetAllProducts();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (priceFilter == "above100")
+            {
+                products = products.Where(p => p.Price > 100).ToList();
+            }
+            else if (priceFilter == "below100")
+            {
+                products = products.Where(p => p.Price <= 100).ToList();
+            }
             var productViewModels = products.Select(p => new ProductViewModel
             {
                 ID = p.ID,
@@ -106,45 +120,30 @@ namespace ASPnetCoreMVC.Controllers
         }
 
         //[HttpGet]
-        //public IActionResult GetProductbyName(string name)
+        //public IActionResult GetProductbyName(string name, string priceFilter)
         //{
         //    var products = _productService.GetAllProducts()
-        //                                  .Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-        //                                  .Select(p => new ProductViewModel
-        //                                  {
-        //                                      ID = p.ID,
-        //                                      Name = p.Name,
-        //                                      Price = p.Price,
-        //                                      Stock = p.Stock
-        //                                  }).ToList();
+        //                                  .Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
 
-        //    return View("ProductList", products);
+        //    if (priceFilter == "above100")
+        //    {
+        //        products = products.Where(p => p.Price > 100);
+        //    }
+        //    else if (priceFilter == "below100")
+        //    {
+        //        products = products.Where(p => p.Price <= 100);
+        //    }
+
+        //    var productViewModels = products.Select(p => new ProductViewModel
+        //    {
+        //        ID = p.ID,
+        //        Name = p.Name,
+        //        Price = p.Price,
+        //        Stock = p.Stock
+        //    }).ToList();
+
+        //    return PartialView("_ProductListPartial", productViewModels);
         //}
-        [HttpGet]
-        public IActionResult GetProductbyName(string name, string priceFilter)
-        {
-            var products = _productService.GetAllProducts()
-                                          .Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
-
-            if (priceFilter == "above100")
-            {
-                products = products.Where(p => p.Price > 100);
-            }
-            else if (priceFilter == "below100")
-            {
-                products = products.Where(p => p.Price <= 100);
-            }
-
-            var productViewModels = products.Select(p => new ProductViewModel
-            {
-                ID = p.ID,
-                Name = p.Name,
-                Price = p.Price,
-                Stock = p.Stock
-            }).ToList();
-
-            return View("ProductList", productViewModels);
-        }
 
         [HttpPost]
         public IActionResult DeleteProduct(int id)

@@ -5,6 +5,9 @@
 <head>
     <meta charset="utf-8" />
     <title>Danh sách sản phẩm</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         table {
             width: 100%;
@@ -89,10 +92,6 @@
                     background-color: #0056b3;
                 }
 
-            .search-bar .search-button {
-                text-align: right;
-            }
-
         .btn-delete {
             background-color: #dc3545;
             color: white;
@@ -109,8 +108,7 @@
 </head>
 <body>
     <h2>Danh sách sản phẩm</h2>
-
-    <form asp-controller="Product" asp-action="GetProductbyName" method="get" class="search-bar">
+    <form asp-action="GetAllProduct" method="get" class="search-bar">
         <div>
             <label for="name">Tìm kiếm theo tên:</label>
             <input type="text" id="name" name="name" placeholder="Tìm kiếm sản phẩm..." />
@@ -123,14 +121,33 @@
                 <option value="below100">Dưới 100</option>
             </select>
         </div>
-        <div class="search-button">
-            <button type="submit">Tìm kiếm</button>
+        <div>
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
     </form>
 
-    <a href="@Url.Action("CreateProduct", "Product")" class="btn-add">Thêm sản phẩm</a>
-
-    <table>
+    <!-- Bootstrap Modal -->
+   @*  <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Danh sách sản phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">
+                        <!-- Chỗ load nội dung  -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div> *@
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>ID</th>
@@ -154,9 +171,7 @@
                             <a href="@Url.Action("EditProduct", "Product", new { id = product.ID })" class="btn-edit">Chỉnh sửa</a>
                             <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="@product.ID" />
-                                <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                    Xóa
-                                </button>
+                                <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
                             </form>
                         </td>
                     </tr>
@@ -170,5 +185,30 @@
             }
         </tbody>
     </table>
+
+   @*  <script>
+        $(document).ready(function () {
+            $('#searchBtn').on('click', function () {
+                var name = $('#name').val();
+                var priceFilter = $('#priceFilter').val();
+
+                $.ajax({
+                    url: '@Url.Action("GetProductbyName", "Product")',
+                    type: 'GET',
+                    data: {
+                        name: name,
+                        priceFilter: priceFilter
+                    },
+                    success: function (data) {
+                        $('#modalContent').html(data);
+                        $('#productModal').modal('show');
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    }
+                });
+            });
+        });
+    </script> *@
 </body>
 </html>

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ASPnetCoreMVC.Models.ProductViewModel>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Tồn kho</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.ID</td>
+                    <td>@product.Name</td>
+                    <td>@product.Price.ToString("C")</td>
+                    <td>@product.Stock</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">Không tìm thấy sản phẩm nào.</td>
+            </tr>
+        }
+    </tbody>
+</table>
