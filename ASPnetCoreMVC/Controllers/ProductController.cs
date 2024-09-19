@@ -18,9 +18,24 @@ namespace ASPnetCoreMVC.Controllers
             _productService = productService;
         }
 
-        public IActionResult GetAllProduct()
+        public IActionResult GetAllProduct(string name, string priceFilter)
         {
+
             var products = _productService.GetAllProducts();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (priceFilter == "above100")
+            {
+                products = products.Where(p => p.Price > 100).ToList();
+            }
+            else if (priceFilter == "below100")
+            {
+                products = products.Where(p => p.Price <= 100).ToList();
+            }
             var productViewModels = products.Select(p => new ProductViewModel
             {
                 ID = p.ID,
@@ -104,31 +119,31 @@ namespace ASPnetCoreMVC.Controllers
             return RedirectToAction("GetAllProduct");
         }
 
-        [HttpGet]
-        public IActionResult GetProductbyName(string name, string priceFilter)
-        {
-            var products = _productService.GetAllProducts()
-                                          .Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+        //[HttpGet]
+        //public IActionResult GetProductbyName(string name, string priceFilter)
+        //{
+        //    var products = _productService.GetAllProducts()
+        //                                  .Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
 
-            if (priceFilter == "above100")
-            {
-                products = products.Where(p => p.Price > 100);
-            }
-            else if (priceFilter == "below100")
-            {
-                products = products.Where(p => p.Price <= 100);
-            }
+        //    if (priceFilter == "above100")
+        //    {
+        //        products = products.Where(p => p.Price > 100);
+        //    }
+        //    else if (priceFilter == "below100")
+        //    {
+        //        products = products.Where(p => p.Price <= 100);
+        //    }
 
-            var productViewModels = products.Select(p => new ProductViewModel
-            {
-                ID = p.ID,
-                Name = p.Name,
-                Price = p.Price,
-                Stock = p.Stock
-            }).ToList();
+        //    var productViewModels = products.Select(p => new ProductViewModel
+        //    {
+        //        ID = p.ID,
+        //        Name = p.Name,
+        //        Price = p.Price,
+        //        Stock = p.Stock
+        //    }).ToList();
 
-            return PartialView("_ProductListPartial", productViewModels);
-        }
+        //    return PartialView("_ProductListPartial", productViewModels);
+        //}
 
         [HttpPost]
         public IActionResult DeleteProduct(int id)

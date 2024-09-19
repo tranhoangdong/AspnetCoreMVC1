@@ -108,7 +108,7 @@
 </head>
 <body>
     <h2>Danh sách sản phẩm</h2>
-    <form id="searchForm" class="search-bar">
+    <form asp-action="GetAllProduct" method="get" class="search-bar">
         <div>
             <label for="name">Tìm kiếm theo tên:</label>
             <input type="text" id="name" name="name" placeholder="Tìm kiếm sản phẩm..." />
@@ -121,13 +121,13 @@
                 <option value="below100">Dưới 100</option>
             </select>
         </div>
-        <div class="search-button">
-            <button type="button" id="searchBtn">Tìm kiếm</button>
+        <div>
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
     </form>
 
     <!-- Bootstrap Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+   @*  <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -146,7 +146,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
     <table class="table table-striped">
         <thead>
             <tr>
@@ -186,7 +186,7 @@
         </tbody>
     </table>
 
-    <script>
+   @*  <script>
         $(document).ready(function () {
             $('#searchBtn').on('click', function () {
                 var name = $('#name').val();
@@ -209,6 +209,6 @@
                 });
             });
         });
-    </script>
+    </script> *@
 </body>
 </html>
