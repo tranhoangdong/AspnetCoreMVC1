@@ -8,6 +8,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <style>
         table {
             width: 100%;
@@ -108,6 +109,10 @@
 </head>
 <body>
     <h2>Danh sách sản phẩm</h2>
+
+   
+
+    <!-- Search Form -->
     <form asp-action="GetAllProduct" method="get" class="search-bar">
         <div>
             <label for="name">Tìm kiếm theo tên:</label>
@@ -125,20 +130,22 @@
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
     </form>
+    <!-- Thêm nút "Thêm sản phẩm" -->
+   
+    <a href="javascript:void(0)" id="btnAddProduct" class="btn-add">Thêm sản phẩm</a>
 
-    <!-- Bootstrap Modal -->
-   @*  <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Danh sách sản phẩm</h5>
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm sản phẩm mới</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div id="modalContent">
-                        <!-- Chỗ load nội dung  -->
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -146,7 +153,27 @@
                 </div>
             </div>
         </div>
-    </div> *@
+    </div>
+    <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="editModalContent">
+                 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -168,7 +195,10 @@
                         <td>@product.Price.ToString("C")</td>
                         <td>@product.Stock</td>
                         <td>
-                            <a href="@Url.Action("EditProduct", "Product", new { id = product.ID })" class="btn-edit">Chỉnh sửa</a>
+                         
+                            <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
+
+                            
                             <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="@product.ID" />
                                 <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
@@ -185,30 +215,44 @@
             }
         </tbody>
     </table>
-
-   @*  <script>
+    <script>
         $(document).ready(function () {
-            $('#searchBtn').on('click', function () {
-                var name = $('#name').val();
-                var priceFilter = $('#priceFilter').val();
-
+            $('#btnAddProduct').on('click', function () {
                 $.ajax({
-                    url: '@Url.Action("GetProductbyName", "Product")',
+                    url: '@Url.Action("CreateProduct", "Product")',
                     type: 'GET',
-                    data: {
-                        name: name,
-                        priceFilter: priceFilter
-                    },
                     success: function (data) {
-                        $('#modalContent').html(data);
-                        $('#productModal').modal('show');
+                        console.log("Form đã được tải thành công");
+                        $('#modalContent').html(data); 
+                        $('#addProductModal').modal('show'); 
                     },
                     error: function () {
+                        console.log("Lỗi khi tải form");
                         alert('Có lỗi xảy ra, vui lòng thử lại.');
                     }
                 });
             });
         });
-    </script> *@
+       
+        $(document).on('click', '.btn-edit', function () {
+            var productId = $(this).data('id'); 
+            console.log("ID sản phẩm chỉnh sửa: " + productId); 
+
+            $.ajax({
+                url: '@Url.Action("EditProduct", "Product")?id=' + productId,
+                type: 'GET',
+                success: function (data) {
+                    console.log("Form chỉnh sửa đã được tải thành công");
+                    $('#editModalContent').html(data); 
+                    $('#editProductModal').modal('show'); 
+                },
+                error: function () {
+                    console.log("Lỗi khi tải form chỉnh sửa");
+                    alert('Có lỗi xảy ra, vui lòng thử lại.');
+                }
+            });
+        });
+
+      </script>
 </body>
 </html>
