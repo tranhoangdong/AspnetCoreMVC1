@@ -165,7 +165,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="editModalContent">
-                        <!-- Nội dung form chỉnh sửa sẽ được load ở đây bằng AJAX -->
+                 
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -195,7 +195,8 @@
                         <td>@product.Price.ToString("C")</td>
                         <td>@product.Stock</td>
                         <td>
-                            <a href="javascript:void(0)" class="btn-edit" onclick="openEditModal(@product.ID)">Chỉnh sửa</a>
+                         
+                            <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
 
                             
                             <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
@@ -232,22 +233,26 @@
                 });
             });
         });
-                 </script>
-        <script>
+       
         $(document).on('click', '.btn-edit', function () {
-            var productId = $(this).data('id');
+            var productId = $(this).data('id'); 
+            console.log("ID sản phẩm chỉnh sửa: " + productId); 
+
             $.ajax({
                 url: '@Url.Action("EditProduct", "Product")?id=' + productId,
                 type: 'GET',
                 success: function (data) {
+                    console.log("Form chỉnh sửa đã được tải thành công");
                     $('#editModalContent').html(data); 
                     $('#editProductModal').modal('show'); 
                 },
                 error: function () {
+                    console.log("Lỗi khi tải form chỉnh sửa");
                     alert('Có lỗi xảy ra, vui lòng thử lại.');
                 }
             });
         });
-        </script>
+
+      </script>
 </body>
 </html>
