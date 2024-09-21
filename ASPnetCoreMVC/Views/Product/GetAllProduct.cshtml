@@ -108,9 +108,50 @@
     </style>
 </head>
 <body>
-    <h2>Danh sách sản phẩm</h2>
-    <!-- Search Form -->
-    <form asp-action="GetAllProduct" method="get" class="search-bar">
+   
+     <form asp-action="GetAllProduct" method="get" class="search-bar">
+    <div class="container-fluid">
+        <h2>Danh sách sản phẩm</h2>
+        <div class="row">
+            <div class="col-sm-6">
+                    <div>
+                        <label for="name">Tìm kiếm theo tên:</label>
+                        <input type="text" id="name" name="name" placeholder="Tìm kiếm sản phẩm..." />
+                    </div>
+                    <div>
+                        <label for="priceFilter">Tìm kiếm theo giá:</label>
+                        <select id="priceFilter" name="priceFilter">
+                            <option value="">-- Chọn điều kiện giá --</option>
+                            <option value="above100">Trên 100</option>
+                            <option value="below100">Dưới 100</option>
+                        </select>
+                    </div>
+            </div>
+            <div class="col-sm-6" >
+                    <div>
+                        <label for="sortColumn">Sắp xếp theo:</label>
+                        <select id="sortColumn" name="sortColumn">
+                            <option value="">-- Chọn sắp xếp --</option>
+                            <option value="price">Giá</option>
+                            <option value="stock">Tồn kho</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="sortOrder">Sắp xếp theo giá:</label>
+                        <select id="sortOrder" name="sortOrder">
+                            <option value="">-- Chọn sắp xếp --</option>
+                            <option value="price_asc">Giá tăng dần</option>
+                            <option value="price_desc">Giá giảm dần</option>
+                        </select>
+                    </div>
+            </div>
+        </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </div>
+    </div>
+    </form>
+   @*  <form asp-action="GetAllProduct" method="get" class="search-bar">
         <div>
             <label for="name">Tìm kiếm theo tên:</label>
             <input type="text" id="name" name="name" placeholder="Tìm kiếm sản phẩm..." />
@@ -124,9 +165,18 @@
             </select>
         </div>
         <div>
+            <label for="sortOrder">Sắp xếp theo giá:</label>
+            <select id="sortOrder" name="sortOrder">
+                <option value="">-- Chọn sắp xếp --</option>
+                <option value="price_asc">Giá tăng dần</option>
+                <option value="price_desc">Giá giảm dần</option>
+            </select>
+        </div>
+        <div>
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
-    </form>
+    </form> *@
+
     <!-- Thêm nút "Thêm sản phẩm" -->
    
     <a href="javascript:void(0)" id="btnAddProduct" class="btn-add">Thêm sản phẩm</a>
@@ -170,7 +220,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+              
                 <th>Tên sản phẩm</th>
                 <th>Giá</th>
                 <th>Tồn kho</th>
@@ -183,7 +233,7 @@
                 foreach (var product in Model)
                 {
                     <tr>
-                        <td>@product.ID</td>
+                       
                         <td>@product.Name</td>
                         <td>@product.Price.ToString("C")</td>
                         <td>@product.Stock</td>
