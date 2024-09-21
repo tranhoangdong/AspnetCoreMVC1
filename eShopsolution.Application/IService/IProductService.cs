@@ -10,14 +10,16 @@ namespace eShopSolution.Application.IService
    public interface IProductService
     {
         List<Product> GetAllProducts();
-        Product GetProductbyID(int productId);
+        Product GetProductbyId(int productId);
         public void DeleteProduct(int productId);
         Task<bool> UpdateProductAsync(int id, ProductDTO productDto);
         public IEnumerable<Product> GetPagedProducts(int pageNumber, int pageSize);
         public int GetTotalProducts();
-        Task<Product> AddProductAsync(Product product);
+        Task<ProductDTO> AddProductAsync(ProductDTO productDto);
         Task<List<ProductDTO>> GetProductImageAsync();
-       
+        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter);
+
+
 
     }
 }

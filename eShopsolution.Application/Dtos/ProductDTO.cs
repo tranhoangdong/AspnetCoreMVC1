@@ -19,4 +19,10 @@ namespace eShopSolution.Application.Dtos
         public string Name { get; set; }
         public string ContentType { get; set; }
     }
+    public class ProductDTO1
+    {
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+    }
 }

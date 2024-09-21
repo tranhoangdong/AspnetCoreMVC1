@@ -109,9 +109,6 @@
 </head>
 <body>
     <h2>Danh sách sản phẩm</h2>
-
-   
-
     <!-- Search Form -->
     <form asp-action="GetAllProduct" method="get" class="search-bar">
         <div>
@@ -191,10 +188,7 @@
                         <td>@product.Price.ToString("C")</td>
                         <td>@product.Stock</td>
                         <td>
-                         
                             <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
-
-                            
                             <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="@product.ID" />
                                 <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
