@@ -17,7 +17,7 @@ namespace eShopSolution.Application.IService
         public int GetTotalProducts();
         Task<ProductDTO> AddProductAsync(ProductDTO productDto);
         Task<List<ProductDTO>> GetProductImageAsync();
-        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter);
+        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter, string sortColumn, string sortOrder);
 
 
 

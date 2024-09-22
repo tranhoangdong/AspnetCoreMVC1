@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
 using eShopSolution.Data.Entities;
 using System;
+using Microsoft.Data.SqlClient;
 
 namespace ASPnetCoreMVC.Controllers
 {
@@ -21,31 +22,7 @@ namespace ASPnetCoreMVC.Controllers
         public IActionResult GetAllProduct(string name, string priceFilter, string sortColumn, string sortOrder)
         {
             var products = _productService.GetAllProducts();
-            products = _productService.FilterProducts(products, name, priceFilter);
-
-
-            if (sortColumn == "price")
-            {
-                if (sortOrder == "asc")
-                {
-                    products = products.OrderBy(p => p.Price).ToList();
-                }
-                else if (sortOrder == "desc")
-                {
-                    products = products.OrderByDescending(p => p.Price).ToList();
-                }
-            }
-            else if (sortColumn == "stock")
-            {
-                if (sortOrder == "asc")
-                {
-                    products = products.OrderBy(p => p.Stock).ToList();
-                }
-                else if (sortOrder == "desc")
-                {
-                    products = products.OrderByDescending(p => p.Stock).ToList();
-                }
-            }
+            products = _productService.FilterProducts(products, name, priceFilter,   sortColumn,  sortOrder);
 
             var productViewModels = products.Select(p => new ProductViewModel
             {

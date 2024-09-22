@@ -45,7 +45,7 @@ namespace eShopSolution.Application.Service
            await  _eShopDbContext.SaveChangesAsync();
             return productDto;
         }
-        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter)
+        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter, string sortColumn, string sortOrder)
         {
             if (!string.IsNullOrEmpty(name))
             {
@@ -59,6 +59,29 @@ namespace eShopSolution.Application.Service
             else if (priceFilter == "below100")
             {
                 products = products.Where(p => p.Price <= 100).ToList();
+            }
+
+            if (sortColumn == "price")
+            {
+                if (sortOrder == "asc")
+                {
+                    products = products.OrderBy(p => p.Price).ToList();
+                }
+                else if (sortOrder == "desc")
+                {
+                    products = products.OrderByDescending(p => p.Price).ToList();
+                }
+            }
+            else if (sortColumn == "stock")
+            {
+                if (sortOrder == "asc")
+                {
+                    products = products.OrderBy(p => p.Stock).ToList();
+                }
+                else if (sortOrder == "desc")
+                {
+                    products = products.OrderByDescending(p => p.Stock).ToList();
+                }
             }
             return products;
         }
