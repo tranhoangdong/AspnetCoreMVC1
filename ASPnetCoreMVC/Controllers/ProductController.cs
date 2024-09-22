@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
 using eShopSolution.Data.Entities;
 using System;
+using Microsoft.Data.SqlClient;
 
 namespace ASPnetCoreMVC.Controllers
 {
@@ -18,24 +19,11 @@ namespace ASPnetCoreMVC.Controllers
             _productService = productService;
         }
 
-        public IActionResult GetAllProduct(string name, string priceFilter)
+        public IActionResult GetAllProduct(string name, string priceFilter, string sortColumn, string sortOrder)
         {
-
             var products = _productService.GetAllProducts();
+            products = _productService.FilterProducts(products, name, priceFilter,   sortColumn,  sortOrder);
 
-            if (!string.IsNullOrEmpty(name))
-            {
-                products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-
-            if (priceFilter == "above100")
-            {
-                products = products.Where(p => p.Price > 100).ToList();
-            }
-            else if (priceFilter == "below100")
-            {
-                products = products.Where(p => p.Price <= 100).ToList();
-            }
             var productViewModels = products.Select(p => new ProductViewModel
             {
                 ID = p.ID,
@@ -49,9 +37,11 @@ namespace ASPnetCoreMVC.Controllers
 
 
 
+
+
         public IActionResult EditProduct(int id)
         {
-            var product = _productService.GetProductbyID(id);
+            var product = _productService.GetProductbyId(id);
             if (product == null)
             {
                 return NotFound();
@@ -105,16 +95,16 @@ namespace ASPnetCoreMVC.Controllers
             if (!ModelState.IsValid)
             {
                 return View(productViewModel);
-            }   
+            }
 
-            var product = new Product
+            var productDto = new ProductDTO
             {
                 Name = productViewModel.Name,
                 Price = productViewModel.Price,
                 Stock = productViewModel.Stock
             };
 
-            await _productService.AddProductAsync(product); 
+            await _productService.AddProductAsync(productDto); 
 
             return RedirectToAction("GetAllProduct");
         }
@@ -124,7 +114,7 @@ namespace ASPnetCoreMVC.Controllers
         [HttpPost]
         public IActionResult DeleteProduct(int id)
         {
-            var product = _productService.GetProductbyID(id);
+            var product = _productService.GetProductbyId(id);
             if (product == null)
             {
                 return NotFound();

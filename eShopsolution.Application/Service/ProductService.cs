@@ -17,26 +17,76 @@ namespace eShopSolution.Application.Service
     public class ProductService : IProductService
     {
         private readonly EShopDbContext _eShopDbContext;
+       
 
         public ProductService(EShopDbContext eShopDbContext)
         {
             _eShopDbContext = eShopDbContext;
+            
         }
 
         public List<Product> GetAllProducts()
         {
             return _eShopDbContext.Products.ToList();
         }
-        public Product GetProductbyID(int productId)
+        public Product GetProductbyId(int productId)
         {
             return _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
         }
-        public async Task<Product> AddProductAsync(Product product)
+        public async Task<ProductDTO> AddProductAsync(ProductDTO productDto)
         {
+            var product = new Product
+            {
+                Name = productDto.Name,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+            };
             _eShopDbContext.Products.Add(product);
            await  _eShopDbContext.SaveChangesAsync();
-            return product;
+            return productDto;
         }
+        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter, string sortColumn, string sortOrder)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (priceFilter == "above100")
+            {
+                products = products.Where(p => p.Price > 100).ToList();
+            }
+            else if (priceFilter == "below100")
+            {
+                products = products.Where(p => p.Price <= 100).ToList();
+            }
+
+            if (sortColumn == "price")
+            {
+                if (sortOrder == "asc")
+                {
+                    products = products.OrderBy(p => p.Price).ToList();
+                }
+                else if (sortOrder == "desc")
+                {
+                    products = products.OrderByDescending(p => p.Price).ToList();
+                }
+            }
+            else if (sortColumn == "stock")
+            {
+                if (sortOrder == "asc")
+                {
+                    products = products.OrderBy(p => p.Stock).ToList();
+                }
+                else if (sortOrder == "desc")
+                {
+                    products = products.OrderByDescending(p => p.Stock).ToList();
+                }
+            }
+            return products;
+        }
+
+
         public async Task<bool> UpdateProductAsync(int id, ProductDTO productDto)
         {
             var existingProduct = await _eShopDbContext.Products.FindAsync(id);
