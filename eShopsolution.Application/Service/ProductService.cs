@@ -85,47 +85,7 @@ namespace eShopSolution.Application.Service
            await  _eShopDbContext.SaveChangesAsync();
             return productDto;
         }
-        //public List<Product> FilterProducts(List<Product> products, string name, string priceFilter, string sortColumn, string sortOrder)
-        //{
-        //    if (!string.IsNullOrEmpty(name))
-        //    {
-        //        products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
-        //    }
-        //    if (priceFilter == "above100")
-        //    {
-        //        products = products.Where(p => p.Price > 100).ToList();
-        //    }
-        //    else if (priceFilter == "below100")
-        //    {
-        //        products = products.Where(p => p.Price <= 100).ToList();
-        //    }
-
-        //    if (sortColumn == "price")
-        //    {
-        //        if (sortOrder == "asc")
-        //        {
-        //            products = products.OrderBy(p => p.Price).ToList();
-        //        }
-        //        else if (sortOrder == "desc")
-        //        {
-        //            products = products.OrderByDescending(p => p.Price).ToList();
-        //        }
-        //    }
-        //    else if (sortColumn == "stock")
-        //    {
-        //        if (sortOrder == "asc")
-        //        {
-        //            products = products.OrderBy(p => p.Stock).ToList();
-        //        }
-        //        else if (sortOrder == "desc")
-        //        {
-        //            products = products.OrderByDescending(p => p.Stock).ToList();
-        //        }
-        //    }
-        //    return products;
-        //}
-
-
+      
         public async Task<bool> UpdateProductAsync(int id, ProductDTO productDto)
         {
             var existingProduct = await _eShopDbContext.Products.FindAsync(id);
@@ -143,16 +103,6 @@ namespace eShopSolution.Application.Service
 
             return true;
         }
-
-        //public void DeleteProduct(int productId) 
-        //{
-        //    var product = _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
-        //    {
-        //        if (product != null)
-        //            _eShopDbContext.Products.Remove(product);
-        //        _eShopDbContext.SaveChanges();
-        //    }
-        //}
 
         public void DeleteProduct(int productId)
         {
