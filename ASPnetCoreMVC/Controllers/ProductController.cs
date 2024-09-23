@@ -7,6 +7,8 @@ using eShopSolution.Application.Dtos;
 using eShopSolution.Data.Entities;
 using System;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace ASPnetCoreMVC.Controllers
 {
@@ -17,6 +19,23 @@ namespace ASPnetCoreMVC.Controllers
         public ProductController(IProductService productService)
         {
             _productService = productService;
+        }
+
+        public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder)
+        {
+            var products = _productService.GetAllProducts();
+            products = _productService.FilterProducts(products, name, priceFilter, sortColumn, sortOrder);
+
+            var productViewModels = products.Select(p => new ProductViewModel
+            {
+                ID = p.ID,
+                Name = p.Name,
+                Price = p.Price,
+                Stock = p.Stock
+            }).ToList();
+
+
+            return PartialView("_ProductTablePartial", productViewModels);
         }
 
         public IActionResult GetAllProduct(string name, string priceFilter, string sortColumn, string sortOrder)
