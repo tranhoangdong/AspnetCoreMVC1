@@ -111,7 +111,7 @@
    
      <form asp-action="GetAllProduct" method="get" class="search-bar">
     <div class="container-fluid">
-        <h2>Danh sách</h2>
+        <h2>Tìm kiếm </h2>
         <div class="row">
             <div class="col-sm-6">
                     <div>
@@ -140,8 +140,8 @@
                         <label for="sortOrder">Sắp xếp theo</label>
                         <select id="sortOrder" name="sortOrder">
                             <option value="">-- Chọn sắp xếp --</option>
-                            <option value="price_asc">tăng dần</option>
-                            <option value="price_desc">giảm dần</option>
+                            <option value="asc">tăng dần</option>
+                            <option value="desc">giảm dần</option>
                         </select>
                     </div>
             </div>
@@ -197,44 +197,7 @@
             </div>
         </div>
     </div>
-   @*  <table class="table table-striped">
-        <thead>
-            <tr>
-              
-                <th>Tên sản phẩm</th>
-                <th>Giá</th>
-                <th>Tồn kho</th>
-                <th>Chỉnh sửa / Xóa</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var product in Model)
-                {
-                    <tr>
-                       
-                        <td>@product.Name</td>
-                        <td>@product.Price.ToString("C")</td>
-                        <td>@product.Stock</td>
-                        <td>
-                            <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
-                            <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="@product.ID" />
-                                <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="5">Không có sản phẩm nào được tìm thấy.</td>
-                </tr>
-            }
-        </tbody>
-    </table> *@
+  
     <script>
         $(document).ready(function () {
             $('#btnAddProduct').on('click', function () {
@@ -264,14 +227,24 @@
                 success: function (data) {
                     console.log("Form chỉnh sửa đã được tải thành công");
                     $('#editModalContent').html(data); 
-                    $('#editProductModal').modal('show'); 
+                    $('#editProductModal').modal('show');
+                    
                 },
                 error: function () {
                     console.log("Lỗi khi tải form chỉnh sửa");
                     alert('Có lỗi xảy ra, vui lòng thử lại.');
                 }
+                         
             });
+            loadProductTable();
+            $('#btnUpdateProduct').on('click', function (e) {
+                e.preventDefault();
+                loadProductTable();
+            });
+
         });
+       
+
        
         $(document).ready(function () {
             function loadProductTable() {

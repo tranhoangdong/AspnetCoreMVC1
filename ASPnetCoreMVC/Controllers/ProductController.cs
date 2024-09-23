@@ -23,9 +23,7 @@ namespace ASPnetCoreMVC.Controllers
 
         public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder)
         {
-            var products = _productService.GetAllProducts();
-            products = _productService.FilterProducts(products, name, priceFilter, sortColumn, sortOrder);
-
+            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder);
             var productViewModels = products.Select(p => new ProductViewModel
             {
                 ID = p.ID,
@@ -33,16 +31,12 @@ namespace ASPnetCoreMVC.Controllers
                 Price = p.Price,
                 Stock = p.Stock
             }).ToList();
-
-
             return PartialView("_ProductTablePartial", productViewModels);
         }
 
         public IActionResult GetAllProduct(string name, string priceFilter, string sortColumn, string sortOrder)
         {
-            var products = _productService.GetAllProducts();
-            products = _productService.FilterProducts(products, name, priceFilter,   sortColumn,  sortOrder);
-
+            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder);
             var productViewModels = products.Select(p => new ProductViewModel
             {
                 ID = p.ID,
@@ -53,11 +47,6 @@ namespace ASPnetCoreMVC.Controllers
 
             return View(productViewModels);
         }
-
-
-
-
-
         public IActionResult EditProduct(int id)
         {
             var product = _productService.GetProductbyId(id);
@@ -99,7 +88,7 @@ namespace ASPnetCoreMVC.Controllers
                 return NotFound();
             }
 
-            return RedirectToAction("GetAllProduct");
+            return Ok();
         }
 
         public IActionResult CreateProduct()
@@ -127,8 +116,6 @@ namespace ASPnetCoreMVC.Controllers
 
             return RedirectToAction("GetAllProduct");
         }
-
-
 
         [HttpPost]
         public IActionResult DeleteProduct(int id)
