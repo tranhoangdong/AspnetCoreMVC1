@@ -30,7 +30,7 @@ namespace eShopSolution.Application.Service
 
         public List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder)
         {
-            var products = _eShopDbContext.Products.ToList();
+            var products = _eShopDbContext.Products.Include(p => p.Category).ToList();
             if (!string.IsNullOrEmpty(name))
             {
                 products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();

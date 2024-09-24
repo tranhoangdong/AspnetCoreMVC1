@@ -29,7 +29,8 @@ namespace ASPnetCoreMVC.Controllers
                 ID = p.ID,
                 Name = p.Name,
                 Price = p.Price,
-                Stock = p.Stock
+                Stock = p.Stock,
+                CategoryName = p.Category.Name
             }).ToList();
             return PartialView("_ProductTablePartial", productViewModels);
         }
