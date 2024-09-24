@@ -111,7 +111,7 @@
    
      <form asp-action="GetAllProduct" method="get" class="search-bar">
     <div class="container-fluid">
-        <h2>Danh sách sản phẩm</h2>
+        <h2>Tìm kiếm </h2>
         <div class="row">
             <div class="col-sm-6">
                     <div>
@@ -140,8 +140,8 @@
                         <label for="sortOrder">Sắp xếp theo</label>
                         <select id="sortOrder" name="sortOrder">
                             <option value="">-- Chọn sắp xếp --</option>
-                            <option value="price_asc">tăng dần</option>
-                            <option value="price_desc">giảm dần</option>
+                            <option value="asc">tăng dần</option>
+                            <option value="desc">giảm dần</option>
                         </select>
                     </div>
             </div>
@@ -155,7 +155,12 @@
     <!-- Thêm nút "Thêm sản phẩm" -->
    
     <a href="javascript:void(0)" id="btnAddProduct" class="btn-add">Thêm sản phẩm</a>
-
+    <!-- fill data listproduct-->
+    <div class="container">
+        <h2>Danh sách sản phẩm</h2>
+       
+        <div id="productTableContainer"></div>
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -192,54 +197,68 @@
             </div>
         </div>
     </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-              
-                <th>Tên sản phẩm</th>
-                <th>Giá</th>
-                <th>Tồn kho</th>
-                <th>Chỉnh sửa / Xóa</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var product in Model)
-                {
-                    <tr>
-                       
-                        <td>@product.Name</td>
-                        <td>@product.Price.ToString("C")</td>
-                        <td>@product.Stock</td>
-                        <td>
-                            <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
-                            <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="@product.ID" />
-                                <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="5">Không có sản phẩm nào được tìm thấy.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+  
     <script>
+
+
+
+        function loadProductTable() {
+
+            var name = $('#name').val();
+            var priceFilter = $('#priceFilter').val();
+            var sortColumn = $('#sortColumn').val();
+            var sortOrder = $('#sortOrder').val();
+
+            $.ajax({
+                url: '@Url.Action("LoadProductTable", "Product")',
+                type: 'GET',
+                data: {
+                    name: name,
+                    priceFilter: priceFilter,
+                    sortColumn: sortColumn,
+                    sortOrder: sortOrder
+                },
+                success: function (data) {
+                    $('#productTableContainer').html(data);
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
+                }
+            });
+        }
+        function LoadEvent() {
+            const btnUpdateProduct = document.getElementById('btnUpdateProduct');
+
+            btnUpdateProduct.addEventListener('click', function (e) {
+                e.preventDefault(); 
+                var formData = $('#FormUpdate').serialize();
+                $.ajax({
+                    url: '/Product/EditProduct', 
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        console.log("Form submitted successfully");
+                        loadProductTable();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error occurred while submitting the form");
+                    }
+                });
+            });
+        }
+
         $(document).ready(function () {
+
+            
             $('#btnAddProduct').on('click', function () {
                 $.ajax({
                     url: '@Url.Action("CreateProduct", "Product")',
                     type: 'GET',
                     success: function (data) {
                         console.log("Form đã được tải thành công");
-                        $('#modalContent').html(data); 
-                        $('#addProductModal').modal('show'); 
+                        $('#modalContent').html(data);
+                        $('#addProductModal').modal('show');
+                          
                     },
                     error: function () {
                         console.log("Lỗi khi tải form");
@@ -247,27 +266,41 @@
                     }
                 });
             });
-        });
-       
-        $(document).on('click', '.btn-edit', function () {
-            var productId = $(this).data('id'); 
-            console.log("ID sản phẩm chỉnh sửa: " + productId); 
 
-            $.ajax({
-                url: '@Url.Action("EditProduct", "Product")?id=' + productId,
-                type: 'GET',
-                success: function (data) {
-                    console.log("Form chỉnh sửa đã được tải thành công");
-                    $('#editModalContent').html(data); 
-                    $('#editProductModal').modal('show'); 
-                },
-                error: function () {
-                    console.log("Lỗi khi tải form chỉnh sửa");
-                    alert('Có lỗi xảy ra, vui lòng thử lại.');
-                }
+
+            $(document).on('click', '.btn-edit', function () {
+                var productId = $(this).data('id');
+                console.log("ID sản phẩm chỉnh sửa: " + productId);
+
+                $.ajax({
+                    url: '@Url.Action("EditProduct", "Product")?id=' + productId,
+                    type: 'GET',
+                    success: function (data) {
+                        console.log("Form chỉnh sửa đã được tải thành công");
+                        $('#editModalContent').html(data);
+                        $('#editProductModal').modal('show');
+                        LoadEvent();
+                    },
+                    error: function () {
+                        console.log("Lỗi khi tải form chỉnh sửa");
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    }
+
+                });
+
+
             });
-        });
+            loadProductTable();
+           
+           
+          
+            loadProductTable();
+            $('form.search-bar').on('submit', function (e) {
+                e.preventDefault();
+                loadProductTable();
+            });
 
+        });
       </script>
 </body>
 </html>

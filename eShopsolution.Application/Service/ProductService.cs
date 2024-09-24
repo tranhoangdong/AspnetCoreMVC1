@@ -5,12 +5,15 @@ using eShopSolution.Application.IService;
 using eShopSolution.Data.Entities;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace eShopSolution.Application.Service
 {
@@ -25,33 +28,13 @@ namespace eShopSolution.Application.Service
             
         }
 
-        public List<Product> GetAllProducts()
+        public List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder)
         {
-            return _eShopDbContext.Products.ToList();
-        }
-        public Product GetProductbyId(int productId)
-        {
-            return _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
-        }
-        public async Task<ProductDTO> AddProductAsync(ProductDTO productDto)
-        {
-            var product = new Product
-            {
-                Name = productDto.Name,
-                Price = productDto.Price,
-                Stock = productDto.Stock,
-            };
-            _eShopDbContext.Products.Add(product);
-           await  _eShopDbContext.SaveChangesAsync();
-            return productDto;
-        }
-        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter, string sortColumn, string sortOrder)
-        {
+            var products = _eShopDbContext.Products.ToList();
             if (!string.IsNullOrEmpty(name))
             {
                 products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-
             if (priceFilter == "above100")
             {
                 products = products.Where(p => p.Price > 100).ToList();
@@ -85,8 +68,24 @@ namespace eShopSolution.Application.Service
             }
             return products;
         }
-
-
+    
+        public Product GetProductbyId(int productId)
+        {
+            return _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
+        }
+        public async Task<ProductDTO> AddProductAsync(ProductDTO productDto)
+        {
+            var product = new Product
+            {
+                Name = productDto.Name,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+            };
+            _eShopDbContext.Products.Add(product);
+           await  _eShopDbContext.SaveChangesAsync();
+            return productDto;
+        }
+      
         public async Task<bool> UpdateProductAsync(int id, ProductDTO productDto)
         {
             var existingProduct = await _eShopDbContext.Products.FindAsync(id);
@@ -104,16 +103,6 @@ namespace eShopSolution.Application.Service
 
             return true;
         }
-
-        //public void DeleteProduct(int productId) 
-        //{
-        //    var product = _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
-        //    {
-        //        if (product != null)
-        //            _eShopDbContext.Products.Remove(product);
-        //        _eShopDbContext.SaveChanges();
-        //    }
-        //}
 
         public void DeleteProduct(int productId)
         {

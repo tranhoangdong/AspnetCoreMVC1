@@ -9,7 +9,7 @@ namespace eShopSolution.Application.IService
 {
    public interface IProductService
     {
-        List<Product> GetAllProducts();
+        List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder);
         Product GetProductbyId(int productId);
         public void DeleteProduct(int productId);
         Task<bool> UpdateProductAsync(int id, ProductDTO productDto);
@@ -17,7 +17,6 @@ namespace eShopSolution.Application.IService
         public int GetTotalProducts();
         Task<ProductDTO> AddProductAsync(ProductDTO productDto);
         Task<List<ProductDTO>> GetProductImageAsync();
-        public List<Product> FilterProducts(List<Product> products, string name, string priceFilter, string sortColumn, string sortOrder);
 
 
 
