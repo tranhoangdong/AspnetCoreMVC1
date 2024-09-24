@@ -2,6 +2,7 @@
 
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
+using eShopSolution.Data.Emtyties;
 using eShopSolution.Data.Entities;
 
 using Microsoft.AspNetCore.Mvc;
@@ -28,12 +29,17 @@ namespace eShopSolution.Application.Service
             
         }
 
-        public List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder)
+        public List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
             var products = _eShopDbContext.Products.Include(p => p.Category).ToList();
+
             if (!string.IsNullOrEmpty(name))
             {
                 products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (categoryId.HasValue)
+            {
+                products = products.Where(p => p.CategoryId == categoryId.Value).ToList();
             }
             if (priceFilter == "above100")
             {
@@ -86,9 +92,9 @@ namespace eShopSolution.Application.Service
             return productDto;
         }
       
-        public async Task<bool> UpdateProductAsync(int id, ProductDTO productDto)
+        public async Task<bool> UpdateProductAsync(ProductDTO productDto)
         {
-            var existingProduct = await _eShopDbContext.Products.FindAsync(id);
+            var existingProduct = await _eShopDbContext.Products.FindAsync(productDto.Id);
             if (existingProduct == null)
             {
                 return false;

@@ -15,16 +15,27 @@ namespace ASPnetCoreMVC.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService , ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
+        //public IActionResult GetAllCategory ()
+        //{
+        //    var category = _categoryService.GetAllCategory().Select ( x => new CategoryViewModel
+        //    {
+        //        Id = x.ID,
+        //        Name = x.Name
+        //    });
+        //    return View(category);
+        //}
 
-        public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder)
+        public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
-            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder);
-            var productViewModels = products.Select(p => new ProductViewModel
+            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder, categoryId);
+            var productViewModels = products.Select(p => new ProductDetailViewModel
             {
                 ID = p.ID,
                 Name = p.Name,
@@ -35,18 +46,20 @@ namespace ASPnetCoreMVC.Controllers
             return PartialView("_ProductTablePartial", productViewModels);
         }
 
-        public IActionResult GetAllProduct(string name, string priceFilter, string sortColumn, string sortOrder)
+        public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
-            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder);
-            var productViewModels = products.Select(p => new ProductViewModel
+            var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel
             {
-                ID = p.ID,
-                Name = p.Name,
-                Price = p.Price,
-                Stock = p.Stock
+                Id = x.ID,
+                Name = x.Name
             }).ToList();
+            var allProductViewModel = new AllProductViewModel
+            {
+                Categories = categories,
 
-            return View(productViewModels);
+            };
+
+            return View(allProductViewModel);
         }
         public IActionResult EditProduct(int id)
         {
@@ -56,7 +69,7 @@ namespace ASPnetCoreMVC.Controllers
                 return NotFound();
             }
 
-            var productViewModel = new ProductViewModel
+            var productViewModel = new ProductDetailViewModel
             {
                 ID = product.ID,
                 Name = product.Name,
@@ -68,7 +81,7 @@ namespace ASPnetCoreMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProduct(int id, ProductViewModel productViewModel)
+        public async Task<IActionResult> EditProduct(ProductDetailViewModel productViewModel)
         {
             if (productViewModel == null)
             {
@@ -77,12 +90,13 @@ namespace ASPnetCoreMVC.Controllers
 
             var productDto = new ProductDTO
             {
+                Id = productViewModel.ID,
                 Name = productViewModel.Name,
                 Price = productViewModel.Price,
                 Stock = productViewModel.Stock
             };
 
-            bool isUpdated = await _productService.UpdateProductAsync(id, productDto); 
+            bool isUpdated = await _productService.UpdateProductAsync(productDto); 
 
             if (!isUpdated)
             {
@@ -99,7 +113,7 @@ namespace ASPnetCoreMVC.Controllers
 
      
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductViewModel productViewModel)
+        public async Task<IActionResult> CreateProduct(ProductDetailViewModel productViewModel)
         {
             if (!ModelState.IsValid)
             {

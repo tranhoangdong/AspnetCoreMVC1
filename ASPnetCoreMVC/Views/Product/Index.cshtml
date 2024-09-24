@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ASPnetCoreMVC.Models.ProductViewModel>
+﻿@model ASPnetCoreMVC.Models.AllProductViewModel
 
 <!DOCTYPE html>
 <html>
@@ -108,12 +108,12 @@
     </style>
 </head>
 <body>
-   
-     <form asp-action="GetAllProduct" method="get" class="search-bar">
-    <div class="container-fluid">
-        <h2>Tìm kiếm </h2>
-        <div class="row">
-            <div class="col-sm-6">
+
+    <form asp-action="GetAllProduct" method="get" class="search-bar">
+        <div class="container-fluid">
+            <h2>Tìm kiếm </h2>
+            <div class="row">
+                <div class="col-sm-6">
                     <div>
                         <label for="name">Tìm kiếm theo tên:</label>
                         <input type="text" id="name" name="name" placeholder="Tìm kiếm sản phẩm..." />
@@ -126,8 +126,15 @@
                             <option value="below100">Dưới 100</option>
                         </select>
                     </div>
-            </div>
-            <div class="col-sm-6" >
+                </div>
+                <div class="col-sm-6">
+                    <select name="categoryId" id="categoryDropdown">
+                        <option value="">-- Chọn danh mục --</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
                     <div>
                         <label for="sortColumn">Sắp xếp theo:</label>
                         <select id="sortColumn" name="sortColumn">
@@ -144,21 +151,22 @@
                             <option value="desc">giảm dần</option>
                         </select>
                     </div>
+                   
+                </div>
             </div>
-        </div>
             <div>
                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
             </div>
-    </div>
+        </div>
     </form>
-   
+
     <!-- Thêm nút "Thêm sản phẩm" -->
-   
+
     <a href="javascript:void(0)" id="btnAddProduct" class="btn-add">Thêm sản phẩm</a>
     <!-- fill data listproduct-->
     <div class="container">
         <h2>Danh sách sản phẩm</h2>
-       
+
         <div id="productTableContainer"></div>
     </div>
     <!-- Modal -->
@@ -175,7 +183,7 @@
                     <div id="modalContent">
                     </div>
                 </div>
-               
+
             </div>
         </div>
     </div>
@@ -190,50 +198,55 @@
                 </div>
                 <div class="modal-body">
                     <div id="editModalContent">
-                 
                     </div>
                 </div>
-               
+
             </div>
         </div>
     </div>
-  
+
     <script>
 
 
+        $(document).ready(function () {
 
-        function loadProductTable() {
+            function loadProductTable() {
+                var name = $('#name').val();
+                var priceFilter = $('#priceFilter').val();
+                var sortColumn = $('#sortColumn').val();
+                var sortOrder = $('#sortOrder').val();
+                var categoryDropdown = $('#categoryDropdown').val();
 
-            var name = $('#name').val();
-            var priceFilter = $('#priceFilter').val();
-            var sortColumn = $('#sortColumn').val();
-            var sortOrder = $('#sortOrder').val();
-
-            $.ajax({
-                url: '@Url.Action("LoadProductTable", "Product")',
-                type: 'GET',
-                data: {
-                    name: name,
-                    priceFilter: priceFilter,
-                    sortColumn: sortColumn,
-                    sortOrder: sortOrder
-                },
-                success: function (data) {
-                    $('#productTableContainer').html(data);
-                },
-                error: function () {
-                    alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
-                }
-            });
-        }
-        function LoadEvent() {
-            const btnUpdateProduct = document.getElementById('btnUpdateProduct');
-
-            btnUpdateProduct.addEventListener('click', function (e) {
-                e.preventDefault(); 
-                var formData = $('#FormUpdate').serialize();
                 $.ajax({
-                    url: '/Product/EditProduct', 
+                    url: '@Url.Action("LoadProductTable", "Product")',
+                    type: 'GET',
+                    data: { 
+                        name: name,
+                        priceFilter: priceFilter,
+                        sortColumn: sortColumn,
+                        sortOrder: sortOrder,
+                        categoryId: categoryDropdown
+                    },
+                    success: function (data) {
+                        $('#productTableContainer').html(data);
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
+                    }
+                });
+            }
+
+            $('#btnUpdateProduct').on('click', function (e) {
+                e.preventDefault();
+               // debugger;
+                var formData = {
+                    Id: $('#ID').val(),
+                    Name: $('#Name').val(),
+                    Price: $('#Price').val(),
+                    Stock: $('#Stock').val()
+                };
+                $.ajax({
+                    url: '/Product/EditProduct',
                     type: 'POST',
                     data: formData,
                     success: function (response) {
@@ -245,11 +258,8 @@
                     }
                 });
             });
-        }
 
-        $(document).ready(function () {
 
-            
             $('#btnAddProduct').on('click', function () {
                 $.ajax({
                     url: '@Url.Action("CreateProduct", "Product")',
@@ -258,7 +268,7 @@
                         console.log("Form đã được tải thành công");
                         $('#modalContent').html(data);
                         $('#addProductModal').modal('show');
-                          
+
                     },
                     error: function () {
                         console.log("Lỗi khi tải form");
@@ -279,7 +289,6 @@
                         console.log("Form chỉnh sửa đã được tải thành công");
                         $('#editModalContent').html(data);
                         $('#editProductModal').modal('show');
-                        LoadEvent();
                     },
                     error: function () {
                         console.log("Lỗi khi tải form chỉnh sửa");
@@ -291,9 +300,9 @@
 
             });
             loadProductTable();
-           
-           
-          
+
+
+
             loadProductTable();
             $('form.search-bar').on('submit', function (e) {
                 e.preventDefault();
@@ -301,6 +310,6 @@
             });
 
         });
-      </script>
+    </script>
 </body>
 </html>
