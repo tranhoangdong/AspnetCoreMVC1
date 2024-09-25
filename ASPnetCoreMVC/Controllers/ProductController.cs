@@ -23,15 +23,6 @@ namespace ASPnetCoreMVC.Controllers
             _productService = productService;
             _categoryService = categoryService;
         }
-        //public IActionResult GetAllCategory ()
-        //{
-        //    var category = _categoryService.GetAllCategory().Select ( x => new CategoryViewModel
-        //    {
-        //        Id = x.ID,
-        //        Name = x.Name
-        //    });
-        //    return View(category);
-        //}
 
         public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
@@ -51,7 +42,7 @@ namespace ASPnetCoreMVC.Controllers
         {
             var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel
             {
-                Id = x.ID,
+                Id = x.Id,
                 Name = x.Name
             }).ToList();
             var allProductViewModel = new AllProductViewModel
@@ -71,7 +62,7 @@ namespace ASPnetCoreMVC.Controllers
             }
             var categories = _categoryService.GetAllCategory().Select(c => new CategoryViewModel
             {
-                Id = c.ID,
+                Id = c.Id,
                 Name = c.Name,
             }).ToList();
 
@@ -124,7 +115,7 @@ namespace ASPnetCoreMVC.Controllers
         {
             var  category = _categoryService.GetAllCategory().Select( c => new CategoryViewModel
             {
-                Id = c.ID,
+                Id = c.Id,
                 Name = c.Name,
             }).ToList();
             var allproductviewmodel = new AllProductViewModel

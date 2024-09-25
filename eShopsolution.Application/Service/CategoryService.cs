@@ -24,7 +24,7 @@ namespace eShopSolution.Application.Service
         {
             var category = _eShopDbContext.Categories.ToList().Select(x => new CategoryDTO
             {
-                ID = x.Id,
+                Id = x.Id,
                 Name = x.Name
             }).ToList();
          

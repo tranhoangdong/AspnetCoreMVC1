@@ -6,7 +6,7 @@ namespace eShopSolution.Application.Dtos
 {
     public  class CategoryDTO
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

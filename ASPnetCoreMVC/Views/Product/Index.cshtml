@@ -253,7 +253,6 @@
                     success: function (response) {
                         console.log("Form submitted successfully");
                         loadProductTable();
-                      //  $('#editProductModal').modal('hide');
 
                         console.log("ID sản phẩm chỉnh sửa: " + productId);
                     },
@@ -285,7 +284,6 @@
 
 
             $(document).on('click', '.btn-edit', function () {
-               // debugger;
                 var productId = $(this).data('id');
                 console.log("ID sản phẩm chỉnh sửa: " + productId);
 

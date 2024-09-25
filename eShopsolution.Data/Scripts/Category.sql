@@ -38,4 +38,3 @@ SET CategoryId = (
     ORDER BY NEWID()
 );
 
-select * from Category
