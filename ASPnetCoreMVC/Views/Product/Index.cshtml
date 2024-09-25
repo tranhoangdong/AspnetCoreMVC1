@@ -235,16 +235,16 @@
                     }
                 });
             }
-
-            $('#btnUpdateProduct').on('click', function (e) {
+            $(document).on('click', '#btnUpdateProduct', function (e) {
                 e.preventDefault();
-               // debugger;
+                var productId = $(this).data('id');
+                debugger;
                 var formData = {
-                    Id: $('#ID').val(),
+                    Id: productId,
                     Name: $('#Name').val(),
                     Price: $('#Price').val(),
                     Stock: $('#Stock').val(),
-                    CategoryId: $('#categoryDropdown').val()
+                    CategoryId: $('#categoryDropdownselect').val()
                 };
                 $.ajax({
                     url: '/Product/EditProduct',
@@ -253,6 +253,7 @@
                     success: function (response) {
                         console.log("Form submitted successfully");
                         loadProductTable();
+                        console.log("ID sản phẩm chỉnh sửa: " + productId);
                     },
                     error: function (xhr, status, error) {
                         console.log("Error occurred while submitting the form");
@@ -280,6 +281,7 @@
 
 
             $(document).on('click', '.btn-edit', function () {
+               // debugger;
                 var productId = $(this).data('id');
                 console.log("ID sản phẩm chỉnh sửa: " + productId);
 
@@ -290,6 +292,7 @@
                         console.log("Form chỉnh sửa đã được tải thành công");
                         $('#editModalContent').html(data);
                         $('#editProductModal').modal('show');
+                        $('#btnUpdateProduct').data('id', productId);
                     },
                     error: function () {
                         console.log("Lỗi khi tải form chỉnh sửa");

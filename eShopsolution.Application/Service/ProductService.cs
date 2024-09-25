@@ -86,6 +86,7 @@ namespace eShopSolution.Application.Service
                 Name = productDto.Name,
                 Price = productDto.Price,
                 Stock = productDto.Stock,
+                CategoryId = productDto.CategoryId,
             };
             _eShopDbContext.Products.Add(product);
            await  _eShopDbContext.SaveChangesAsync();
@@ -103,6 +104,7 @@ namespace eShopSolution.Application.Service
             existingProduct.Name = productDto.Name;
             existingProduct.Price = productDto.Price;
             existingProduct.Stock = productDto.Stock;
+            existingProduct.CategoryId = productDto.CategoryId;
 
             _eShopDbContext.Products.Update(existingProduct);
             await _eShopDbContext.SaveChangesAsync();
