@@ -7,5 +7,6 @@ namespace ASPnetCoreMVC.Models
     public class AllProductViewModel
     {
         public List<CategoryViewModel> Categories { get; set; }
+        public ProductDetailViewModel Product { get; set; }
     }
 }

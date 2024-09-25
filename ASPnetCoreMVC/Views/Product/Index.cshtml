@@ -243,7 +243,8 @@
                     Id: $('#ID').val(),
                     Name: $('#Name').val(),
                     Price: $('#Price').val(),
-                    Stock: $('#Stock').val()
+                    Stock: $('#Stock').val(),
+                    CategoryId: $('#categoryDropdown').val()
                 };
                 $.ajax({
                     url: '/Product/EditProduct',

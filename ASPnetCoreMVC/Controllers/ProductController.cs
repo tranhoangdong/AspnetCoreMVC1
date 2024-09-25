@@ -9,6 +9,7 @@ using System;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace ASPnetCoreMVC.Controllers
 {
@@ -41,7 +42,7 @@ namespace ASPnetCoreMVC.Controllers
                 Name = p.Name,
                 Price = p.Price,
                 Stock = p.Stock,
-                CategoryName = p.Category.Name
+                CategoryName = p.Category?.Name
             }).ToList();
             return PartialView("_ProductTablePartial", productViewModels);
         }
@@ -68,16 +69,28 @@ namespace ASPnetCoreMVC.Controllers
             {
                 return NotFound();
             }
+            var categories = _categoryService.GetAllCategory().Select(c => new CategoryViewModel
+            {
+                Id = c.ID,
+                Name = c.Name,
+            }).ToList();
 
             var productViewModel = new ProductDetailViewModel
             {
                 ID = product.ID,
                 Name = product.Name,
                 Price = product.Price,
-                Stock = product.Stock
+                Stock = product.Stock,
+                CategoryName = product.Category?.Name
+            };
+            var allProductViewModel = new AllProductViewModel
+            {
+                Product = productViewModel,
+                Categories = categories
+
             };
 
-            return PartialView("_EditProductPartial", productViewModel);
+            return PartialView("_EditProductPartial", allProductViewModel);
         }
 
         [HttpPost]
@@ -93,7 +106,8 @@ namespace ASPnetCoreMVC.Controllers
                 Id = productViewModel.ID,
                 Name = productViewModel.Name,
                 Price = productViewModel.Price,
-                Stock = productViewModel.Stock
+                Stock = productViewModel.Stock,
+                CategoryId = productViewModel.CategoryId
             };
 
             bool isUpdated = await _productService.UpdateProductAsync(productDto); 
