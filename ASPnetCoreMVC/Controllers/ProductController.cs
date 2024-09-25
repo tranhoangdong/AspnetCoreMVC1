@@ -118,7 +118,7 @@ namespace ASPnetCoreMVC.Controllers
                 Id = c.Id,
                 Name = c.Name,
             }).ToList();
-            var allproductviewmodel = new AllProductViewModel
+            var allproductviewmodel = new EditProductPartialViewModel
             {
                 Categories = category,
                             };
