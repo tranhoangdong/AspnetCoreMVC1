@@ -33,8 +33,10 @@ namespace ASPnetCoreMVC
             services.AddDbContextPool<EShopDbContext>(options =>
                         options.UseSqlServer(Configuration.GetConnectionString("eShopSolutionDb")));
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+
         }
-        
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -60,7 +62,7 @@ namespace ASPnetCoreMVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Product}/{action=GetAllProduct}/{id?}");
+                    pattern: "{controller=Product}/{action=Index}/{id?}");
             });
         }
     }

@@ -9,10 +9,10 @@ namespace eShopSolution.Application.IService
 {
    public interface IProductService
     {
-        List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder);
+        List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId);
         Product GetProductbyId(int productId);
         public void DeleteProduct(int productId);
-        Task<bool> UpdateProductAsync(int id, ProductDTO productDto);
+        Task<bool> UpdateProductAsync(ProductDTO productDto);
         public IEnumerable<Product> GetPagedProducts(int pageNumber, int pageSize);
         public int GetTotalProducts();
         Task<ProductDTO> AddProductAsync(ProductDTO productDto);

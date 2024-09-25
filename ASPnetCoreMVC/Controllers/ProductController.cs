@@ -9,43 +9,49 @@ using System;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace ASPnetCoreMVC.Controllers
 {
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService , ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
 
-        public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder)
+        public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
-            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder);
-            var productViewModels = products.Select(p => new ProductViewModel
+            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder, categoryId);
+            var productViewModels = products.Select(p => new ProductDetailViewModel
             {
                 ID = p.ID,
                 Name = p.Name,
                 Price = p.Price,
-                Stock = p.Stock
+                Stock = p.Stock,
+                CategoryName = p.Category?.Name
             }).ToList();
             return PartialView("_ProductTablePartial", productViewModels);
         }
 
-        public IActionResult GetAllProduct(string name, string priceFilter, string sortColumn, string sortOrder)
+        public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
-            var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder);
-            var productViewModels = products.Select(p => new ProductViewModel
+            var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel
             {
-                ID = p.ID,
-                Name = p.Name,
-                Price = p.Price,
-                Stock = p.Stock
+                Id = x.Id,
+                Name = x.Name
             }).ToList();
+            var allProductViewModel = new AllProductViewModel
+            {
+                Categories = categories,
 
-            return View(productViewModels);
+            };
+
+            return View(allProductViewModel);
         }
         public IActionResult EditProduct(int id)
         {
@@ -54,20 +60,32 @@ namespace ASPnetCoreMVC.Controllers
             {
                 return NotFound();
             }
+            var categories = _categoryService.GetAllCategory().Select(c => new CategoryViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+            }).ToList();
 
-            var productViewModel = new ProductViewModel
+            var productViewModel = new ProductDetailViewModel
             {
                 ID = product.ID,
                 Name = product.Name,
                 Price = product.Price,
-                Stock = product.Stock
+                Stock = product.Stock,
+                CategoryName = product.Category?.Name
+            };
+            var allProductViewModel = new AllProductViewModel
+            {
+                Product = productViewModel,
+                Categories = categories
+
             };
 
-            return PartialView("_EditProductPartial", productViewModel);
+            return PartialView("_EditProductPartial", allProductViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProduct(int id, ProductViewModel productViewModel)
+        public async Task<IActionResult> EditProduct(ProductDetailViewModel productViewModel)
         {
             if (productViewModel == null)
             {
@@ -76,12 +94,14 @@ namespace ASPnetCoreMVC.Controllers
 
             var productDto = new ProductDTO
             {
+                Id = productViewModel.ID,
                 Name = productViewModel.Name,
                 Price = productViewModel.Price,
-                Stock = productViewModel.Stock
+                Stock = productViewModel.Stock,
+                CategoryId = productViewModel.CategoryId
             };
 
-            bool isUpdated = await _productService.UpdateProductAsync(id, productDto); 
+            bool isUpdated = await _productService.UpdateProductAsync(productDto); 
 
             if (!isUpdated)
             {
@@ -93,12 +113,21 @@ namespace ASPnetCoreMVC.Controllers
 
         public IActionResult CreateProduct()
         {
-            return PartialView("_CreateProductPartial");
+            var  category = _categoryService.GetAllCategory().Select( c => new CategoryViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+            }).ToList();
+            var allproductviewmodel = new EditProductPartialViewModel
+            {
+                Categories = category,
+                            };
+            return PartialView("_CreateProductPartial", allproductviewmodel);
         }
 
      
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductViewModel productViewModel)
+        public async Task<IActionResult> CreateProduct(ProductDetailViewModel productViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -109,12 +138,13 @@ namespace ASPnetCoreMVC.Controllers
             {
                 Name = productViewModel.Name,
                 Price = productViewModel.Price,
-                Stock = productViewModel.Stock
+                Stock = productViewModel.Stock,
+                CategoryId = productViewModel.CategoryId
             };
 
             await _productService.AddProductAsync(productDto); 
 
-            return RedirectToAction("GetAllProduct");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
