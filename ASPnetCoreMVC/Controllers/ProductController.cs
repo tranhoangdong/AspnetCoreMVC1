@@ -122,7 +122,16 @@ namespace ASPnetCoreMVC.Controllers
 
         public IActionResult CreateProduct()
         {
-            return PartialView("_CreateProductPartial");
+            var  category = _categoryService.GetAllCategory().Select( c => new CategoryViewModel
+            {
+                Id = c.ID,
+                Name = c.Name,
+            }).ToList();
+            var allproductviewmodel = new AllProductViewModel
+            {
+                Categories = category,
+                            };
+            return PartialView("_CreateProductPartial", allproductviewmodel);
         }
 
      
@@ -138,12 +147,13 @@ namespace ASPnetCoreMVC.Controllers
             {
                 Name = productViewModel.Name,
                 Price = productViewModel.Price,
-                Stock = productViewModel.Stock
+                Stock = productViewModel.Stock,
+                CategoryId = productViewModel.CategoryId
             };
 
             await _productService.AddProductAsync(productDto); 
 
-            return RedirectToAction("GetAllProduct");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

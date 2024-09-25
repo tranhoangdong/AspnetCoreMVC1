@@ -253,6 +253,8 @@
                     success: function (response) {
                         console.log("Form submitted successfully");
                         loadProductTable();
+                      //  $('#editProductModal').modal('hide');
+
                         console.log("ID sản phẩm chỉnh sửa: " + productId);
                     },
                     error: function (xhr, status, error) {
@@ -267,6 +269,7 @@
                     url: '@Url.Action("CreateProduct", "Product")',
                     type: 'GET',
                     success: function (data) {
+                        debugger;
                         console.log("Form đã được tải thành công");
                         $('#modalContent').html(data);
                         $('#addProductModal').modal('show');
@@ -276,6 +279,7 @@
                         console.log("Lỗi khi tải form");
                         alert('Có lỗi xảy ra, vui lòng thử lại.');
                     }
+
                 });
             });
 
@@ -298,9 +302,7 @@
                         console.log("Lỗi khi tải form chỉnh sửa");
                         alert('Có lỗi xảy ra, vui lòng thử lại.');
                     }
-
                 });
-
 
             });
             loadProductTable();
