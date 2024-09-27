@@ -163,33 +163,31 @@ namespace ASPnetCoreMVC.Controllers
 
         public async Task<IActionResult> GetBulkUpdate(string ids)
         {
-            var listIds = ids.Split(',');
-            var productIds = listIds.Select(x => int.Parse(x)).ToList();
+            var productIds = ids.Split(',').Select(x => int.Parse(x)).ToList();
             var products = await _productService.GetNameProductByListIdAsync(productIds);
-            var requestViewModel = new BulkUpdateRequestViewModel
+            var requestViewModel = products.Select(x => new BulkUpdateRequestViewModel
             {
-                ProductId = products.Select(product => product.Id.ToString()).ToList(),
-                Names = products.Select(x => x.Name).ToList(),
-                NewPrice = 0,
-                NewStock = 0
-            };
+                Id = x.Id,
+                Name = x.Name,
+            })
+            .ToList();  
 
             return PartialView("_GetBulkUpdatePartial", requestViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> BulkUpdate([FromBody] BulkUpdateRequestViewModel request)
-        {
-            var productDtos = request.ProductId.Select(id => new ProductDTO
-            {
-                Id = int.Parse(id),
-                Price = request.NewPrice,
-                Stock = request.NewStock
-            }).ToList();
+        //[HttpPost]
+        //public async Task<IActionResult> BulkUpdate([FromBody] BulkUpdateRequestViewModel request)
+        //{
+        //    var productDtos = request.ProductId.Select(id => new ProductDTO
+        //    {
+        //        Id = int.Parse(id),
+        //        Price = request.NewPrice,
+        //        Stock = request.NewStock
+        //    }).ToList();
 
-            var result = await _productService.BulkUpdateProductsAsync(productDtos);
-            return Json(new { success = result });
-        }
+        //    var result = await _productService.BulkUpdateProductsAsync(productDtos);
+        //    return Json(new { success = result });
+        //}
 
 
     }

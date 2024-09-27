@@ -258,32 +258,34 @@
                 </div>
                 <div class="modal-body">
                     <div id="editModalContent">
-                    </div
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
 
-
-        <div class="modal fade" id="bulkUpdateProductModal" tabindex="-1" role="dialog" aria-labelledby="bulkupdateProductModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="bulkupdateProductModalLabel">Thêm sản phẩm mới</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+    <div class="modal fade" id="bulkUpdateProductModal" tabindex="-1" role="dialog" aria-labelledby="bulkUpdateProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUpdateProductModalLabel">Bulk Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="bulkUpdateProductModalContent">
                     </div>
-                    <div class="modal-body">
-                        <div id="bulkUpdateSection"> 
-                       
-                        </div>
-                    </div>
-
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnUpdateBulk" class="btn btn-success">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
+    </div>
+    
     <script>
 
 
@@ -408,11 +410,11 @@
                             url: '/Product/GetBulkUpdate?ids=' + selectedProductIds,
                             method: 'GET',
                             success: function (data) {
-                                debugger;
-                            console.log(data);
-                                alert('Cập nhật thành công!');
-                            $('#bulkUpdateSection').html(data);
-                            $('#bulkUpdateProductModal').modal('show');
+                            //     debugger;
+                            // console.log(data);
+                            //     alert('Cập nhật thành công!');
+                             $('#bulkUpdateProductModalContent').html(data);
+                             $('#bulkUpdateProductModal').modal('show');
                             },
                             error: function (xhr, status, error) {
                                 alert('Cập nhật thất bại!');
