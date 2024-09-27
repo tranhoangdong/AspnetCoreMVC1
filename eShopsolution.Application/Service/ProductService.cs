@@ -1,20 +1,12 @@
 ﻿using eShopsolution.Data.EF;
-
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
-using eShopSolution.Data.Emtyties;
 using eShopSolution.Data.Entities;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace eShopSolution.Application.Service
 {
@@ -22,17 +14,14 @@ namespace eShopSolution.Application.Service
     {
         private readonly EShopDbContext _eShopDbContext;
        
-
         public ProductService(EShopDbContext eShopDbContext)
         {
             _eShopDbContext = eShopDbContext;
-            
         }
 
         public List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
             var products = _eShopDbContext.Products.Include(p => p.Category).ToList();
-
             if (!string.IsNullOrEmpty(name))
             {
                 products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -179,23 +168,20 @@ namespace eShopSolution.Application.Service
             return products;
         }
 
-        public async Task<bool> BulkUpdateProductsAsync(List<ProductDTO> productDtos)
+        public async Task<bool> BulkUpdateProductsAsync(List<int> productIds, int stock, decimal price)
         {
-            foreach (var productDto in productDtos)
+            foreach (var productId in productIds)
             {
-                var existingProduct = await _eShopDbContext.Products.FindAsync(productDto.Id);
+                var existingProduct = await _eShopDbContext.Products.FindAsync(productId);
                 if (existingProduct != null)
                 {
-                    existingProduct.Price = productDto.Price;
-                    existingProduct.Stock = productDto.Stock;
+                    existingProduct.Price = price;
+                    existingProduct.Stock = stock;
                 }
             }
 
             await _eShopDbContext.SaveChangesAsync();
             return true;
         }
-
-
     }
-
 }

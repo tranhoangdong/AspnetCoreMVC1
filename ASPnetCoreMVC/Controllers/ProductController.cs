@@ -4,12 +4,6 @@ using ASPnetCoreMVC.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
-using eShopSolution.Data.Entities;
-using System;
-using Microsoft.Data.SqlClient;
-using System.Diagnostics;
-using System.Xml.Linq;
-using System.Collections.Generic;
 
 namespace ASPnetCoreMVC.Controllers
 {
@@ -108,7 +102,7 @@ namespace ASPnetCoreMVC.Controllers
             {
                 return NotFound();
             }
-
+            
             return Ok();
         }
 
@@ -125,7 +119,6 @@ namespace ASPnetCoreMVC.Controllers
                             };
             return PartialView("_CreateProductPartial", allproductviewmodel);
         }
-
      
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDetailViewModel productViewModel)
@@ -175,23 +168,12 @@ namespace ASPnetCoreMVC.Controllers
             return PartialView("_GetBulkUpdatePartial", requestViewModel);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> BulkUpdate([FromBody] BulkUpdateRequestViewModel request)
-        //{
-        //    var productDtos = request.ProductId.Select(id => new ProductDTO
-        //    {
-        //        Id = int.Parse(id),
-        //        Price = request.NewPrice,
-        //        Stock = request.NewStock
-        //    }).ToList();
-
-        //    var result = await _productService.BulkUpdateProductsAsync(productDtos);
-        //    return Json(new { success = result });
-        //}
-
-
+        [HttpPost]
+        public async Task<IActionResult> BulkUpdate([FromBody] DoBulkUpdateRequestViewModel request)
+        {
+            var productIds = request.Ids.Split(',').Select(x => int.Parse(x)).ToList();
+            var result = await _productService.BulkUpdateProductsAsync(productIds, request.Stock, request.Price);
+            return Json(new { success = result });
+        }
     }
-
-
 }
-
