@@ -161,16 +161,22 @@ namespace ASPnetCoreMVC.Controllers
             return RedirectToAction("GetAllProduct");
         }
 
-        public IActionResult GetBulkUpdate(string ids)
+        public async Task<IActionResult> GetBulkUpdate(string ids)
         {
             var listIds = ids.Split(',');
-            var productids = listIds.Select(x => int.Parse(x)).ToList();
-            var products = _productService.GetProduct(productids);
+            var productIds = listIds.Select(x => int.Parse(x)).ToList();
+            var products = await _productService.GetNameProductByListIdAsync(productIds);
+            var requestViewModel = new BulkUpdateRequestViewModel
+            {
+                ProductId = products.Select(product => product.Id.ToString()).ToList(),
+                Names = products.Select(x => x.Name).ToList(),
+                NewPrice = 0,
+                NewStock = 0
+            };
 
-
-           return Json(new { product = products });
-           
+            return PartialView("_GetBulkUpdatePartial", requestViewModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> BulkUpdate([FromBody] BulkUpdateRequestViewModel request)
         {

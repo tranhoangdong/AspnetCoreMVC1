@@ -19,5 +19,6 @@ namespace eShopSolution.Application.IService
         Task<List<ProductDTO>> GetProductImageAsync();
         Task<bool> BulkUpdateProductsAsync(List<ProductDTO> productDtos);
         List<Product> GetProduct(List<int> productid);
+        Task<List<ProductDTO>> GetNameProductByListIdAsync(List<int> productIds);
     }
 }

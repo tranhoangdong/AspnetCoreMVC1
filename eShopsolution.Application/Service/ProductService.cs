@@ -166,6 +166,18 @@ namespace eShopSolution.Application.Service
         {
             return _eShopDbContext.Products.Where(x => productid.Contains(x.ID)).ToList();
         }
+        public async Task<List<ProductDTO>> GetNameProductByListIdAsync(List<int> productIds)
+        {
+            var products = await _eShopDbContext.Products
+                .Where(p => productIds.Contains(p.ID))
+                .Select(p => new ProductDTO
+                {
+                    Id = p.ID,
+                    Name = p.Name
+                }).ToListAsync();
+
+            return products;
+        }
 
         public async Task<bool> BulkUpdateProductsAsync(List<ProductDTO> productDtos)
         {
