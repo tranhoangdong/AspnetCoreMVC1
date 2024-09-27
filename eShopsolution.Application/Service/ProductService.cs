@@ -162,6 +162,27 @@ namespace eShopSolution.Application.Service
 
             return productDTOs;
         }
+        public List<Product> GetProduct(List<int> productid)
+        {
+            return _eShopDbContext.Products.Where(x => productid.Contains(x.ID)).ToList();
+        }
+
+        public async Task<bool> BulkUpdateProductsAsync(List<ProductDTO> productDtos)
+        {
+            foreach (var productDto in productDtos)
+            {
+                var existingProduct = await _eShopDbContext.Products.FindAsync(productDto.Id);
+                if (existingProduct != null)
+                {
+                    existingProduct.Price = productDto.Price;
+                    existingProduct.Stock = productDto.Stock;
+                }
+            }
+
+            await _eShopDbContext.SaveChangesAsync();
+            return true;
+        }
+
 
     }
 

@@ -3,6 +3,7 @@
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
+            <th><input type="checkbox" id="selectAll" /></th>
             <th>Tên sản phẩm</th>
             <th>Giá</th>
             <th>Tồn kho</th>
@@ -16,7 +17,7 @@
             foreach (var product in Model)
             {
                 <tr>
-
+                    <td><input type="checkbox" class="productCheckbox" value="@product.ID" /></td>
                     <td>@product.Name</td>
                     <td>@product.Price.ToString("C")</td>
                     <td>@product.Stock</td>

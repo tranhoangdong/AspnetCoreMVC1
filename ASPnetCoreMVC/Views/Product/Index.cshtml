@@ -134,6 +134,23 @@
             width: 180px;
             left: 341px;
         }
+
+        .btn-bulkupdate {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        #btnBulkUpdateProduct {
+            position: relative;
+            left: 14px;
+        }
         }
             .btn-delete:hover {
                 background-color: #c82333;
@@ -199,6 +216,14 @@
     <!-- Thêm nút "Thêm sản phẩm" -->
 
     <a href="javascript:void(0)" id="btnAddProduct" class="btn-add">Thêm sản phẩm</a>
+
+    <a href="javascript:void(0)" id="btnBulkUpdateProduct" class="btn-bulkupdate">Update Nhiều</a>
+
+    <div class="container">
+        <h2>Danh sách chỉnh sửa</h2>
+
+        <div id="bulkUpdateModal"></div>
+    </div>
     <!-- fill data listproduct-->
     <div class="container">
         <h2>Danh sách sản phẩm</h2>
@@ -234,7 +259,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="editModalContent">
-                    </div>
+                    </divk
                 </div>
 
             </div>
@@ -270,7 +295,73 @@
                         alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
                     }
                 });
-            }
+                }
+                
+                $('#btnBulkUpdateProduct').on('click', function () {
+                    debugger; 
+                    var checkboxes = $("input[type='checkbox']");
+                    var selectedProductIds = [];
+                    var selectedProductNames = [];
+                    var checkedCheckboxes = checkboxes.filter(":checked");
+
+                    checkedCheckboxes.each(function () {
+                        console.log($(this).val());
+                        selectedProductIds.push($(this).val());
+                    });
+
+                    console.log(selectedProductIds);
+                    debugger;
+                    
+                    if (selectedProductIds.length > 0) {
+                        $.ajax({
+                            url: '/Product/GetBulkUpdate?ids=' + selectedProductIds,
+                            method: 'GET',
+                            contentType: 'application/json',
+
+                            success: function (response) {
+                                alert('Cập nhật thành công!');
+
+
+                            },
+                            error: function (xhr, status, error) {
+                                alert('Cập nhật thất bại!');
+                            }
+                        });
+
+                       
+                    } else {
+                        alert("Vui lòng chọn ít nhất một sản phẩm để cập nhật.");
+                        return; 
+                    }
+
+                    var bulkPrice = $('#bulkPrice').val();
+                    var bulkStock = $('#bulkStock').val();
+
+                    if (selectedProductIds.length > 0 && bulkPrice && bulkStock) {
+                        var requestData = {
+                            ProductIds: selectedProductIds,
+                            NewPrice: parseFloat(bulkPrice),  
+                            NewStock: parseInt(bulkStock)     
+                        };
+                        $.ajax({
+                            url: '/Product/BulkUpdate',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(requestData),
+                            success: function (response) {
+                                alert('Cập nhật thành công!');
+                            
+                            },
+                            error: function (xhr, status, error) {
+                                alert('Cập nhật thất bại!');
+                            }
+                        });
+                    } else {
+                        alert('Vui lòng chọn sản phẩm và nhập giá trị hợp lệ.');
+                    }
+                });
+
+
             $(document).on('click', '#btnUpdateProduct', function (e) {
                 e.preventDefault();
                 var productId = $(this).data('id');

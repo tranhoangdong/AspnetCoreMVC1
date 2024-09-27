@@ -53,6 +53,7 @@ namespace ASPnetCoreMVC.Controllers
 
             return View(allProductViewModel);
         }
+
         public IActionResult EditProduct(int id)
         {
             var product = _productService.GetProductbyId(id);
@@ -159,6 +160,31 @@ namespace ASPnetCoreMVC.Controllers
             _productService.DeleteProduct(id); 
             return RedirectToAction("GetAllProduct");
         }
+
+        public IActionResult GetBulkUpdate(string ids)
+        {
+            var listIds = ids.Split(',');
+            var productids = listIds.Select(x => int.Parse(x)).ToList();
+            var products = _productService.GetProduct(productids);
+
+
+           return Json(new { product = products });
+           
+        }
+        [HttpPost]
+        public async Task<IActionResult> BulkUpdate([FromBody] BulkUpdateRequestViewModel request)
+        {
+            var productDtos = request.ProductId.Select(id => new ProductDTO
+            {
+                Id = int.Parse(id),
+                Price = request.NewPrice,
+                Stock = request.NewStock
+            }).ToList();
+
+            var result = await _productService.BulkUpdateProductsAsync(productDtos);
+            return Json(new { success = result });
+        }
+
 
     }
 
