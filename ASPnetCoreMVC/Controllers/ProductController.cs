@@ -169,8 +169,13 @@ namespace ASPnetCoreMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BulkUpdate([FromBody] DoBulkUpdateRequestViewModel request)
+        public async Task<IActionResult> BulkUpdate( DoBulkUpdateRequestViewModel request)
         {
+            if (request == null || string.IsNullOrEmpty(request.Ids))
+            {
+                return BadRequest("Yêu cầu không hợp lệ");
+            }
+
             var productIds = request.Ids.Split(',').Select(x => int.Parse(x)).ToList();
             var result = await _productService.BulkUpdateProductsAsync(productIds, request.Stock, request.Price);
             return Json(new { success = result });
