@@ -363,13 +363,19 @@
                 });
             });
 
-          
 
+            $(document).on('click', '#selectAll', function (e) {
+                debugger;
+                $('.productCheckbox').prop('checked', this.checked);
+            });
+          
             $('#btnBulkUpdateProduct').on('click', function () {
-                var checkboxes = $("input[type='checkbox']");
+                debugger;
+                var checkboxes = $(".productCheckbox");
                 var selectedProductIds = [];
                 var checkedCheckboxes = checkboxes.filter(":checked");
 
+                console.log(checkboxes);
                 checkedCheckboxes.each(function () {
                     console.log($(this).val());
                     selectedProductIds.push($(this).val());
