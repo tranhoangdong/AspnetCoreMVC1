@@ -1,10 +1,6 @@
-﻿using eShopSolution.Data.Entities;
+﻿using System.Collections.Generic;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace eShopSolution.Data.Emtyties
+namespace eShopSolution.Data.Entities
 {
     public  class Category
     {

@@ -1,6 +1,6 @@
 ﻿using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
-using eShopSolution.Data.Emtyties;
+using eShopSolution.Data.Entities;
 using eShopSolution.Data.Entities;
 
 using Microsoft.AspNetCore.Identity;
@@ -20,10 +20,10 @@ namespace eShopSolution.Application.Service
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _config;
-        private readonly RoleManager<Roles> _roleManager;
+        private readonly RoleManager<Role> _roleManager;
 
 
-        public UserServices(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, RoleManager<Roles> roleManager)
+        public UserServices(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, RoleManager<Role> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

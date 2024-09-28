@@ -1,6 +1,4 @@
-﻿using eShopSolution.Data.Emtyties;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace eShopSolution.Data.Entities
 {

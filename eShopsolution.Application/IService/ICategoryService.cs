@@ -1,5 +1,5 @@
 ﻿using eShopSolution.Application.Dtos;
-using eShopSolution.Data.Emtyties;
+using eShopSolution.Data.Entities;
 using eShopSolution.Data.Entities;
 using System;
 using System.Collections.Generic;

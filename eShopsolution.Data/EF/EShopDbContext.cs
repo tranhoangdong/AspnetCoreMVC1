@@ -1,4 +1,4 @@
-﻿using eShopSolution.Data.Emtyties;
+﻿using eShopSolution.Data.Configurations;
 using eShopSolution.Data.Entities;
 
 using Microsoft.AspNetCore.Identity;
@@ -10,23 +10,23 @@ using System.Data;
 
 namespace eShopsolution.Data.EF
 {
-    public class EShopDbContext : IdentityDbContext<User, Roles, int>
+    public class EShopDbContext : IdentityDbContext<User, Role, Guid>
     {
-            
 
         public EShopDbContext( DbContextOptions options) : base(options)
         {   
         }
+
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Product");
@@ -34,13 +34,7 @@ namespace eShopsolution.Data.EF
                 entity.Property(e => e.ID).HasColumnType("int");
 
             });
-            modelBuilder.Entity<Image>(entity =>
-            {
-                entity.ToTable("Image");
 
-                entity.Property(e => e.ID).HasColumnType("int");
-
-            });
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.ToTable("Category");
@@ -48,22 +42,14 @@ namespace eShopsolution.Data.EF
                 entity.Property(e => e.Id).HasColumnType("int");
 
             });
-            modelBuilder.Entity<Image>()
-              .HasOne(e => e.product)
-              .WithMany(e => e.Images)
-              .HasForeignKey(e => e.ProductId)
-              .IsRequired();
-             modelBuilder.Entity<Product>()
-              .HasOne(e => e.Category)
-              .WithMany(e => e.Products)
-              .HasForeignKey(e => e.CategoryId)
-              .IsRequired();
+
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
 
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
+
             base.OnModelCreating(modelBuilder);
         }
 
