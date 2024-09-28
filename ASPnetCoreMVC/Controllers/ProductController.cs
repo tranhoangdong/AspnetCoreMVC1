@@ -4,12 +4,6 @@ using ASPnetCoreMVC.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
-using eShopSolution.Data.Entities;
-using System;
-using Microsoft.Data.SqlClient;
-using System.Diagnostics;
-using System.Xml.Linq;
-using System.Collections.Generic;
 
 namespace ASPnetCoreMVC.Controllers
 {
@@ -53,6 +47,7 @@ namespace ASPnetCoreMVC.Controllers
 
             return View(allProductViewModel);
         }
+
         public IActionResult EditProduct(int id)
         {
             var product = _productService.GetProductbyId(id);
@@ -107,7 +102,7 @@ namespace ASPnetCoreMVC.Controllers
             {
                 return NotFound();
             }
-
+            
             return Ok();
         }
 
@@ -124,7 +119,6 @@ namespace ASPnetCoreMVC.Controllers
                             };
             return PartialView("_CreateProductPartial", allproductviewmodel);
         }
-
      
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDetailViewModel productViewModel)
@@ -160,8 +154,31 @@ namespace ASPnetCoreMVC.Controllers
             return RedirectToAction("GetAllProduct");
         }
 
+        public async Task<IActionResult> GetBulkUpdate(string ids)
+        {
+            var productIds = ids.Split(',').Select(x => int.Parse(x)).ToList();
+            var products = await _productService.GetNameProductByListIdAsync(productIds);
+            var requestViewModel = products.Select(x => new BulkUpdateRequestViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+            })
+            .ToList();  
+
+            return PartialView("_GetBulkUpdatePartial", requestViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BulkUpdate( DoBulkUpdateRequestViewModel request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.Ids))
+            {
+                return BadRequest("Yêu cầu không hợp lệ");
+            }
+
+            var productIds = request.Ids.Split(',').Select(x => int.Parse(x)).ToList();
+            var result = await _productService.BulkUpdateProductsAsync(productIds, request.Stock, request.Price);
+            return Json(new { success = result });
+        }
     }
-
-
 }
-

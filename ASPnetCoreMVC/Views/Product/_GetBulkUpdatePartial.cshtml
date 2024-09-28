@@ -1,0 +1,23 @@
+﻿@model List<ASPnetCoreMVC.Models.BulkUpdateRequestViewModel>
+
+<div class="container">
+    <form id="bulkUpdateForm">
+        <ul>
+            @foreach (var productViewModel in Model)
+            {
+                <li> <h4 class="col-sm-12 col-form-label" id="@productViewModel.Id">@productViewModel.Name</h4></li>
+            }
+        </ul>
+
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input type="number" name="newPrices" id="newPrices" class="form-control" placeholder="Giá mới" step="0.01" required />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input type="number" name="newStocks" id="newStocks" class="form-control" placeholder="Số tồn kho mới " required />
+            </div>
+        </div>
+    </form>
+</div>
