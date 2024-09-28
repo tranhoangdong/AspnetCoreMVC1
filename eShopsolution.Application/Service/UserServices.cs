@@ -65,8 +65,8 @@ namespace eShopSolution.Application.Service
                UserName = request.Username.Trim(),
                 Email = request.Email,
                 PasswordHash = request.PasswordHash,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
+                FirstName = request.FirstName ?? "Tran",
+                LastName = request.LastName ?? "Dam",
                
             };
            var result = await _userManager.CreateAsync(user, request.PasswordHash);

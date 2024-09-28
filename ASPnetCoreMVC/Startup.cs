@@ -1,10 +1,12 @@
 using eShopsolution.Data.EF;
 using eShopSolution.Application.IService;
 using eShopSolution.Application.Service;
-
+using eShopSolution.Data.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,12 +31,33 @@ namespace ASPnetCoreMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
             services.AddDbContextPool<EShopDbContext>(options =>
                         options.UseSqlServer(Configuration.GetConnectionString("eShopSolutionDb")));
+
+            services.AddIdentity<User, Role>().AddEntityFrameworkStores<EShopDbContext>().AddDefaultTokenProviders();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
+
+            services.AddMvc()
+        .AddRazorPagesOptions(options =>
+        {
+            options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
+            options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
+        });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+
+
+            // Register services
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
-
         }
 
 
@@ -63,6 +86,7 @@ namespace ASPnetCoreMVC
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Product}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }
