@@ -363,70 +363,11 @@
                 });
             });
 
-
-            //     $('#btnBulkUpdateProduct').on('click', function () {
-            //         var checkboxes = $("input[type='checkbox']");
-            //         selectedProductIds = [];
-            //         var selectedProductNames = [];
-            //         var checkedCheckboxes = checkboxes.filter(":checked");
-
-            //         checkedCheckboxes.each(function () {
-            //             console.log($(this).val());
-            //             selectedProductIds.push($(this).val());
-            //         });
-            //         console.log(selectedProductIds);
-
-            //         if (selectedProductIds.length > 0) {
-            //             $.ajax({
-            //             url: '/Product/GetBulkUpdate?ids=' + selectedProductIds.join(','),
-            //                 method: 'GET',
-            //                 success: function (data) {
-            //                  $('#bulkUpdateProductModalContent').html(data);
-            //                  $('#bulkUpdateProductModal').modal('show');
-            //                 },
-            //                 error: function (xhr, status, error) {
-            //                     alert('Cập nhật thất bại!');
-            //                 }
-            //             });
-            //         } else {
-            //             alert("Vui lòng chọn ít nhất một sản phẩm để cập nhật.");
-            //         }
-
-            //     });
-      
-            // $(document).on('click', '#btnUpdateBulk', function (e) {
-            //     e.preventDefault();
-            //     debugger;
-            //     var bulkPrice = $('#newPrices').val();
-            //     var bulkStock = $('#newStocks').val();
-
-            //     var formData = {
-            //         Ids: selectedProductIds,
-            //         Price: bulkPrice,
-            //         Stock: bulkStock,
-            //     };
-            //     $.ajax({
-            //         url: '/Product/BulkUpdate',
-            //         type: 'POST',
-            //         data: formData,
-            //         data: JSON.stringify(formData),
-            //         success: function (response) {
-            //             console.log("Form submitted successfully");
-            //             loadProductTable();
-
-            //             console.log("ID sản phẩm chỉnh sửa: " + selectedProductIds.join(', '));
-            //         },
-            //         error: function (xhr, status, error) {
-            //             console.log("Error occurred while submitting the form");
-            //         }
-            //     });
-            // });
-            // Khai báo biến toàn cục để lưu danh sách ID sản phẩm đã chọn
-            var selectedProductIds = [];
+          
 
             $('#btnBulkUpdateProduct').on('click', function () {
                 var checkboxes = $("input[type='checkbox']");
-                selectedProductIds = []; 
+                var selectedProductIds = [];
                 var checkedCheckboxes = checkboxes.filter(":checked");
 
                 checkedCheckboxes.each(function () {
@@ -456,21 +397,23 @@
             $(document).on('click', '#btnUpdateBulk', function (e) {
                 e.preventDefault();
                 debugger;
-
+                var selectedProductIds = $("input[name='productIds']").map(function () {
+                    return $(this).val();
+                }).get();
                 var bulkPrice = $('#newPrices').val();
                 var bulkStock = $('#newStocks').val();
 
                 var formData = {
-                    Ids: selectedProductIds.join(','),
-                    Price: bulkPrice,
-                    Stock: bulkStock,
+                    Ids: selectedProductIds.join(','), 
+                    Price: parseFloat(bulkPrice),
+                    Stock: parseInt(bulkStock)
                 };
 
                 $.ajax({
                     url: '/Product/BulkUpdate',
                     type: 'POST',
-                    contentType: 'application/json', 
-                    data: JSON.stringify(formData), 
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
                     success: function (response) {
                         debugger;
                         console.log("Form submitted successfully");
@@ -483,7 +426,6 @@
                     }
                 });
             });
-
 
             $(document).on('click', '.btn-edit', function () {
                 var productId = $(this).data('id');
