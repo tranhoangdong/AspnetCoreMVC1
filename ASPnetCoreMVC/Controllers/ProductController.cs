@@ -23,7 +23,7 @@ namespace eShopSolution.Web.Controllers
             var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder, categoryId);
             var productViewModels = products.Select(p => new ProductDetailViewModel
             {
-                ID = p.ID,
+                ID = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Stock = p.Stock,
@@ -63,7 +63,7 @@ namespace eShopSolution.Web.Controllers
 
             var productViewModel = new ProductDetailViewModel
             {
-                ID = product.ID,
+                ID = product.Id,
                 Name = product.Name,
                 Price = product.Price,
                 Stock = product.Stock,

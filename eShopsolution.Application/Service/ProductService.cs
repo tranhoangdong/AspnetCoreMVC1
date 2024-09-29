@@ -66,7 +66,7 @@ namespace eShopSolution.Application.Service
     
         public Product GetProductbyId(int productId)
         {
-            return _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
+            return _eShopDbContext.Products.FirstOrDefault(x => x.Id == productId);
         }
         public async Task<ProductDTO> AddProductAsync(ProductDTO productDto)
         {
@@ -108,7 +108,7 @@ namespace eShopSolution.Application.Service
             {
                 _eShopDbContext.Images.RemoveRange(images);
             }
-            var product = _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
+            var product = _eShopDbContext.Products.FirstOrDefault(x => x.Id == productId);
             if (product != null)
             {
                 _eShopDbContext.Products.Remove(product);
@@ -153,15 +153,15 @@ namespace eShopSolution.Application.Service
         }
         public List<Product> GetProduct(List<int> productid)
         {
-            return _eShopDbContext.Products.Where(x => productid.Contains(x.ID)).ToList();
+            return _eShopDbContext.Products.Where(x => productid.Contains(x.Id)).ToList();
         }
         public async Task<List<ProductDTO>> GetNameProductByListIdAsync(List<int> productIds)
         {
             var products = await _eShopDbContext.Products
-                .Where(p => productIds.Contains(p.ID))
+                .Where(p => productIds.Contains(p.Id))
                 .Select(p => new ProductDTO
                 {
-                    Id = p.ID,
+                    Id = p.Id,
                     Name = p.Name
                 }).ToListAsync();
 
