@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ASPnetCoreMVC.Models
+namespace eShopSolution.Web.Models
 {
     public class BulkUpdateRequestViewModel
     {

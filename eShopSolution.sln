@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopSolution.Data", "eShop
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopSolution.Application", "eShopsolution.Application\eShopSolution.Application.csproj", "{0059B57D-3C9B-4D41-A528-4F9817CA5200}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopeSolution.MVC", "ASPnetCoreMVC\eShopeSolution.MVC.csproj", "{096FEE62-B2F1-4F66-8801-750C424D548A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopSolution.Web", "ASPnetCoreMVC\eShopSolution.Web.csproj", "{096FEE62-B2F1-4F66-8801-750C424D548A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

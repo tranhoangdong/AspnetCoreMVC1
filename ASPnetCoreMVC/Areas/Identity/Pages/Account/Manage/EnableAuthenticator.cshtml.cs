@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace ASPnetCoreMVC.Areas.Identity.Pages.Account.Manage
+namespace eShopSolution.Web.Areas.Identity.Pages.Account.Manage
 {
     public class EnableAuthenticatorModel : PageModel
     {
@@ -149,7 +149,7 @@ namespace ASPnetCoreMVC.Areas.Identity.Pages.Account.Manage
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("ASPnetCoreMVC"),
+                _urlEncoder.Encode("eShopSolution.Web"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

@@ -1,11 +1,11 @@
 ﻿using eShopSolution.Application.IService;
 using Microsoft.AspNetCore.Mvc;
-using ASPnetCoreMVC.Models;
+using eShopSolution.Web.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
 
-namespace ASPnetCoreMVC.Controllers
+namespace eShopSolution.Web.Controllers
 {
     public class ProductController : Controller
     {
