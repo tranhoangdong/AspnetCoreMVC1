@@ -1,9 +1,10 @@
-﻿using eShopSolution.Data.Emtyties;
+﻿using eShopSolution.Data.Configurations;
 using eShopSolution.Data.Entities;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace eShopsolution.Data.EF
 {
@@ -18,14 +19,9 @@ namespace eShopsolution.Data.EF
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            
-            builder.Entity<Product>(entity =>
-            {
-                entity.ToTable("Product");
+            builder.ApplyConfiguration(new ProductConfiguration());
 
-                entity.Property(e => e.ID).HasColumnType("int");
-
-            });
+            // TODO: refactor
             builder.Entity<Image>(entity =>
             {
                 entity.ToTable("Image");

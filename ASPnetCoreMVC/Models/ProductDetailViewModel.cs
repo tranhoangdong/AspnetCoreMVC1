@@ -1,4 +1,4 @@
-﻿namespace ASPnetCoreMVC.Models
+﻿namespace eShopSolution.Web.Models
 {
     public class ProductDetailViewModel
     {

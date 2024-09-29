@@ -1,11 +1,11 @@
 ﻿using eShopSolution.Application.IService;
 using Microsoft.AspNetCore.Mvc;
-using ASPnetCoreMVC.Models;
+using eShopSolution.Web.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
 
-namespace ASPnetCoreMVC.Controllers
+namespace eShopSolution.Web.Controllers
 {
     public class ProductController : Controller
     {
@@ -23,7 +23,7 @@ namespace ASPnetCoreMVC.Controllers
             var products = _productService.GetAllProducts( name, priceFilter, sortColumn, sortOrder, categoryId);
             var productViewModels = products.Select(p => new ProductDetailViewModel
             {
-                ID = p.ID,
+                ID = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Stock = p.Stock,
@@ -63,7 +63,7 @@ namespace ASPnetCoreMVC.Controllers
 
             var productViewModel = new ProductDetailViewModel
             {
-                ID = product.ID,
+                ID = product.Id,
                 Name = product.Name,
                 Price = product.Price,
                 Stock = product.Stock,

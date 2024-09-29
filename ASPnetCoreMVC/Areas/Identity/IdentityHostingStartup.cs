@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: HostingStartup(typeof(ASPnetCoreMVC.Areas.Identity.IdentityHostingStartup))]
-namespace ASPnetCoreMVC.Areas.Identity
+[assembly: HostingStartup(typeof(eShopSolution.Web.Areas.Identity.IdentityHostingStartup))]
+namespace eShopSolution.Web.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
