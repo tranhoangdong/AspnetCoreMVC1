@@ -1,10 +1,11 @@
 using eShopsolution.Data.EF;
 using eShopSolution.Application.IService;
 using eShopSolution.Application.Service;
-
+using eShopSolution.Data.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,9 +33,19 @@ namespace ASPnetCoreMVC
             services.AddControllersWithViews();
             services.AddDbContextPool<EShopDbContext>(options =>
                         options.UseSqlServer(Configuration.GetConnectionString("eShopSolutionDb")));
+
+
+
+            services.AddDbContext<EShopDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("eShopSolutionDb")));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<EShopDbContext>()
+                    .AddDefaultUI()
+                    .AddDefaultTokenProviders();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
+
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
-
         }
 
 

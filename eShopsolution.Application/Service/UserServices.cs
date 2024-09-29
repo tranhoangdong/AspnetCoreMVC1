@@ -17,13 +17,13 @@ namespace eShopSolution.Application.Service
 {
     public class UserServices : IUserServices
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _config;
         private readonly RoleManager<Roles> _roleManager;
 
 
-        public UserServices(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, RoleManager<Roles> roleManager)
+        public UserServices(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, RoleManager<Roles> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -60,7 +60,7 @@ namespace eShopSolution.Application.Service
 
         public async Task<bool> Register(RegisterRequest request)
         {
-            var user = new User
+            var user = new ApplicationUser
             {
                UserName = request.Username.Trim(),
                 Email = request.Email,

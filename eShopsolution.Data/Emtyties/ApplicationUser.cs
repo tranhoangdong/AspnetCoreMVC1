@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-using System.ComponentModel.DataAnnotations;
-
 namespace eShopSolution.Data.Entities
 {
-    public class User : IdentityUser<int>
+    public class ApplicationUser : IdentityUser
     {
-        [Key]
-        public int ID { get; set; }
         public string FirstName { get; set; }
-        public bool Rememberme { get; set; }
         public string LastName { get; set; }
+        public int UsernameChangeLimit { get; set; } = 10;
+        public byte[] ProfilePicture { get; set; }
     }
 }
