@@ -74,6 +74,7 @@ namespace ASPnetCoreMVC
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Product}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }
