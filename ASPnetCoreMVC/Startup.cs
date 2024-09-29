@@ -67,6 +67,7 @@ namespace ASPnetCoreMVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
