@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace eShopSolution.Data.Emtyties
+namespace eShopSolution.Data.Entities
 {
     public  class Roles : IdentityRole<int>
     {

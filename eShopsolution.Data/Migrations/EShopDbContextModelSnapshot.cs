@@ -150,7 +150,7 @@ namespace eShopSolution.Data.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("eShopSolution.Data.Emtyties.Category", b =>
+            modelBuilder.Entity("eShopSolution.Data.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -356,7 +356,7 @@ namespace eShopSolution.Data.Migrations
 
             modelBuilder.Entity("eShopSolution.Data.Entities.Product", b =>
                 {
-                    b.HasOne("eShopSolution.Data.Emtyties.Category", "Category")
+                    b.HasOne("eShopSolution.Data.Entities.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

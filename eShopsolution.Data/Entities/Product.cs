@@ -1,4 +1,4 @@
-﻿using eShopSolution.Data.Emtyties;
+﻿using eShopSolution.Data.Entities;
 
 using System.Collections.Generic;
 
