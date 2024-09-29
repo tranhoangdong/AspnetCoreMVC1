@@ -5,7 +5,11 @@
         <ul>
             @foreach (var productViewModel in Model)
             {
-                <li> <h4 class="col-sm-12 col-form-label" id="@productViewModel.Id">@productViewModel.Name</h4></li>
+                <li>
+                    <h4 class="col-sm-12 col-form-label" id="@productViewModel.Id">@productViewModel.Name</h4>
+                    <input type="hidden" name="productIds" value="@productViewModel.Id" />
+                </li>
+
             }
         </ul>
 
