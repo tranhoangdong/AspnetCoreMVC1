@@ -63,9 +63,15 @@ namespace eShopSolution.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                  name: "MyAreaDashboard",
+                  areaName: "Dashboard",
+                  pattern: "Dashboard/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Product}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }
