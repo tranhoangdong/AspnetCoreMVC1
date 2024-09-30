@@ -184,7 +184,6 @@
         </div>
     </form>
 
-
     <!-- fill data listproduct-->
     <div class="container">
         <h2>Danh sách sản phẩm</h2>
@@ -192,7 +191,6 @@
     </div>
 
     <script>
-
 
         $(document).ready(function () {
 
@@ -223,7 +221,10 @@
             }
 
             loadProductTable();
-
+            $('form.search-bar').on('submit', function (e) {
+                e.preventDefault();
+                loadProductTable();
+            });
         });
     </script>
 </body>
