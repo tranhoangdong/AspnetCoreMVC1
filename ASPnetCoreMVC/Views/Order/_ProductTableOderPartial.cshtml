@@ -22,11 +22,6 @@
                         <div class="text-center">
                             <a class="btn btn-outline-dark mt-auto" href="javascript:void(0)">View options</a>
                         </div>
-                        <a href="javascript:void(0)" class="btn-edit btn-outline-dark mt-auto" data-id="@product.ID">Chỉnh sửa</a>
-                        <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="@product.ID" />
-                            <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
-                        </form>
                     </div>
                 </div>
             </div>
