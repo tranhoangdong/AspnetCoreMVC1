@@ -16,6 +16,10 @@ namespace eShopsolution.Data.EF
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<RoomAndTable> RoomAndTables { get; set; }
+        public virtual DbSet<Status> Statuses { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,6 +40,20 @@ namespace eShopsolution.Data.EF
                 entity.Property(e => e.Id).HasColumnType("int");
 
             });
+            builder.Entity<RoomAndTable>(entity =>
+            {
+                entity.ToTable("RoomAndTable");
+
+                entity.Property(e => e.Id).HasColumnType("int");
+
+            });
+            builder.Entity<Status>(entity =>
+            {
+                entity.ToTable("Status");
+
+                entity.Property(e => e.Id).HasColumnType("int");
+
+            });
             builder.Entity<Image>()
               .HasOne(e => e.product)
               .WithMany(e => e.Images)
@@ -46,6 +64,11 @@ namespace eShopsolution.Data.EF
               .WithMany(e => e.Products)
               .HasForeignKey(e => e.CategoryId)
               .IsRequired();
+            builder.Entity<RoomAndTable>()
+             .HasOne(e => e.Status)
+             .WithMany(e => e.RoomAndTables)
+             .HasForeignKey(e => e.StatusId)
+             .IsRequired();
 
             base.OnModelCreating(builder);
 

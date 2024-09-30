@@ -23,18 +23,17 @@ namespace eShopSolution.Web.Controllers
         public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
             var products = _productService.GetAllProducts(name, priceFilter, sortColumn, sortOrder, categoryId);
-            var productViewModels = products.Select(p => new ProductDetailViewModel
+            var orderViewModels = products.Select(p => new OrderViewModel
             {
                 ID = p.Id,
                 Name = p.Name,
                 Price = p.Price,
-                Stock = p.Stock,
                 CategoryName = p.Category?.Name
             }).ToList();
-            return PartialView("_ProductTableOderPartial", productViewModels);
+            return PartialView("_ProductTableOderPartial", orderViewModels);
         }
 
-        public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
+        public IActionResult Index(int? categoryId)
         {
             var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel
             {

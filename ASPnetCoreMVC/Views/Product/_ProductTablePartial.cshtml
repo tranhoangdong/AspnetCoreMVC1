@@ -18,12 +18,10 @@
             {
                 <tr>
                     <td><input type="checkbox" class="productCheckbox" value="@product.ID" /></td>
-
                     <td>@product.Name</td>
                     <td>@product.Price.ToString("C")</td>
                     <td>@product.Stock</td>
                     <td>@product.CategoryName</td>
-
                     <td>
                         <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
                         <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">

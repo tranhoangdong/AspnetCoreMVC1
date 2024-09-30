@@ -26,7 +26,6 @@ namespace eShopSolution.Web.Controllers
                 ID = p.Id,
                 Name = p.Name,
                 Price = p.Price,
-                Stock = p.Stock,
                 CategoryName = p.Category?.Name
             }).ToList();
             return PartialView("_ProductTablePartial", productViewModels);
