@@ -1,0 +1,470 @@
+﻿@model eShopSolution.Web.Models.AllProductViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Danh sách sản phẩm</title>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn-add {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+            .btn-add:hover {
+                background-color: #218838;
+            }
+
+        .btn-edit {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+            .btn-edit:hover {
+                background-color: #0056b3;
+            }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+            .search-bar div {
+                margin-bottom: 10px;
+            }
+
+            .search-bar label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .search-bar input[type="text"],
+            .search-bar select {
+                padding: 10px;
+                width: 100%;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .search-bar button {
+                padding: 10px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+                .search-bar button:hover {
+                    background-color: #0056b3;
+                }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input.form-control, select.form-control {
+            line-height: normal;
+            padding: 0.375rem 0.75rem;
+        }
+
+        input.form-control, select.form-control {
+            height: auto;
+            min-height: 38px;
+        }
+
+        input.form-control, select.form-control {
+            font-size: 1rem;
+            height: auto;
+        }
+
+        #btnAddProduct {
+            position: relative;
+            left: 14px;
+        }
+
+        .form-group-sortColumn {
+            position: relative;
+            top: 262px;
+            width: 180px;
+            left: 139px;
+        }
+
+        .form-group-sortOder {
+            position: relative;
+            top: 186px;
+            width: 180px;
+            left: 341px;
+        }
+
+        .btn-bulkupdate {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        #btnBulkUpdateProduct {
+            position: relative;
+            left: 14px;
+        }
+
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+    <form asp-action="GetAllProduct" method="get" class="search-bar">
+        <div class="container-fluid">
+            <h2 class=" mb-4">Danh sách hàng hóa</h2>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="name">Tên sản phẩm:</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Tìm kiếm sản phẩm..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="priceFilter">Giá sản phẩm:</label>
+                        <select id="priceFilter" name="priceFilter" class="form-control">
+                            <option value="">--Chọn --</option>
+                            <option value="above100">Trên 100</option>
+                            <option value="below100">Dưới 100</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="categoryDropdown">Loại sản phẩm:</label>
+                        <div class="input-group">
+                            <select id="categoryDropdown" name="categoryId" class="form-control">
+                                <option value="">-- Chọn --</option>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-success">Thêm</button>
+                        </div>
+                    </div>
+                    <div class="form-group-sortColumn">
+                        <label for="sortColumn">Sắp xếp theo:</label>
+                        <select id="sortColumn" name="sortColumn" class="form-control">
+                            <option value="">-- Chọn --</option>
+                            <option value="price">Giá</option>
+                            <option value="stock">Tồn kho</option>
+                        </select>
+                    </div>
+                    <div class="form-group-sortOder">
+                        <label for="sortOrder">Loại sắp xếp:</label>
+                        <select id="sortOrder" name="sortOrder" class="form-control">
+                            <option value="">-- Chọn --</option>
+                            <option value="asc">Tăng dần</option>
+                            <option value="desc">Giảm dần</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+
+        </div>
+    </form>
+
+
+    <!-- Thêm nút "Thêm sản phẩm" -->
+
+    <a href="javascript:void(0)" id="btnAddProduct" class="btn-add">Thêm sản phẩm</a>
+    <a href="javascript:void(0)" id="btnBulkUpdateProduct" class="btn-bulkupdate">Update Nhiều</a>
+
+    <div class="container">
+        <div id="bulkUpdateModal"></div>
+    </div>
+    <!-- fill data listproduct-->
+    <div class="container">
+        <h2>Danh sách sản phẩm</h2>
+
+        <div id="productTableContainer"></div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm sản phẩm mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="editModalContent">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="bulkUpdateProductModal" tabindex="-1" role="dialog" aria-labelledby="bulkUpdateProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUpdateProductModalLabel">Bulk Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="bulkUpdateProductModalContent">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnUpdateBulk" class="btn btn-success">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        $(document).ready(function () {
+
+            function loadProductTable() {
+                var name = $('#name').val();
+                var priceFilter = $('#priceFilter').val();
+                var sortColumn = $('#sortColumn').val();
+                var sortOrder = $('#sortOrder').val();
+                var categoryDropdown = $('#categoryDropdown').val();
+
+                $.ajax({
+                    url: '@Url.Action("LoadProductTable", "Product")',
+                    type: 'GET',
+                    data: {
+                        name: name,
+                        priceFilter: priceFilter,
+                        sortColumn: sortColumn,
+                        sortOrder: sortOrder,
+                        categoryId: categoryDropdown
+                    },
+                    success: function (data) {
+                        $('#productTableContainer').html(data);
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
+                    }
+                });
+            }
+
+
+            $(document).on('click', '#btnUpdateProduct', function (e) {
+                e.preventDefault();
+                var productId = $(this).data('id');
+
+                var formData = {
+                    Id: productId,
+                    Name: $('#Name').val(),
+                    Price: $('#Price').val(),
+                    Stock: $('#Stock').val(),
+                    CategoryId: $('#categoryDropdownselect').val()
+                };
+                $.ajax({
+                    url: '/Product/EditProduct',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        console.log("Form submitted successfully");
+                        loadProductTable();
+
+                        console.log("ID sản phẩm chỉnh sửa: " + productId);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error occurred while submitting the form");
+                    }
+                });
+            });
+
+
+            $('#btnAddProduct').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("CreateProduct", "Product")',
+                    type: 'GET',
+                    success: function (data) {
+                        debugger;
+                        console.log("Form đã được tải thành công");
+                        $('#modalContent').html(data);
+                        $('#addProductModal').modal('show');
+
+                    },
+                    error: function () {
+                        console.log("Lỗi khi tải form");
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    }
+
+                });
+            });
+
+
+            $(document).on('click', '#selectAll', function (e) {
+                debugger;
+                $('.productCheckbox').prop('checked', this.checked);
+            });
+
+            $('#btnBulkUpdateProduct').on('click', function () {
+                debugger;
+                var checkboxes = $(".productCheckbox");
+                var selectedProductIds = [];
+                var checkedCheckboxes = checkboxes.filter(":checked");
+
+                console.log(checkboxes);
+                checkedCheckboxes.each(function () {
+                    console.log($(this).val());
+                    selectedProductIds.push($(this).val());
+                });
+                console.log(selectedProductIds);
+
+                if (selectedProductIds.length > 0) {
+                    $.ajax({
+                        url: '/Product/GetBulkUpdate?ids=' + selectedProductIds,
+                        method: 'GET',
+                        success: function (data) {
+                            debugger;
+                            $('#bulkUpdateProductModalContent').html(data);
+                            $('#bulkUpdateProductModal').modal('show');
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Cập nhật thất bại!');
+                        }
+                    });
+                } else {
+                    alert("Vui lòng chọn ít nhất một sản phẩm để cập nhật.");
+                }
+            });
+
+            $(document).on('click', '#btnUpdateBulk', function (e) {
+                e.preventDefault();
+                debugger;
+                var selectedProductIds = $("input[name='productIds']").map(function () {
+                    return $(this).val();
+                }).get();
+                var bulkPrice = $('#newPrices').val();
+                var bulkStock = $('#newStocks').val();
+
+                var formData = {
+                    Ids: selectedProductIds.join(','),
+                    Price: parseFloat(bulkPrice),
+                    Stock: parseInt(bulkStock)
+                };
+
+                $.ajax({
+                    url: '/Product/BulkUpdate',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        debugger;
+                        console.log("Form submitted successfully");
+                        loadProductTable();
+
+                        console.log("ID sản phẩm chỉnh sửa: " + selectedProductIds.join(','));
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error occurred while submitting the form");
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-edit', function () {
+                var productId = $(this).data('id');
+                console.log("ID sản phẩm chỉnh sửa: " + productId);
+
+                $.ajax({
+                    url: '@Url.Action("EditProduct", "Product")?id=' + productId,
+                    type: 'GET',
+                    success: function (data) {
+                        console.log("Form chỉnh sửa đã được tải thành công");
+                        $('#editModalContent').html(data);
+                        $('#editProductModal').modal('show');
+                        $('#btnUpdateProduct').data('id', productId);
+                    },
+                    error: function () {
+                        console.log("Lỗi khi tải form chỉnh sửa");
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    }
+                });
+
+            });
+            loadProductTable();
+
+            loadProductTable();
+            $('form.search-bar').on('submit', function (e) {
+                e.preventDefault();
+                loadProductTable();
+            });
+
+        });
+    </script>
+</body>
+</html>

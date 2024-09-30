@@ -1,0 +1,35 @@
+﻿@model IEnumerable<eShopSolution.Web.Models.ProductDetailViewModel>
+
+<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var product in Model)
+        {
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
+                    <div class="card-body p-4">
+
+                        <div class="text-center">
+                            <h5 class="fw-bolder">@product.Name<br /></h5>
+                            @product.Price.ToString("C")<br />
+                            @product.Stock<br />
+                            @product.CategoryName
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" href="javascript:void(0)">View options</a>
+                        </div>
+                        <a href="javascript:void(0)" class="btn-edit btn-outline-dark mt-auto" data-id="@product.ID">Chỉnh sửa</a>
+                        <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@product.ID" />
+                            <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
