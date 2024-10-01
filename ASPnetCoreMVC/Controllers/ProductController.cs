@@ -18,9 +18,9 @@ namespace eShopSolution.Web.Controllers
             _categoryService = categoryService;
         }
 
-        public IActionResult LoadProductTable(int? categoryId)
+        public IActionResult LoadProductTable(int? categoryId , string priceFilter, string sortColumn, string sortOrder, string name)
         {
-            var products = _productService.GetAllProducts(categoryId);
+            var products = _productService.GetAllProducts(categoryId , priceFilter, sortColumn, sortOrder,name );
             var productViewModels = products.Select(p => new ProductDetailViewModel
             {
                 ID = p.Id,
