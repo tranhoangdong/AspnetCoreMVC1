@@ -1,4 +1,5 @@
 ﻿using eShopSolution.Application.Dtos;
+using eShopSolution.Data.Entities;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace eShopSolution.Application.IService
 {
     public interface IRoomAndTableServices
     {
-        List<RoomAndTableDTO> GetAllRoomAndTable();
+        List<RoomAndTable> GetAllRoomAndTable();
         Task<RoomAndTableDTO> AddRoomAndTableAsync(RoomAndTableDTO roomandtableDto);
     }
 }
