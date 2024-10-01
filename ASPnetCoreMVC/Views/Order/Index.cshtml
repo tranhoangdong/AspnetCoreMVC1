@@ -10,7 +10,7 @@
 </head>
 <body>
 
-    <form method="get" class="search-bar">
+    <form method="get" class="search-category-bar">
         <div class="container-fluid">
             <h2 class=" mb-4">Danh sách hàng hóa</h2>
             <div class="row">
@@ -63,7 +63,7 @@
             }
 
             loadProductTable();
-            $('form.search-bar').on('submit', function (e) {
+            $('form.search-category-bar').on('submit', function (e) {
                 e.preventDefault();
                 loadProductTable();
             });
