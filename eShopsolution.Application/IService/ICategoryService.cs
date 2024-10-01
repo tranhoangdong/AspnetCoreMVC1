@@ -5,6 +5,6 @@ namespace eShopSolution.Application.IService
 {
     public interface ICategoryService
     {
-        public List<CategoryDTO> GetAllCategory();
+        List<CategoryDTO> GetAllCategory(bool filterProducts = false);
     }
 }

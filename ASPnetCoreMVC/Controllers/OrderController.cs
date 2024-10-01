@@ -20,9 +20,9 @@ namespace eShopSolution.Web.Controllers
             _categoryService = categoryService;
         }
 
-        public IActionResult LoadProductTable(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
+        public IActionResult LoadProductTable( int? categoryId)
         {
-            var products = _productService.GetAllProducts(name, priceFilter, sortColumn, sortOrder, categoryId);
+            var products = _productService.GetAllProducts("", "", "", "", categoryId);
             var orderViewModels = products.Select(p => new OrderViewModel
             {
                 ID = p.Id,
@@ -35,7 +35,7 @@ namespace eShopSolution.Web.Controllers
 
         public IActionResult Index(int? categoryId)
         {
-            var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel
+            var categories = _categoryService.GetAllCategory(true).Select(x => new CategoryViewModel
             {
                 Id = x.Id,
                 Name = x.Name
