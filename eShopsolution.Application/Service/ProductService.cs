@@ -19,7 +19,7 @@ namespace eShopSolution.Application.Service
             _eShopDbContext = eShopDbContext;
         }
 
-        public List<Product> GetAllProducts( string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
+        public List<Product> GetAllProducts(int? categoryId, string name, string priceFilter, string sortColumn, string sortOrder)
         {
             var products = _eShopDbContext.Products.Include(p => p.Category).ToList();
             if (!string.IsNullOrEmpty(name))

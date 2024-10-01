@@ -22,7 +22,7 @@ namespace eShopSolution.Web.Controllers
 
         public IActionResult LoadProductTable( int? categoryId)
         {
-            var products = _productService.GetAllProducts("", "", "", "", categoryId);
+            var products = _productService.GetAllProducts(categoryId ,"", "", "", "");
             var orderViewModels = products.Select(p => new OrderViewModel
             {
                 ID = p.Id,

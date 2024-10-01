@@ -31,14 +31,6 @@ namespace eShopSolution.Application.Service
             }).ToList();
             return category;
 
-
-            //var category = _eShopDbContext.Categories.Where(c => c.Products.Any()).ToList().Select(x => new CategoryDTO
-            //{
-            //    Id = x.Id,
-            //    Name = x.Name
-            //}).ToList();
-
-            //return category;
         }
 
 
