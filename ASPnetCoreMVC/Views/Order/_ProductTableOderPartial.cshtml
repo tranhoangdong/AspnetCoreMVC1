@@ -1,0 +1,38 @@
+﻿@model IEnumerable<eShopSolution.Web.Models.OrderViewModel>
+
+<div class="row gx-4 gx-lg-5 justify-content-start">
+    @if (Model != null && Model.Any())
+    {
+     
+        var productCount = Model.Count();
+        var productsPerRow = 4; 
+        var lastRowCount = productCount % productsPerRow; 
+
+        var index = 0;
+        foreach (var product in Model)
+        {
+            bool isInLastRow = index >= (productCount - lastRowCount);
+
+            <div class="col-6 col-md-4 col-lg-3 mb-5 @(isInLastRow ? "" : "")">
+                <div class="card h-100">
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder">@product.Name<br /></h5>
+                            @product.Price.ToString("C")<br />
+                            @product.CategoryName
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" href="javascript:void(0)">View options</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            index++;
+        }
+    }
+</div>

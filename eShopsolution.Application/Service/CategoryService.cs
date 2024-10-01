@@ -18,7 +18,7 @@ namespace eShopSolution.Application.Service
 
         public List<CategoryDTO> GetAllCategory()
         {
-            var category = _eShopDbContext.Categories.ToList().Select(x => new CategoryDTO
+            var category = _eShopDbContext.Categories.Where(c => c.Products.Any()).ToList().Select(x => new CategoryDTO
             {
                 Id = x.Id,
                 Name = x.Name
