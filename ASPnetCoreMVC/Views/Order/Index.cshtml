@@ -12,7 +12,18 @@
 
     <div class="search-category-bar">
         <div class="container-fluid">
-            <h2 class=" mb-4">Danh sách hàng hóa</h2>
+            <div class="row">
+            <h2 class="mb-4 col-sm-10">Danh sách hàng hóa</h2>
+                <!-- Cart-->
+                <div class="d-flex-card col-sm-2 float-end">
+                    <button class="btn btn-outline-dark" type="submit">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                </div>
+
+            </div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -33,6 +44,7 @@
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
     </div>
+  
 
     <!-- fill data listproduct-->
     <div class="container">
@@ -43,6 +55,21 @@
     <script>
 
         $(document).ready(function () {
+
+            function addToCart() {
+                var cartCountElement = document.getElementById("count-card");
+                var currentCount = parseInt(cartCountElement.innerText);
+                debugger;
+
+                cartCountElement.innerText = currentCount + 1;
+            }
+            $(document).on('click', '#add-card', function (e) {
+                debugger;
+                if (event.target && event.target.id === "add-card") {
+                    addToCart();
+                }
+            });
+
 
             function loadProductTable() {
                 var categoryDropdown = $('#categoryDropdown').val();
