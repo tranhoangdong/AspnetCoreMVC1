@@ -12,7 +12,7 @@ namespace eShopSolution.Application.Dtos
         public int Quantity { get; set; }
         public int StatusId { get; set; }
         public string Note { get; set; }
-        public string statusName { get; set; }
+        public string StatusName { get; set; }
         public int OrdinalNumber { get; set; }
     }
 }

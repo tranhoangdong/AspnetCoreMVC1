@@ -9,7 +9,7 @@
             <th>Số ghế</th>
             <th>Trạng thái</th>
             <th>Số thứ tự</th>
-            <th>QR code</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
@@ -39,23 +39,30 @@
         }
     </tbody>
 </table>
+
+<script src="~/js/jquery-3.6.0.min.js"></script>
 <script src="~/js/qrcode.min.js"></script>
 
 <script>
     function generateQRCode(button) {
-        var id = button.getAttribute('data-id');
+        var id = $(button).data('id');  
         var url = 'https://localhost:44393/Table?Id=' + id;
-        var qrcodeDiv = document.getElementById('qrcode-' + id);
-        qrcodeDiv.innerHTML = '';
+        var $qrcodeDiv = $('#qrcode-' + id); 
+        $qrcodeDiv.empty();  
         QRCode.toDataURL(url, function (err, url) {
-            if (err) console.error(err);
-            var img = document.createElement('img');
-            img.src = url;
-            img.alt = 'QR code';
-            img.width = 150; 
-            qrcodeDiv.appendChild(img);
+            if (err) {
+                console.error(err);
+                return;
+            }
+            var img = $('<img>', {
+                src: url,
+                alt: 'QR code',
+                width: 150
+            });
+            $qrcodeDiv.append(img);
         });
     }
+
 
 </script>
 
