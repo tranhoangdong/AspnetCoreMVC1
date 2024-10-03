@@ -7,7 +7,7 @@
     <title>Danh sách sản phẩm</title>
     <link rel="stylesheet" href="~/css/Index.css" />
 
-  
+
 </head>
 <body>
 
@@ -61,9 +61,9 @@
                     </div>
                 </div>
             </div>
-           
-                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-            
+
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+
         </div>
     </form>
 
@@ -138,7 +138,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
 
 
@@ -154,7 +154,7 @@
                 $.ajax({
                     url: '@Url.Action("LoadProductTable", "Product")',
                     type: 'GET',
-                    data: { 
+                    data: {
                         name: name,
                         priceFilter: priceFilter,
                         sortColumn: sortColumn,
@@ -168,13 +168,13 @@
                         alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
                     }
                 });
-                }
+            }
 
 
             $(document).on('click', '#btnUpdateProduct', function (e) {
                 e.preventDefault();
                 var productId = $(this).data('id');
-            
+
                 var formData = {
                     Id: productId,
                     Name: $('#Name').val(),
@@ -223,7 +223,7 @@
                 debugger;
                 $('.productCheckbox').prop('checked', this.checked);
             });
-          
+
             $('#btnBulkUpdateProduct').on('click', function () {
                 debugger;
                 var checkboxes = $(".productCheckbox");
@@ -239,7 +239,7 @@
 
                 if (selectedProductIds.length > 0) {
                     $.ajax({
-                        url: '/Product/GetBulkUpdate?ids=' + selectedProductIds, 
+                        url: '/Product/GetBulkUpdate?ids=' + selectedProductIds,
                         method: 'GET',
                         success: function (data) {
                             debugger;
@@ -265,7 +265,7 @@
                 var bulkStock = $('#newStocks').val();
 
                 var formData = {
-                    Ids: selectedProductIds.join(','), 
+                    Ids: selectedProductIds.join(','),
                     Price: parseFloat(bulkPrice),
                     Stock: parseInt(bulkStock)
                 };

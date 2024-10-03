@@ -12,7 +12,18 @@
 
     <div class="search-category-bar">
         <div class="container-fluid">
-            <h2 class=" mb-4">Danh sách hàng hóa</h2>
+            <div class="row">
+                <h2 class="mb-4 col-sm-10">Danh sách hàng hóa</h2>
+                <!-- Cart-->
+                <div class="d-flex-card col-sm-2 float-end">
+                    <button class="btn btn-outline-dark"  >
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                </div>
+
+            </div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -30,9 +41,12 @@
 
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            <button type="submit" id ="submit-Category" class="btn btn-primary">Tìm kiếm</button>
+
         </div>
+
     </div>
+  
 
     <!-- fill data listproduct-->
     <div class="container">
@@ -43,6 +57,18 @@
     <script>
 
         $(document).ready(function () {
+
+            function addToCart() {
+                var cartCountElement = document.getElementById("count-card");
+                var currentCount = parseInt(cartCountElement.innerText);
+                debugger;
+
+                cartCountElement.innerText = currentCount + 1;
+            }
+            $(document).on('click', '#add-card', function (e) {
+                addToCart();
+            });
+
 
             function loadProductTable() {
                 var categoryDropdown = $('#categoryDropdown').val();
@@ -63,10 +89,17 @@
             }
 
             loadProductTable();
-            $('form.search-category-bar').on('submit', function (e) {
+
+            $(document).on('click', '#submit-Category', function (e) {
                 e.preventDefault();
                 loadProductTable();
             });
+            // $('form.search-category-bar').on('submit', function (e) {
+            //     debugger;
+            //     e.preventDefault();
+            //     loadProductTable();
+            // });
+           
         });
     </script>
 </body>
