@@ -13,10 +13,10 @@
     <div class="search-category-bar">
         <div class="container-fluid">
             <div class="row">
-            <h2 class="mb-4 col-sm-10">Danh sách hàng hóa</h2>
+                <h2 class="mb-4 col-sm-10">Danh sách hàng hóa</h2>
                 <!-- Cart-->
                 <div class="d-flex-card col-sm-2 float-end">
-                    <button class="btn btn-outline-dark" type="submit">
+                    <button class="btn btn-outline-dark"  >
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -41,8 +41,10 @@
 
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            <button type="submit" id ="submit-Category" class="btn btn-primary">Tìm kiếm</button>
+
         </div>
+
     </div>
   
 
@@ -64,10 +66,7 @@
                 cartCountElement.innerText = currentCount + 1;
             }
             $(document).on('click', '#add-card', function (e) {
-                debugger;
-                if (event.target && event.target.id === "add-card") {
-                    addToCart();
-                }
+                addToCart();
             });
 
 
@@ -90,10 +89,17 @@
             }
 
             loadProductTable();
-            $('form.search-category-bar').on('submit', function (e) {
+
+            $(document).on('click', '#submit-Category', function (e) {
                 e.preventDefault();
                 loadProductTable();
             });
+            // $('form.search-category-bar').on('submit', function (e) {
+            //     debugger;
+            //     e.preventDefault();
+            //     loadProductTable();
+            // });
+           
         });
     </script>
 </body>
