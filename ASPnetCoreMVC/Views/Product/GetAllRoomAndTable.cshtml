@@ -1,0 +1,68 @@
+﻿@model IEnumerable<eShopSolution.Web.Models.RoomAndTableViewModel>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Tên Phòng/Bàn</th>
+            <th>Ghi chú</th>
+            <th>Khu vực</th>
+            <th>Số ghế</th>
+            <th>Trạng thái</th>
+            <th>Số thứ tự</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var roomAndTable in Model)
+            {
+                <tr>
+                    <td>@roomAndTable.Name</td>
+                    <td>@roomAndTable.Note</td>
+                    <td>@roomAndTable.Area</td>
+                    <td>@roomAndTable.Quantity</td>
+                    <td>@roomAndTable.StatusName</td>
+                    <td>@roomAndTable.OrdinalNumber</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-id="@roomAndTable.Id" onclick="generateQRCode(this)">Tạo QR</button>
+                        <div id="qrcode-@roomAndTable.Id" class="mt-2"></div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7">Không có phòng bàn nào .</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="~/js/jquery-3.6.0.min.js"></script>
+<script src="~/js/qrcode.min.js"></script>
+
+<script>
+    function generateQRCode(button) {
+        var id = $(button).data('id');  
+        var url = 'https://localhost:44393/Table?Id=' + id;
+        var $qrcodeDiv = $('#qrcode-' + id); 
+        $qrcodeDiv.empty();  
+        QRCode.toDataURL(url, function (err, url) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            var img = $('<img>', {
+                src: url,
+                alt: 'QR code',
+                width: 150
+            });
+            $qrcodeDiv.append(img);
+        });
+    }
+
+
+</script>
+

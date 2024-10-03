@@ -24,17 +24,18 @@ namespace eShopSolution.Application.Service
         }
         public List<RoomAndTableDTO> GetAllRoomAndTable()
         {
-            var roomandtableDto = _eShopDbContext.RoomAndTables.Include(r => r.Status).Select(r => new RoomAndTableDTO
+            var roomAndTable = _eShopDbContext.RoomAndTables.Select(r => new RoomAndTableDTO
             {
+                Id = r.Id,
                 Name = r.Name,
                 Area = r.Area,
-               Note = r.Note,   
-               OrdinalNumber = r.OrdinalNumber,
-               Quantity = r.Quantity,
-               StatusId = r.StatusId,
+                Note = r.Note,
+                OrdinalNumber = r.OrdinalNumber,
+                Quantity = r.Quantity,
+                StatusId = r.StatusId,
+                statusName = r.Status.Name
             }).ToList();
-                
-            return roomandtableDto;
+            return roomAndTable;
         }
         public async Task<RoomAndTableDTO> AddRoomAndTableAsync(RoomAndTableDTO roomandtableDto)
         {
