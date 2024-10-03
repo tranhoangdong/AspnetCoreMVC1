@@ -22,10 +22,20 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
-        public List<RoomAndTable> GetAllRoomAndTable()
+        public List<RoomAndTableDTO> GetAllRoomAndTable()
         {
-            var roomandtable = _eShopDbContext.RoomAndTables.Include(r => r.Status).ToList();
-            return roomandtable;
+            var roomAndTable = _eShopDbContext.RoomAndTables.Select(r => new RoomAndTableDTO
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Area = r.Area,
+                Note = r.Note,
+                OrdinalNumber = r.OrdinalNumber,
+                Quantity = r.Quantity,
+                StatusId = r.StatusId,
+                statusName = r.Status.Name
+            }).ToList();
+            return roomAndTable;
         }
         public async Task<RoomAndTableDTO> AddRoomAndTableAsync(RoomAndTableDTO roomandtableDto)
         {

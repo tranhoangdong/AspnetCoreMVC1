@@ -10,7 +10,7 @@ namespace eShopSolution.Application.IService
 {
     public interface IRoomAndTableServices
     {
-        List<RoomAndTable> GetAllRoomAndTable();
+        List<RoomAndTableDTO> GetAllRoomAndTable();
         Task<RoomAndTableDTO> AddRoomAndTableAsync(RoomAndTableDTO roomandtableDto);
     }
 }

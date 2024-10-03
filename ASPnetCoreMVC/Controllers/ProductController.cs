@@ -183,7 +183,7 @@ namespace eShopSolution.Web.Controllers
 
         public IActionResult GetAllRoomAndTable()
         {
-           var roomandtable = _roomAndtableservices.GetAllRoomAndTable().Select(r => new RoomAndTableViewModel
+           var roomAndTable = _roomAndtableservices.GetAllRoomAndTable().Select(r => new RoomAndTableViewModel
            {
                Id = r.Id,
                Area = r.Area,
@@ -191,9 +191,9 @@ namespace eShopSolution.Web.Controllers
                Note = r.Note,
                OrdinalNumber =r.OrdinalNumber,
                Quantity = r.Quantity,
-               StatusName = r.Status?.Name,
+               StatusName = r.statusName,
            });
-            return View(roomandtable);
+            return View(roomAndTable);
         }
     }
 }
