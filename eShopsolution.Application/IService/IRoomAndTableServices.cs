@@ -1,4 +1,5 @@
 ﻿using eShopSolution.Application.Dtos;
+using eShopSolution.Data.Entities;
 
 using System;
 using System.Collections.Generic;

@@ -14,7 +14,5 @@ namespace eShopSolution.Data.Entities
         public string Note {  get; set; }
         public int OrdinalNumber { get; set; }
         public Status Status { get; set; }
-
-
     }
 }

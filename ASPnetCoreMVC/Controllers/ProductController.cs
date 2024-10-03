@@ -4,6 +4,7 @@ using eShopSolution.Web.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
+using eShopSolution.Application.Service;
 
 namespace eShopSolution.Web.Controllers
 {
@@ -11,11 +12,14 @@ namespace eShopSolution.Web.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
+        private readonly IRoomAndTableServices _roomAndtableservices;
 
-        public ProductController(IProductService productService , ICategoryService categoryService)
+
+        public ProductController(IProductService productService , ICategoryService categoryService, IRoomAndTableServices roomAndTableServices)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _roomAndtableservices = roomAndTableServices;
         }
 
         public IActionResult LoadProductTable(int? categoryId , string priceFilter, string sortColumn, string sortOrder, string name)
@@ -25,6 +29,7 @@ namespace eShopSolution.Web.Controllers
             {
                 ID = p.Id,
                 Name = p.Name,
+                Stock = p.Stock,
                 Price = p.Price,
                 Stock = p.Stock,
                 CategoryName = p.Category?.Name
@@ -175,6 +180,21 @@ namespace eShopSolution.Web.Controllers
             var productIds = request.Ids.Split(',').Select(x => int.Parse(x)).ToList();
             var result = await _productService.BulkUpdateProductsAsync(productIds, request.Stock, request.Price);
             return Json(new { success = result });
+        }
+
+        public IActionResult GetAllRoomAndTable()
+        {
+           var roomAndTable = _roomAndtableservices.GetAllRoomAndTable().Select(r => new RoomAndTableViewModel
+           {
+               Id = r.Id,
+               Area = r.Area,
+               Name = r.Name,
+               Note = r.Note,
+               OrdinalNumber =r.OrdinalNumber,
+               Quantity = r.Quantity,
+               StatusName = r.statusName,
+           });
+            return View(roomAndTable);
         }
     }
 }
