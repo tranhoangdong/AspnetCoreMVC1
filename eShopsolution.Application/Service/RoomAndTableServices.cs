@@ -33,7 +33,7 @@ namespace eShopSolution.Application.Service
                 OrdinalNumber = r.OrdinalNumber,
                 Quantity = r.Quantity,
                 StatusId = r.StatusId,
-                statusName = r.Status.Name
+                StatusName = r.Status.Name
             }).ToList();
             return roomAndTable;
         }
