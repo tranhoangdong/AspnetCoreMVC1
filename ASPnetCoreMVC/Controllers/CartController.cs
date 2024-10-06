@@ -29,6 +29,14 @@ namespace eShopSolution.Web.Controllers
         }
         public const string CARTKEY = "cart";
 
+        [HttpGet]
+        public IActionResult GetCartItemCount()
+        {
+            var cart = GetCartItems(); 
+            var count = cart.Sum(item => item.quantity);
+            return Json(new { count }); 
+        }
+
         List<CartItem> GetCartItems()
         {
             var session = HttpContext.Session;
@@ -51,9 +59,9 @@ namespace eShopSolution.Web.Controllers
             string jsoncart = JsonConvert.SerializeObject(ls);
             session.SetString(CARTKEY, jsoncart);
         }
-        public IActionResult AddToCart( int productid)
+        [HttpPost]
+        public IActionResult AddToCart(int productid)
         {
-
             var product = _eShopDbContext.Products
                 .Where(p => p.Id == productid)
                 .FirstOrDefault();
@@ -72,8 +80,9 @@ namespace eShopSolution.Web.Controllers
             }
 
             SaveCartSession(cart);
-            return RedirectToAction(nameof(Cart));
+            return Json(new { success = true, message = "Đã thêm vào giỏ hàng" });
         }
+
         public IActionResult Cart()
         {
             return View(GetCartItems());

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <title>Danh sách sản phẩm</title>
     <link rel="stylesheet" href="~/css/Index.css" />
-   
+
 </head>
 <body>
 
@@ -16,7 +16,7 @@
                 <h2 class="mb-4 col-sm-10">Danh sách hàng hóa</h2>
                 <!-- Cart-->
                 <div class="d-flex-card col-sm-2 float-end">
-                    <button class="btn btn-outline-dark"  >
+                    <button id="view-cart" class="btn btn-outline-dark">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -41,7 +41,7 @@
 
                 </div>
             </div>
-            <button type="submit" id ="submit-Category" class="btn btn-primary">Tìm kiếm</button>
+            <button type="submit" id="submit-Category" class="btn btn-primary">Tìm kiếm</button>
 
         </div>
 
@@ -76,6 +76,9 @@
     <script>
 
         $(document).ready(function () {
+            document.getElementById("view-cart").addEventListener("click", function () {
+                window.location.href = '/Cart/Cart';
+            });
 
             $('#count-card').hover(
                 function () {
@@ -119,16 +122,38 @@
 
             loadProductTable();
 
-            $(document).on('click', '#submit-Category', function (e) {
-                e.preventDefault();
-                loadProductTable();
+            function updateCartCount() {
+                $.ajax({
+                    url: '/Cart/GetCartItemCount',
+                    type: 'GET',
+                    success: function (response) {
+                        $("#count-card").text(response.count); 
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Có lỗi xảy ra khi cập nhật số lượng giỏ hàng: " + error);
+                    }
+                });
+            }
+
+            $(document).on('click', '#add-card', function (e) {
+                var productId = $(this).data("id");
+                $.ajax({
+                    url: '/Cart/AddToCart',
+                    type: 'POST',
+                    data: { productid: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            updateCartCount();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Có lỗi xảy ra: " + error);
+                    }
+                });
             });
-            // $('form.search-category-bar').on('submit', function (e) {
-            //     debugger;
-            //     e.preventDefault();
-            //     loadProductTable();
-            // });
-           
         });
     </script>
 </body>
