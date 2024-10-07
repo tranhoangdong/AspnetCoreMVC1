@@ -76,30 +76,28 @@
     <script>
 
         $(document).ready(function () {
-            document.getElementById("view-cart").addEventListener("click", function () {
+
+            $(document).on('click', "#view-cart", function (e) {
                 window.location.href = '/Cart/Cart';
             });
 
-            $('#count-card').hover(
-                function () {
-                    let refID = '#' + $(this).data('modal_id');
-                    $(refID).modal('show');
-                },
-                function () {
-                    let refID = '#' + $(this).data('modal_id');
-                    $(refID).modal('hide');
-                });
 
             function addToCart() {
-                var cartCountElement = document.getElementById("count-card");
-                var currentCount = parseInt(cartCountElement.innerText);
                 debugger;
+                var cartCountElement = document.getElementById("count-card");
+                let currentCount = parseInt(sessionStorage.getItem('cardCount')) || 0;
+                currentCount += 1;
+                cartCountElement.innerText = currentCount;
+                sessionStorage.setItem('cardCount', currentCount);
 
-                cartCountElement.innerText = currentCount + 1;
+
             }
             $(document).on('click', '#add-card', function (e) {
                 addToCart();
             });
+
+            var saveCount = parseInt(sessionStorage.getItem('cardCount')) || 0;
+            document.getElementById("count-card").innerText = saveCount;
 
 
             function loadProductTable() {

@@ -20,7 +20,6 @@ namespace eShopSolution.Web.Controllers
         private readonly EShopDbContext _eShopDbContext;
 
 
-
         public CartController(IProductService productService, ICategoryService categoryService, EShopDbContext eShopDbContext)
         {
             _productService = productService;
