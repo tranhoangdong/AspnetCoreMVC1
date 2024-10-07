@@ -7,7 +7,7 @@ namespace eShopSolution.Web.Models
 {
     public class CartviewModel
     {
-        public int quantity { set; get; }
+        public int Quantity { set; get; }
         public Product product { set; get; }
     }
 }
