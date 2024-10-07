@@ -8,6 +8,6 @@ namespace eShopSolution.Web.Models
     public class CartviewModel
     {
         public int Quantity { set; get; }
-        public Product product { set; get; }
+        public Product Product { set; get; }
     }
 }

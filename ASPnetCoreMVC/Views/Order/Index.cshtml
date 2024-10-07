@@ -96,7 +96,7 @@
             });
 
             var saveCount = parseInt(sessionStorage.getItem('cardCount')) || 0;
-            document.getElementById("count-card").innerText = saveCount;
+            $("#count-card").text(saveCount);
 
 
             function loadProductTable() {
