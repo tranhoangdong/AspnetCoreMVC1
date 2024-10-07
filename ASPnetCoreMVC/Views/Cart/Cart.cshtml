@@ -27,8 +27,8 @@
                 <td><input asp-for="@cartitem.quantity" id="@($"quantity-{cartitem.product.Id}")" /></td>
                 <td>@(thanhtien.ToString("n0"))</td>
                 <td>
-                    <button class="btn btn-success updatecartitem"
-                            data-productid="@cartitem.product.Id">
+                    <button class="btn btn-success updatecartitem" id="updatecartitemId"
+                            data-id="@cartitem.product.Id">
                         Cập nhật
                     </button>
                     <a asp-route="removecart" asp-route-productid="@cartitem.product.Id"
@@ -48,19 +48,20 @@
     @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".updatecartitem").click(function (event) {
+            $(document).on('click', "#updatecartitemId", function (event) {
                 event.preventDefault();
-                var productid = $(this).attr("data-productid");
+                debugger;
+                var productid = $(this).data('id');
                 var quantity = $("#quantity-" + productid).val();
                 $.ajax({
+                    url: '/Cart/UpdateCart',
                     type: "POST",
-                    url:"@Url.RouteUrl("updatecart")",
                     data: {
                         productid: productid,
                         quantity:quantity
                     },
                     success: function (result) {
-                        window.location.href = "@Url.RouteUrl("cart")";
+                        window.location.href = "@Url.Action("Cart", "Cart")";
                     }
                 });
             });

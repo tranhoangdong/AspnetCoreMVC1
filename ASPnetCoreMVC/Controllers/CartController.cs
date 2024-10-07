@@ -81,6 +81,18 @@ namespace eShopSolution.Web.Controllers
             SaveCartSession(cart);
             return Json(new { success = true, message = "Đã thêm vào giỏ hàng" });
         }
+        [HttpPost]
+        public IActionResult UpdateCart([FromForm] int productid, [FromForm] int quantity)
+        {
+            var cart = GetCartItems();
+            var cartitem = cart.Find(p => p.product.Id == productid);
+            if (cartitem != null)
+            {
+                cartitem.quantity = quantity;
+            }
+            SaveCartSession(cart);
+            return Ok();
+        }
 
         public IActionResult Cart()
         {
