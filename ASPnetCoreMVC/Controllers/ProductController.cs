@@ -120,7 +120,7 @@ namespace eShopSolution.Web.Controllers
             var allproductviewmodel = new EditProductPartialViewModel
             {
                 Categories = category,
-                            };
+            };
             return PartialView("_CreateProductPartial", allproductviewmodel);
         }
      
