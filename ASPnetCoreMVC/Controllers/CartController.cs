@@ -82,6 +82,22 @@ namespace eShopSolution.Web.Controllers
             return Json(new { success = true, message = "Đã thêm vào giỏ hàng" });
         }
         [HttpPost]
+        public IActionResult RemoveCart(int productid)
+        {
+            var cart = GetCartItems();
+            var cartitem = cart.Find(p => p.product.Id == productid);
+            if (cartitem != null)
+            {
+                cart.Remove(cartitem);
+                SaveCartSession(cart);
+                return Json(new { success = true, message = "Sản phẩm đã được xóa khỏi giỏ hàng." });
+            }
+
+            return Json(new { success = false, message = "Không tìm thấy sản phẩm trong giỏ hàng." });
+        }
+
+
+        [HttpPost]
         public IActionResult UpdateCart([FromForm] int productid, [FromForm] int quantity)
         {
             var cart = GetCartItems();
