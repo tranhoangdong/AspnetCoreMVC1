@@ -39,29 +39,27 @@ namespace eShopSolution.Web.Controllers
             return PartialView("_ProductTableOderPartial", orderViewModels);
         }
 
-        public IActionResult Index(int? categoryId, int Ban)
+        public IActionResult Index(int? categoryId, int ban)
         {
             var categories = _categoryService.GetAllCategory(true).Select(x => new CategoryViewModel
             {
                 Id = x.Id,
                 Name = x.Name
             }).ToList();
-            var roomAndTable = _roomAndTableServices.GetAllRoomAndTable().FirstOrDefault(r => r.Id == Ban);
+            var roomAndTable = _roomAndTableServices.GetNameTable(ban);
             var roomAndTableViewModel = new RoomAndTableViewModel
             {
                 Id = roomAndTable.Id,
                 Name = roomAndTable.Name,
-
             };
             var allProductViewModel = new AllProductViewModel
             {
                 Categories = categories,
-                RoomAndTable = roomAndTableViewModel
-
+                RoomAndTable = roomAndTableViewModel,
             };
             return View(allProductViewModel);
         }
-
+      
       
     }
 }
