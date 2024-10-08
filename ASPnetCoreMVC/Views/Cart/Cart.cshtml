@@ -49,7 +49,6 @@
         $(document).ready(function () {
             $(document).on('click', "#updatecartitemId", function (event) {
                 event.preventDefault();
-                debugger;
                 var productid = $(this).data('id');
                 var quantity = $("#quantity-" + productid).val();
                 $.ajax({
@@ -65,7 +64,6 @@
                 });
             });
             $(document).on('click', '.remove-cart', function (event) {
-                debugger;
                 event.preventDefault();
                 var productid = $(this).data('id');
                 var rowToRemove = $(this).closest('tr'); 
@@ -77,8 +75,6 @@
                         productid: productid,
                     },
                     success: function (result) {
-                        debugger;
-
                         if (result.success) {
                             rowToRemove.remove(); 
                         }

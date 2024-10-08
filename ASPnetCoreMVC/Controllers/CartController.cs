@@ -100,13 +100,13 @@ namespace eShopSolution.Web.Controllers
         [HttpPost]
         public IActionResult UpdateCart([FromForm] int productid, [FromForm] int quantity)
         {
-            var cart = GetCartItems();
-            var cartitem = cart.Find(p => p.product.Id == productid);
+            var carts = GetCartItems();
+            var cartitem = carts.Find(p => p.product.Id == productid);
             if (cartitem != null)
             {
                 cartitem.quantity = quantity;
             }
-            SaveCartSession(cart);
+            SaveCartSession(carts);
             return Ok();
         }
 
