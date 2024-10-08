@@ -25,7 +25,7 @@ namespace eShopSolution.Web.Controllers
             var products = _productService.GetAllProducts(categoryId);
             var orderViewModels = products.Select(p => new OrderViewModel
             {
-                ID = p.Id,
+                Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 CategoryName = p.Category?.Name

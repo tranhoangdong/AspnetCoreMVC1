@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <title>Danh sách sản phẩm</title>
     <link rel="stylesheet" href="~/css/Index.css" />
-   
+
 </head>
 <body>
 
@@ -16,7 +16,7 @@
                 <h2 class="mb-4 col-sm-10">Danh sách hàng hóa</h2>
                 <!-- Cart-->
                 <div class="d-flex-card col-sm-2 float-end">
-                    <button class="btn btn-outline-dark"  >
+                    <button id="view-cart" class="btn btn-outline-dark">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -41,13 +41,32 @@
 
                 </div>
             </div>
-            <button type="submit" id ="submit-Category" class="btn btn-primary">Tìm kiếm</button>
+            <button type="submit" id="submit-Category" class="btn btn-primary">Tìm kiếm</button>
 
         </div>
 
     </div>
-  
 
+    <div class="modal fade" id="Card-Modal" tabindex="-1" role="dialog" aria-labelledby="Card-ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Card-ModalLabel">Bulk Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="bulkUpdateProductModalContent">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnUpdateBulk" class="btn btn-success">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- fill data listproduct-->
     <div class="container">
         <h2>Danh sách sản phẩm</h2>
@@ -58,16 +77,26 @@
 
         $(document).ready(function () {
 
+            $(document).on('click', "#view-cart", function (e) {
+                window.location.href = '/Cart/Cart';
+            });
+
+
             function addToCart() {
                 var cartCountElement = document.getElementById("count-card");
-                var currentCount = parseInt(cartCountElement.innerText);
-                debugger;
+                let currentCount = parseInt(sessionStorage.getItem('cardCount')) || 0;
+                currentCount += 1;
+                cartCountElement.innerText = currentCount;
+                sessionStorage.setItem('cardCount', currentCount);
 
-                cartCountElement.innerText = currentCount + 1;
+
             }
             $(document).on('click', '#add-card', function (e) {
                 addToCart();
             });
+
+            var saveCount = parseInt(sessionStorage.getItem('cardCount')) || 0;
+            $("#count-card").text(saveCount);
 
 
             function loadProductTable() {
@@ -90,16 +119,38 @@
 
             loadProductTable();
 
-            $(document).on('click', '#submit-Category', function (e) {
-                e.preventDefault();
-                loadProductTable();
+            function updateCartCount() {
+                $.ajax({
+                    url: '/Cart/GetCartItemCount',
+                    type: 'GET',
+                    success: function (response) {
+                        $("#count-card").text(response.count); 
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Có lỗi xảy ra khi cập nhật số lượng giỏ hàng: " + error);
+                    }
+                });
+            }
+
+            $(document).on('click', '#add-card', function (e) {
+                var productId = $(this).data("id");
+                $.ajax({
+                    url: '/Cart/AddToCart',
+                    type: 'POST',
+                    data: { productid: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            updateCartCount();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Có lỗi xảy ra: " + error);
+                    }
+                });
             });
-            // $('form.search-category-bar').on('submit', function (e) {
-            //     debugger;
-            //     e.preventDefault();
-            //     loadProductTable();
-            // });
-           
         });
     </script>
 </body>

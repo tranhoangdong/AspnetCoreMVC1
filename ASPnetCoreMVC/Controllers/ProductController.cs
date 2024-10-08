@@ -29,7 +29,6 @@ namespace eShopSolution.Web.Controllers
             {
                 ID = p.Id,
                 Name = p.Name,
-                Stock = p.Stock,
                 Price = p.Price,
                 Stock = p.Stock,
                 CategoryName = p.Category?.Name
@@ -192,7 +191,7 @@ namespace eShopSolution.Web.Controllers
                Note = r.Note,
                OrdinalNumber =r.OrdinalNumber,
                Quantity = r.Quantity,
-               StatusName = r.statusName,
+               StatusName = r.StatusName,
            });
             return View(roomAndTable);
         }

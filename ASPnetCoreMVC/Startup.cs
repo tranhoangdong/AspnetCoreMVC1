@@ -1,4 +1,4 @@
-using eShopsolution.Data.EF;
+﻿using eShopsolution.Data.EF;
 using eShopSolution.Application.IService;
 using eShopSolution.Application.Service;
 using eShopSolution.Data.Entities;
@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using System;
 
 namespace eShopSolution.Web
 {
@@ -40,6 +42,11 @@ namespace eShopSolution.Web
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IRoomAndTableServices, RoomAndTableServices>();
 
+            services.AddDistributedMemoryCache();           
+            services.AddSession(cfg => {                   
+                cfg.Cookie.Name = "dongtran";            
+                cfg.IdleTimeout = new TimeSpan(0, 30, 0);  
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,7 +66,7 @@ namespace eShopSolution.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 
