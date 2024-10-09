@@ -1,0 +1,27 @@
+﻿@model CheckoutViewModel
+
+<h2>Chi tiết đơn hàng</h2>
+
+@if (Model.RoomAndTable != null)
+{
+    <h2 class="mb-4 col-sm-10"> Tên bàn: @Model.RoomAndTable.Name</h2>
+}
+<p>Thời gian đặt: @Model.OrderTime.ToString("dd/MM/yyyy HH:mm")</p>
+
+<table class="table">
+    <tr>
+        <th>Sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Giá</th>
+    </tr>
+    @foreach (var item in Model.CartItems)
+    {
+        <tr>
+            <td>@item.product.Name</td>
+            <td>@item.quantity</td>
+            <td>@(item.product.Price.ToString("n0"))</td>
+        </tr>
+    }
+</table>
+
+@* <a class="btn btn-primary" href="@Url.Action("ConfirmOrder", "Cart")">Xác nhận đơn hàng</a> *@
