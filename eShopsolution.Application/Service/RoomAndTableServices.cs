@@ -52,6 +52,10 @@ namespace eShopSolution.Application.Service
             await _eShopDbContext.SaveChangesAsync();
             return roomandtableDto;
         }
+        public RoomAndTable GetNameTable(int ban)
+        {
+            return _eShopDbContext.RoomAndTables.FirstOrDefault(r => r.Id == ban);
+        }
 
 
 

@@ -45,8 +45,9 @@
 
 <script>
     function generateQRCode(button) {
+        debugger;
         var id = $(button).data('id');  
-        var url = 'https://localhost:44393/Table?Id=' + id;
+        var url = 'https://localhost:5001/Order/Index?ban=' + id;
         var $qrcodeDiv = $('#qrcode-' + id); 
         $qrcodeDiv.empty();  
         QRCode.toDataURL(url, function (err, url) {
