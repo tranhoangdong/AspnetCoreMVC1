@@ -41,8 +41,10 @@
             <td></td>
         </tr>
     </table>
+    <button type="button" class="btn btn-primary" onclick="checkout(@Model.RoomAndTable.Id)">Thanh toán</button>
 
-    <a asp-controller="Order" asp-action="Checkout" class="btn btn-success">Gửi đơn hàng</a>
+
+
 
     @section Scripts {
     <script>

@@ -25,3 +25,18 @@
 </table>
 
 @* <a class="btn btn-primary" href="@Url.Action("ConfirmOrder", "Cart")">Xác nhận đơn hàng</a> *@
+<script>
+function checkout(banId) {
+    $.ajax({
+        url: '/Order/Checkout',
+        type: 'GET',
+        data: { ban: banId },  
+        success: function (response) {
+            window.location.href = '/Order/Checkout?ban=' + banId;
+        },
+        error: function (error) {
+            console.error('Có lỗi xảy ra:', error);
+        }
+    });
+}
+</script>
