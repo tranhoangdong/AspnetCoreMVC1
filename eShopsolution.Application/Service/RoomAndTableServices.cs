@@ -54,7 +54,7 @@ namespace eShopSolution.Application.Service
         }
         public RoomAndTable GetNameTable(int ban)
         {
-            return _eShopDbContext.RoomAndTables.FirstOrDefault(r => r.Id == ban);
+            return  _eShopDbContext.RoomAndTables.Find(ban);
         }
 
 

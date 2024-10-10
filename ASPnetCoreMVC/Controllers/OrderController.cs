@@ -3,8 +3,13 @@ using eShopSolution.Application.IService;
 using eShopSolution.Data.Entities;
 using eShopSolution.Web.Models;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
@@ -25,7 +30,7 @@ namespace eShopSolution.Web.Controllers
             _roomAndTableServices = roomAndTableServices;
 
         }
-
+        public const string CARTKEY = "cart";
         public IActionResult LoadProductTable(int? categoryId)
         {
             var products = _productService.GetAllProducts(categoryId);
@@ -59,7 +64,34 @@ namespace eShopSolution.Web.Controllers
             };
             return View(allProductViewModel);
         }
+
+        List<CartItem> GetCartItems()
+        {
+            var session = HttpContext.Session;
+            string jsoncart = session.GetString(CARTKEY);
+            if (jsoncart != null)
+            {
+                return JsonConvert.DeserializeObject<List<CartItem>>(jsoncart);
+            }
+            return new List<CartItem>();
+        }
       
-      
+        public IActionResult Checkout(int ban)
+        {
+            var cartItems = GetCartItems();
+            var roomAndTable = _roomAndTableServices.GetNameTable(ban);
+            var roomAndTableViewModel = new RoomAndTableViewModel
+            {
+                Id = roomAndTable.Id,
+                Name = roomAndTable.Name,
+            };
+            var checkoutModel = new CheckoutViewModel()
+            {
+                CartItems = cartItems,
+                OrderTime = DateTime.Now,
+                RoomAndTable = roomAndTableViewModel
+            };
+            return View(checkoutModel);
+        }
     }
 }
