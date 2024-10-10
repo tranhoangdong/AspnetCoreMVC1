@@ -42,11 +42,21 @@
         </tr>
     </table>
 
-    <a asp-controller="Order" asp-action="Checkout" class="btn btn-success">Gửi đơn hàng</a>
+    <a class="btn btn-success" id="GuiDonHang">Gửi đơn hàng</a>
 
     @section Scripts {
     <script>
         $(document).ready(function () {
+            $(document).on('click', "#GuiDonHang", function (event) {
+                var urlParams = new URLSearchParams(window.location.search);
+                var banValue = urlParams.get('ban');
+                var url = '/Order/Checkout';
+                if (banValue) {
+                    url += '?ban=' + banValue;
+                }
+
+                window.location.href = url;
+            });
             $(document).on('click', "#updatecartitemId", function (event) {
                 event.preventDefault();
                 var productid = $(this).data('id');
