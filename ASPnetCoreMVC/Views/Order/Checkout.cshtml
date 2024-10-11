@@ -23,10 +23,11 @@
         </tr>
     }
 </table>
-
+<a class="btn btn-primary" id="confirmOrder">Xác nhận đơn hàng</a>
 @* <a class="btn btn-primary" href="@Url.Action("ConfirmOrder", "Cart")">Xác nhận đơn hàng</a> *@
 <script>
-function checkout(banId) {
+    function checkout(banId) {
+
     $.ajax({
         url: '/Order/Checkout',
         type: 'GET',

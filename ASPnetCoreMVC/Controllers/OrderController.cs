@@ -21,13 +21,17 @@ namespace eShopSolution.Web.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IRoomAndTableServices _roomAndTableServices;
+        private readonly IOrderDetailService  _orderDetailService;
 
 
-        public OrderController(IProductService productService, ICategoryService categoryService, IRoomAndTableServices roomAndTableServices)
+
+        public OrderController(IProductService productService, ICategoryService categoryService, IRoomAndTableServices roomAndTableServices, IOrderDetailService orderDetailService)
         {
             _productService = productService;
             _categoryService = categoryService;
             _roomAndTableServices = roomAndTableServices;
+            _orderDetailService = orderDetailService;
+
 
         }
         public const string CARTKEY = "cart";
@@ -93,5 +97,25 @@ namespace eShopSolution.Web.Controllers
             };
             return View(checkoutModel);
         }
+        [HttpPost]
+        public async Task<IActionResult> SaveOrder([FromBody] OrderDetailViewModel orderDetailViewModel)
+        {
+            foreach (var item in orderDetailViewModel.OrderDetails)
+            {
+                var orderDetailDto = new OrderDetailDTO
+                {
+                    Name = item.Name,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    Tongtien = item.TongTien
+                };
+
+                await _orderDetailService.AddOrderDetailAsync(orderDetailDto);
+            }
+
+            return Ok(new { success = true, message = "Đơn hàng đã được lưu thành công!" });
+        }
+
+
     }
 }
