@@ -98,22 +98,69 @@ namespace eShopSolution.Web.Controllers
             return View(checkoutModel);
         }
         [HttpPost]
-        public async Task<IActionResult> SaveOrder([FromBody] OrderDetailViewModel orderDetailViewModel)
+        public async Task<IActionResult> SaveOrder(int ban)
         {
-            foreach (var item in orderDetailViewModel.OrderDetails)
+            var cartItems = GetCartItems();
+            var roomAndTable = _roomAndTableServices.GetNameTable(ban);
+            if (roomAndTable == null)
             {
-                var orderDetailDto = new OrderDetailDTO
-                {
-                    Name = item.Name,
-                    Price = item.Price,
-                    Quantity = item.Quantity,
-                    Tongtien = item.TongTien
-                };
-
-                await _orderDetailService.AddOrderDetailAsync(orderDetailDto);
+                return Json(new { success = false, message = "Bàn không tồn tại!" });
             }
 
-            return Ok(new { success = true, message = "Đơn hàng đã được lưu thành công!" });
+            var orderDetails = new List<OrderDetailDTO>();
+
+            foreach (var item in cartItems)
+            {
+                var orderDetailDTO = new OrderDetailDTO
+                {
+                    Name = item.product.Name,
+                    Price = item.product.Price,
+                    TableName = roomAndTable.Name,
+                    Time = DateTime.Now,
+                    Quantity = item.quantity,
+                    Tongtien = item.quantity * item.product.Price
+                };
+
+                orderDetails.Add(orderDetailDTO);
+            }
+
+            await _orderDetailService.AddOrderDetailAsync(orderDetails);
+
+            return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!" });
+        }
+
+
+        [HttpGet]
+        public IActionResult OrderDetails(int ban)
+        {
+            var cartItems = GetCartItems();
+            var roomAndTable = _roomAndTableServices.GetNameTable(ban);
+            if (roomAndTable == null)
+            {
+                return NotFound(); 
+            }
+
+            var roomAndTableViewModel = new RoomAndTableViewModel
+            {
+                Id = roomAndTable.Id,
+                Name = roomAndTable.Name,
+            };
+
+            decimal totalAmount = 0;
+            foreach (var item in cartItems)
+            {
+                totalAmount += item.quantity * item.product.Price;
+            }
+
+            var checkoutViewModel = new CheckoutViewModel
+            {
+                RoomAndTable = roomAndTableViewModel,
+                OrderTime = DateTime.Now,
+                CartItems = cartItems,
+                TotalAmount = totalAmount
+            };
+
+            return View(checkoutViewModel);
         }
 
 

@@ -4,6 +4,7 @@ using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
 using eShopSolution.Data.Entities;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,19 +19,39 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
-        public async Task<OrderDetailDTO> AddOrderDetailAsync(OrderDetailDTO orderDetailDTO)
+        public async Task<List<OrderDetailDTO>> AddOrderDetailAsync(List<OrderDetailDTO> orderDetailDTOs)
         {
-            var orderDetail = new OrderDetail
+            try
             {
-               Name = orderDetailDTO.Name,
-               Price = orderDetailDTO.Price,
-               Quantity = orderDetailDTO.Quantity,
-               Tongtien = orderDetailDTO.Tongtien   
-            };
-            _eShopDbContext.OrderDetails.Add(orderDetail);
-            await _eShopDbContext.SaveChangesAsync();
-            return orderDetailDTO;
+                var orderDetails = new List<OrderDetail>();
+                foreach (var orderDetailDTO in orderDetailDTOs)
+                {
+                    var orderDetail = new OrderDetail
+                    {
+                        Name = orderDetailDTO.Name,
+                        Price = orderDetailDTO.Price,
+                        TableName = orderDetailDTO.TableName,
+                        Time = orderDetailDTO.Time,
+                        Quantity = orderDetailDTO.Quantity,
+                        Tongtien = orderDetailDTO.Tongtien
+                    };
+
+                    orderDetails.Add(orderDetail);
+                    _eShopDbContext.OrderDetails.Add(orderDetail);
+                }
+
+                await _eShopDbContext.SaveChangesAsync();
+                return orderDetailDTOs;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
+
+
+
 
     }
 }

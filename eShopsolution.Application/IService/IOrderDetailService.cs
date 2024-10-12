@@ -6,6 +6,6 @@ namespace eShopSolution.Application.IService
 {
     public interface IOrderDetailService
     {
-        Task<OrderDetailDTO> AddOrderDetailAsync(OrderDetailDTO orderDetailDTO);
+        Task<List<OrderDetailDTO>> AddOrderDetailAsync(List<OrderDetailDTO> orderDetailDTOs);
     }
 }

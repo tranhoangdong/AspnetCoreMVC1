@@ -8,10 +8,10 @@ namespace eShopSolution.Web.Models
 {
     public class CheckoutViewModel
     {
-        public List<CartItem> CartItems { get; set; } 
-        public DateTime OrderTime { get; set; }
-        public RoomAndTableViewModel RoomAndTable { get; set; }
-
+            public List<CartItem> CartItems { get; set; }
+            public DateTime OrderTime { get; set; }
+            public RoomAndTableViewModel RoomAndTable { get; set; }
+            public decimal TotalAmount { get; set; } 
     }
 
 }

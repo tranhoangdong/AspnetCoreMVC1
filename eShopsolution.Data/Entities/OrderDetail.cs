@@ -8,9 +8,11 @@ namespace eShopSolution.Data.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string TableName { get; set; }
+        public DateTime Time { get; set; }
         public int Quantity { get; set; }
-        public float Price { get; set; }
-        public float Tongtien { get; set; }
+        public decimal Price { get; set; }
+        public decimal Tongtien { get; set; }
 
     }
 }
