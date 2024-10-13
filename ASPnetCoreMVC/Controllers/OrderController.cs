@@ -37,7 +37,11 @@ namespace eShopSolution.Web.Controllers
         public const string CARTKEY = "cart";
         public IActionResult LoadProductTable(int? categoryId)
         {
-            var products = _productService.GetAllProducts(categoryId);
+            var getAllProductsDTO = new GetAllProductsDTO
+            {
+                categoryId = categoryId
+            };
+            var products = _productService.GetAllProducts(getAllProductsDTO);
             var orderViewModels = products.Select(p => new OrderViewModel
             {
                 Id = p.Id,
@@ -79,24 +83,7 @@ namespace eShopSolution.Web.Controllers
             }
             return new List<CartItem>();
         }
-      
-        public IActionResult Checkout(int ban)
-        {
-            var cartItems = GetCartItems();
-            var roomAndTable = _roomAndTableServices.GetNameTable(ban);
-            var roomAndTableViewModel = new RoomAndTableViewModel
-            {
-                Id = roomAndTable.Id,
-                Name = roomAndTable.Name,
-            };
-            var checkoutModel = new CheckoutViewModel()
-            {
-                CartItems = cartItems,
-                OrderTime = DateTime.Now,
-                RoomAndTable = roomAndTableViewModel
-            };
-            return View(checkoutModel);
-        }
+
         [HttpPost]
         public async Task<IActionResult> SaveOrder(int ban)
         {
@@ -109,16 +96,16 @@ namespace eShopSolution.Web.Controllers
 
             var orderDetails = new List<OrderDetailDTO>();
 
-            foreach (var item in cartItems)
+            foreach (var orderDetail in cartItems)
             {
                 var orderDetailDTO = new OrderDetailDTO
                 {
-                    Name = item.product.Name,
-                    Price = item.product.Price,
+                    Name = orderDetail.product.Name,
+                    Price = orderDetail.product.Price,
                     TableName = roomAndTable.Name,
                     Time = DateTime.Now,
-                    Quantity = item.quantity,
-                    Tongtien = item.quantity * item.product.Price
+                    Quantity = orderDetail.quantity,
+                    Tongtien = orderDetail.quantity * orderDetail.product.Price
                 };
 
                 orderDetails.Add(orderDetailDTO);

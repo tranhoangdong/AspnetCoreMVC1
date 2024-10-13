@@ -80,7 +80,11 @@ namespace eShopSolution.Web.Controllers
             }
 
             SaveCartSession(cart);
-            return Json(new { success = true, message = "Đã thêm vào giỏ hàng" });
+            return Json(new JsonResultResponse 
+            {
+                Success = true,
+                Message = "Đã thêm vào giỏ hàng" 
+            });
         }
         [HttpPost]
         public IActionResult RemoveCart(int productid)
@@ -91,10 +95,18 @@ namespace eShopSolution.Web.Controllers
             {
                 cart.Remove(cartitem);
                 SaveCartSession(cart);
-                return Json(new { success = true, message = "Sản phẩm đã được xóa khỏi giỏ hàng." });
+                return Json(new JsonResultResponse
+                {
+                    Success = true,
+                    Message = "Sản phẩm đã được xóa khỏi giỏ hàng."
+                });
             }
 
-            return Json(new { success = false, message = "Không tìm thấy sản phẩm trong giỏ hàng." });
+            return Json(new JsonResultResponse
+            {
+                Success = false,
+                Message = "Không tìm thấy sản phẩm trong giỏ hàng."
+            });
         }
 
 
