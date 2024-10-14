@@ -48,7 +48,9 @@ namespace eShopSolution.Application.Service
         }
         public async Task<IEnumerable<Image>> GetImagesByProductIdAsync(int productId)
         {
-            return _eShopDbContext.Images.Where(img => img.ProductId == productId).ToList();
+            return await _eShopDbContext.Images
+        .Where(img => img.ProductId == productId)
+        .ToListAsync();
         }
         public async Task<Image> UpdateImageAsync(int id, IFormFile file, string name, int productId)
         {

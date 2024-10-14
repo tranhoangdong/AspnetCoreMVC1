@@ -18,6 +18,8 @@ namespace eShopsolution.Data.EF
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<RoomAndTable> RoomAndTables { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+
 
 
 
@@ -50,6 +52,13 @@ namespace eShopsolution.Data.EF
             builder.Entity<Status>(entity =>
             {
                 entity.ToTable("Status");
+
+                entity.Property(e => e.Id).HasColumnType("int");
+
+            });
+            builder.Entity<OrderDetail>(entity =>
+            {
+                entity.ToTable("OrderDetail");
 
                 entity.Property(e => e.Id).HasColumnType("int");
 

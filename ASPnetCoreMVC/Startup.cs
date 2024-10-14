@@ -41,6 +41,8 @@ namespace eShopSolution.Web
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IRoomAndTableServices, RoomAndTableServices>();
+            services.AddTransient<IOrderDetailService, OrderDetailService>();
+
 
             services.AddDistributedMemoryCache();           
             services.AddSession(cfg => {                   

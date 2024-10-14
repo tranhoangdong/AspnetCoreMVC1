@@ -19,7 +19,7 @@
                 }
                 <!-- Cart-->
                 <div class="d-flex-card col-sm-2 float-end">
-                    <button id="view-cart" class="btn btn-outline-dark">
+                    <button id="view-cart" data-banId ="@Model.RoomAndTable.Id" class="btn btn-outline-dark">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -81,7 +81,8 @@
         $(document).ready(function () {
 
             $(document).on('click', "#view-cart", function (e) {
-                window.location.href = '/Cart/Cart';
+                let banId = $(this).data('banid');
+                window.location.href = '/Cart/Cart?ban=' + banId;
             });
 
 
@@ -153,6 +154,10 @@
                         console.log("Có lỗi xảy ra: " + error);
                     }
                 });
+            });
+            $('#submit-Category').on('click', function (e) {
+                e.preventDefault();
+                loadProductTable();
             });
         });
     </script>

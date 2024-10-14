@@ -24,7 +24,15 @@ namespace eShopSolution.Web.Controllers
 
         public IActionResult LoadProductTable(int? categoryId , string priceFilter, string sortColumn, string sortOrder, string name)
         {
-            var products = _productService.GetAllProducts(categoryId , priceFilter, sortColumn, sortOrder,name );
+            var getAllProductsDTO = new GetAllProductsDTO
+            {
+                categoryId = categoryId,
+                priceFilter = priceFilter,
+                sortColumn = sortColumn,
+                sortOrder = sortOrder,
+                name = name
+            };
+            var products = _productService.GetAllProducts(getAllProductsDTO);
             var productViewModels = products.Select(p => new ProductDetailViewModel
             {
                 ID = p.Id,

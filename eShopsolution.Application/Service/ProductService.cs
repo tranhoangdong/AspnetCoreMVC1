@@ -19,9 +19,16 @@ namespace eShopSolution.Application.Service
             _eShopDbContext = eShopDbContext;
         }
 
-        public List<Product> GetAllProducts(int? categoryId, string name = "", string priceFilter = "", string sortColumn = "", string sortOrder = "")
+        public List<Product> GetAllProducts(GetAllProductsDTO getAllProductsDTO)
         {
+            var name = getAllProductsDTO.name;
+            var categoryId = getAllProductsDTO.categoryId;
+            var priceFilter = getAllProductsDTO.priceFilter;
+            var sortColumn = getAllProductsDTO.sortColumn;
+            var sortOrder = getAllProductsDTO.sortOrder;
+
             var products = _eShopDbContext.Products.Include(p => p.Category).ToList();
+
             if (!string.IsNullOrEmpty(name))
             {
                 products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -183,5 +190,6 @@ namespace eShopSolution.Application.Service
             await _eShopDbContext.SaveChangesAsync();
             return true;
         }
+
     }
 }

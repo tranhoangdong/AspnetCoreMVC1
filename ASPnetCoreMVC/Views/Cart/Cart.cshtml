@@ -41,12 +41,39 @@
             <td></td>
         </tr>
     </table>
+    <a class="btn btn-success" id="GuiDonHang">Gửi đơn hàng</a>
 
-    <a asp-controller="Product" asp-action="Checkout" class="btn btn-success">Gửi đơn hàng</a>
 
-    @section Scripts {
+
     <script>
-        $(document).ready(function () {
+            $(document).ready(function () {
+                $(document).on('click', "#GuiDonHang", function (event) {
+                    event.preventDefault();
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var banValue = urlParams.get('ban');
+
+                    $.ajax({
+                        url: '/Order/SaveOrder',
+                        type: 'POST',
+                        data: {
+                            ban: banValue,
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                                alert(result.message);
+                                window.location.href = '/Order/OrderDetails?ban=' + banValue;
+                            } else {
+                                alert("Lưu đơn hàng thất bại: " + result.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Đã xảy ra lỗiiiii: " + error);
+                        }
+                    });
+                });
+
+
+
             $(document).on('click', "#updatecartitemId", function (event) {
                 event.preventDefault();
                 var productid = $(this).data('id');
@@ -66,7 +93,7 @@
             $(document).on('click', '.remove-cart', function (event) {
                 event.preventDefault();
                 var productid = $(this).data('id');
-                var rowToRemove = $(this).closest('tr'); 
+                var rowToRemove = $(this).closest('tr');
 
                 $.ajax({
                     url: '/Cart/RemoveCart/',
@@ -76,7 +103,7 @@
                     },
                     success: function (result) {
                         if (result.success) {
-                            rowToRemove.remove(); 
+                            rowToRemove.remove();
                         }
                         alert(result.message);
                     },
@@ -87,9 +114,10 @@
             });
 
 
-        });
+           });
+
     </script>
-    }
+
 
 }
 else
