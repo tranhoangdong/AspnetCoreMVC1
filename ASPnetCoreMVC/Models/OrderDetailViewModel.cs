@@ -9,7 +9,7 @@ namespace eShopSolution.Web.Models
     {
         public string RoomAndTable { get; set; } 
         public DateTime OrderTime { get; set; }  
-        public List<CartItemViewModel> OrderDetails { get; set; }
+        public List<CartItemViewModel> CartItems { get; set; }
 
     }
 }

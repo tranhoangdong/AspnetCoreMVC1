@@ -85,7 +85,7 @@ namespace eShopSolution.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveOrder(int ban)
+        public  IActionResult SaveOrder(int ban)
         {
             var cartItems = GetCartItems();
             var roomAndTable = _roomAndTableServices.GetNameTable(ban);
@@ -111,7 +111,7 @@ namespace eShopSolution.Web.Controllers
                 orderDetails.Add(orderDetailDTO);
             }
 
-            await _orderDetailService.AddOrderDetailAsync(orderDetails);
+             _orderDetailService.AddOrderDetail(orderDetails);
 
             return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!" });
         }
@@ -126,22 +126,18 @@ namespace eShopSolution.Web.Controllers
             {
                 return NotFound(); 
             }
-
-            var roomAndTableViewModel = new RoomAndTableViewModel
-            {
-                Id = roomAndTable.Id,
-                Name = roomAndTable.Name,
-            };
-
             decimal totalAmount = 0;
+            decimal thanhTien = 0;
             foreach (var item in cartItems)
             {
-                totalAmount += item.quantity * item.product.Price;
+                thanhTien = item.quantity * item.product.Price;
+                totalAmount += thanhTien;
+                item.ThanhTien = thanhTien;
             }
-
             var checkoutViewModel = new CheckoutViewModel
             {
-                RoomAndTable = roomAndTableViewModel,
+                BanId = roomAndTable.Id,
+                banName = roomAndTable.Name,
                 OrderTime = DateTime.Now,
                 CartItems = cartItems,
                 TotalAmount = totalAmount

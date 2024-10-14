@@ -19,7 +19,7 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
-        public async Task<List<OrderDetailDTO>> AddOrderDetailAsync(List<OrderDetailDTO> orderDetailDTOs)
+        public void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs)
         {
             try
             {
@@ -40,8 +40,8 @@ namespace eShopSolution.Application.Service
                     _eShopDbContext.OrderDetails.Add(orderDetail);
                 }
 
-                await _eShopDbContext.SaveChangesAsync();
-                return orderDetailDTOs;
+                _eShopDbContext.SaveChanges();
+                return ;
             }
             catch (Exception ex)
             {

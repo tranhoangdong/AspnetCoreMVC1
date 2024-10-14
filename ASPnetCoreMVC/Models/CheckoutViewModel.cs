@@ -10,8 +10,10 @@ namespace eShopSolution.Web.Models
     {
             public List<CartItem> CartItems { get; set; }
             public DateTime OrderTime { get; set; }
-            public RoomAndTableViewModel RoomAndTable { get; set; }
             public decimal TotalAmount { get; set; } 
+            public int BanId { get; set; }
+            public string banName { get; set; }
+
     }
 
 }

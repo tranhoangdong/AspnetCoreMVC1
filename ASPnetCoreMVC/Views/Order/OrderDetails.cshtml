@@ -2,9 +2,9 @@
 
 <h2>Chi tiết đơn hàng</h2>
 
-@if (Model.RoomAndTable != null)
+@if (Model != null)
 {
-<h2 class="mb-4 col-sm-10">Tên bàn: @Model.RoomAndTable.Name</h2>
+<h2 class="mb-4 col-sm-10">Tên bàn: @Model.banName</h2>
 }
 <p>Thời gian đặt: @Model.OrderTime.ToString("dd/MM/yyyy HH:mm")</p>
 
@@ -17,12 +17,11 @@
     </tr>
     @foreach (var item in Model.CartItems)
     {
-    var thanhTien = item.quantity * item.product.Price; // Tính thành tiền cho từng sản phẩm
     <tr>
         <td>@item.product.Name</td>
         <td>@item.quantity</td>
         <td>@(item.product.Price.ToString("n0"))</td>
-        <td>@(thanhTien.ToString("n0"))</td> 
+        <td>@(item.ThanhTien.ToString("n0"))</td> 
     </tr>
     }
 </table>
