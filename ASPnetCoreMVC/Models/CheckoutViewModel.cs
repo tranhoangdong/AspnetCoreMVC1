@@ -13,7 +13,6 @@ namespace eShopSolution.Web.Models
             public decimal TotalAmount { get; set; } 
             public int BanId { get; set; }
             public string banName { get; set; }
-
     }
 
 }

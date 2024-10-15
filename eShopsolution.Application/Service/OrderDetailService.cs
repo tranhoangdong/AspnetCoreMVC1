@@ -19,25 +19,22 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
-        public void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs)
+        public void AddOrder(List<OrderDTO> orderDTOs)
         {
             try
             {
-                var orderDetails = new List<OrderDetail>();
-                foreach (var orderDetailDTO in orderDetailDTOs)
+                var orders = new List<Order>();
+                foreach (var OrderDTO in orderDTOs)
                 {
-                    var orderDetail = new OrderDetail
+                    var order = new Order
                     {
-                        Name = orderDetailDTO.Name,
-                        Price = orderDetailDTO.Price,
-                        TableName = orderDetailDTO.TableName,
-                        Time = orderDetailDTO.Time,
-                        Quantity = orderDetailDTO.Quantity,
-                        Tongtien = orderDetailDTO.Tongtien
+                        RoomAndTableId = OrderDTO.RoomAndTableId,
+                        OrderTime = OrderDTO.OrderTime,
+                        TotalAmount = OrderDTO.TotalAmount,
                     };
 
-                    orderDetails.Add(orderDetail);
-                    _eShopDbContext.OrderDetails.Add(orderDetail);
+                    orders.Add(order);
+                    _eShopDbContext.Orders.Add(order);
                 }
 
                 _eShopDbContext.SaveChanges();
@@ -49,9 +46,33 @@ namespace eShopSolution.Application.Service
                 throw;
             }
         }
+        public void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs)
+        {
+            try
+            {
+                var orderDetails = new List<OrderDetail>();
+                foreach (var orderDetailDTO in orderDetailDTOs)
+                {
+                    var orderDetail = new OrderDetail
+                    {
+                        OrderId = orderDetailDTO.OrderId, 
+                        ProductId = orderDetailDTO.ProductId,
+                        Quantity = orderDetailDTO.Quantity,
+                        Price = orderDetailDTO.Price,
+                        Total = orderDetailDTO.Total
+                    };
 
+                    orderDetails.Add(orderDetail);
+                    _eShopDbContext.OrderDetails.Add(orderDetail); 
+                }
 
-
-
+                _eShopDbContext.SaveChanges(); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw; 
+            }
+        }
     }
 }
