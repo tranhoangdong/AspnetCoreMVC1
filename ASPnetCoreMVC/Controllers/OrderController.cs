@@ -92,22 +92,18 @@ namespace eShopSolution.Web.Controllers
             {
                 return Json(new { success = false, message = "Bàn không tồn tại!" });
             }
-            var orders = new List<OrderDTO>();
 
-            foreach (var Order in cartItems)
+            var totalAmount = cartItems.Sum(item => item.quantity * item.product.Price);
+            var orderDTO = new OrderDTO
             {
-                var orderDTO = new OrderDTO
-                {
-                    RoomAndTableId = roomAndTable.Id,
-                    OrderTime = DateTime.Now,
-                    TotalAmount = Order.quantity* Order.product.Price
-                };
-                orders.Add(orderDTO); 
-            }
-            _orderDetailService.AddOrder(orders);
-
-            return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!" });
+                RoomAndTableId = roomAndTable.Id,
+                OrderTime = DateTime.Now,
+                TotalAmount = totalAmount
+            };
+            var orderId = _orderDetailService.AddOrder(orderDTO);
+            return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!", orderId = orderId });
         }
+
 
         [HttpGet]
         public IActionResult OrderDetails(int ban)
@@ -138,24 +134,22 @@ namespace eShopSolution.Web.Controllers
             return View(checkoutViewModel);
         }
         [HttpPost]
-        public IActionResult SaveOrderDetails(int ban)
+        public IActionResult SaveOrderDetails(int ban, int orderId)
         {
-            var cartItems = GetCartItems();
+            var cartItems = GetCartItems(); 
             var orderDetails = new List<OrderDetailDTO>();
-            decimal Total = 0;
 
-            foreach (var orderDetail in cartItems)
+            foreach (var cartItem in cartItems)
             {
-
                 var orderDetailDto = new OrderDetailDTO
                 {
-                    OrderId = orderDetail.order.Id,
-                    ProductId = orderDetail.product.Id,
-                    Quantity = orderDetail.quantity,
-                    Price = orderDetail.product.Price,
-                    Total = orderDetail.quantity * orderDetail.product.Price
+                    OrderId = orderId, 
+                    ProductId = cartItem.product.Id,
+                    Quantity = cartItem.quantity,
+                    Price = cartItem.product.Price,
+                    Total = cartItem.quantity * cartItem.product.Price
                 };
-                Total += orderDetailDto.Total;
+
                 orderDetails.Add(orderDetailDto);
             }
             _orderDetailService.AddOrderDetail(orderDetails);
@@ -166,6 +160,7 @@ namespace eShopSolution.Web.Controllers
                 message = "Chi tiết đơn hàng đã được lưu"
             });
         }
+
 
     }
 }

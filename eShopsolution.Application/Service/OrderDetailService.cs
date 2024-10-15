@@ -19,26 +19,19 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
-        public void AddOrder(List<OrderDTO> orderDTOs)
+        public int AddOrder(OrderDTO orderDTOs)
         {
             try
             {
-                var orders = new List<Order>();
-                foreach (var OrderDTO in orderDTOs)
+                var order = new Order
                 {
-                    var order = new Order
-                    {
-                        RoomAndTableId = OrderDTO.RoomAndTableId,
-                        OrderTime = OrderDTO.OrderTime,
-                        TotalAmount = OrderDTO.TotalAmount,
-                    };
-
-                    orders.Add(order);
-                    _eShopDbContext.Orders.Add(order);
-                }
-
+                    RoomAndTableId = orderDTOs.RoomAndTableId,
+                    OrderTime = orderDTOs.OrderTime,
+                    TotalAmount = orderDTOs.TotalAmount,
+                };
+                _eShopDbContext.Orders.Add(order);
                 _eShopDbContext.SaveChanges();
-                return ;
+                return order.Id; 
             }
             catch (Exception ex)
             {
@@ -55,7 +48,7 @@ namespace eShopSolution.Application.Service
                 {
                     var orderDetail = new OrderDetail
                     {
-                        OrderId = orderDetailDTO.OrderId, 
+                        OrderId = orderDetailDTO.OrderId,
                         ProductId = orderDetailDTO.ProductId,
                         Quantity = orderDetailDTO.Quantity,
                         Price = orderDetailDTO.Price,
@@ -63,15 +56,15 @@ namespace eShopSolution.Application.Service
                     };
 
                     orderDetails.Add(orderDetail);
-                    _eShopDbContext.OrderDetails.Add(orderDetail); 
+                    _eShopDbContext.OrderDetails.Add(orderDetail);
                 }
 
-                _eShopDbContext.SaveChanges(); 
+                _eShopDbContext.SaveChanges();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                throw; 
+                throw;
             }
         }
     }
