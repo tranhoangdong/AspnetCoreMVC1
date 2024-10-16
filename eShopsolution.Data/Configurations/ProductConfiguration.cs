@@ -10,6 +10,11 @@ namespace eShopSolution.Data.Configurations
         {
             builder.ToTable("Product");
             builder.Property(e => e.Id).HasColumnType("int");
+
+            builder.HasOne(e => e.Category)
+         .WithMany(e => e.Products)
+         .HasForeignKey(e => e.CategoryId)
+         .IsRequired();
         }
     }
 }

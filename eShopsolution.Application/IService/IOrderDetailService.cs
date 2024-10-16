@@ -8,5 +8,6 @@ namespace eShopSolution.Application.IService
     {
         int AddOrder(OrderDTO orderDTOs);
         void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs);
+         List<OrderDTO> GetAllOrders();
     }
 }

@@ -19,6 +19,18 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
+
+        public List<OrderDTO> GetAllOrders()
+        {
+            return _eShopDbContext.Orders.Select(o => new OrderDTO
+            {
+                Id = o.Id,
+                RoomAndTableId = o.RoomAndTableId,
+                OrderTime = o.OrderTime,
+                TotalAmount = o.TotalAmount,
+            }).ToList();
+        }
+
         public int AddOrder(OrderDTO orderDTOs)
         {
             try
@@ -28,6 +40,7 @@ namespace eShopSolution.Application.Service
                     RoomAndTableId = orderDTOs.RoomAndTableId,
                     OrderTime = orderDTOs.OrderTime,
                     TotalAmount = orderDTOs.TotalAmount,
+
                 };
                 _eShopDbContext.Orders.Add(order);
                 _eShopDbContext.SaveChanges();
@@ -66,6 +79,28 @@ namespace eShopSolution.Application.Service
                 Console.WriteLine(ex.Message);
                 throw;
             }
+        }
+        public OrderDTO GetOrderById(int id)
+        {
+            var order = _dbContext.Orders.Find(id);
+            if (order == null) return null;
+
+            return new OrderDTO
+            {
+                Id = order.Id,
+                RoomAndTableId = order.RoomAndTableId,
+                OrderTime = order.OrderTime,
+                TotalAmount = order.TotalAmount,
+                Status = order.Status,
+                OrderDetails = order.OrderDetails.Select(od => new OrderDetailDTO
+                {
+                    ProductId = od.ProductId,
+                    ProductName = od.Product.Name,
+                    Quantity = od.Quantity,
+                    Price = od.Price,
+                    Total = od.Total
+                }).ToList()
+            };
         }
     }
 }

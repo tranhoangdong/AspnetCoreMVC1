@@ -101,7 +101,10 @@ namespace eShopSolution.Web.Controllers
                 TotalAmount = totalAmount
             };
             var orderId = _orderDetailService.AddOrder(orderDTO);
-            return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!", orderId = orderId });
+            return Json(new JsonResultResponse
+            { success = true,
+              message = "Đơn hàng đã được lưu thành công!",
+              orderId = orderId });
         }
 
 
