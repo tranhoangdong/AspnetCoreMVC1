@@ -82,8 +82,8 @@ namespace eShopSolution.Web.Controllers
             SaveCartSession(cart);
             return Json(new JsonResultResponse 
             {
-                Success = true,
-                Message = "Đã thêm vào giỏ hàng" 
+                success = true,
+                message = "Đã thêm vào giỏ hàng" 
             });
         }
         [HttpPost]
@@ -97,15 +97,15 @@ namespace eShopSolution.Web.Controllers
                 SaveCartSession(cart);
                 return Json(new JsonResultResponse
                 {
-                    Success = true,
-                    Message = "Sản phẩm đã được xóa khỏi giỏ hàng."
+                    success = true,
+                    message = "Sản phẩm đã được xóa khỏi giỏ hàng."
                 });
             }
 
             return Json(new JsonResultResponse
             {
-                Success = false,
-                Message = "Không tìm thấy sản phẩm trong giỏ hàng."
+                success = false,
+                message = "Không tìm thấy sản phẩm trong giỏ hàng."
             });
         }
 

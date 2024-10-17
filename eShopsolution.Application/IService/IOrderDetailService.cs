@@ -6,6 +6,7 @@ namespace eShopSolution.Application.IService
 {
     public interface IOrderDetailService
     {
+        int AddOrder(OrderDTO orderDTOs);
         void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs);
     }
 }

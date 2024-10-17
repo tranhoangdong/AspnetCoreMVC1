@@ -19,6 +19,26 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
+        public int AddOrder(OrderDTO orderDTOs)
+        {
+            try
+            {
+                var order = new Order
+                {
+                    RoomAndTableId = orderDTOs.RoomAndTableId,
+                    OrderTime = orderDTOs.OrderTime,
+                    TotalAmount = orderDTOs.TotalAmount,
+                };
+                _eShopDbContext.Orders.Add(order);
+                _eShopDbContext.SaveChanges();
+                return order.Id; 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
         public void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs)
         {
             try
@@ -28,12 +48,11 @@ namespace eShopSolution.Application.Service
                 {
                     var orderDetail = new OrderDetail
                     {
-                        Name = orderDetailDTO.Name,
-                        Price = orderDetailDTO.Price,
-                        TableName = orderDetailDTO.TableName,
-                        Time = orderDetailDTO.Time,
+                        OrderId = orderDetailDTO.OrderId,
+                        ProductId = orderDetailDTO.ProductId,
                         Quantity = orderDetailDTO.Quantity,
-                        Tongtien = orderDetailDTO.Tongtien
+                        Price = orderDetailDTO.Price,
+                        Total = orderDetailDTO.Total
                     };
 
                     orderDetails.Add(orderDetail);
@@ -41,7 +60,6 @@ namespace eShopSolution.Application.Service
                 }
 
                 _eShopDbContext.SaveChanges();
-                return ;
             }
             catch (Exception ex)
             {
@@ -49,9 +67,5 @@ namespace eShopSolution.Application.Service
                 throw;
             }
         }
-
-
-
-
     }
 }

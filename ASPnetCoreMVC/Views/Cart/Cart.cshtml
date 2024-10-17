@@ -59,9 +59,24 @@
                             ban: banValue,
                         },
                         success: function (result) {
+                            debugger;
+
                             if (result.success) {
                                 alert(result.message);
                                 window.location.href = '/Order/OrderDetails?ban=' + banValue;
+                                $.ajax({
+                                    url: '/Order/SaveOrderDetails',
+                                    type: 'POST',
+                                    data: {
+                                        ban: banValue, orderId: result.orderId
+                                    },
+                                    success: function (detailsResult) {
+                                        console.log("Đã lưu chi tiết đơn hàng thành công!");
+                                    },
+                                    error: function (xhr, status, error) {
+                                        alert("Đã xảy ra lỗi khi lưu chi tiết đơn hàng: " + error);
+                                    }
+                                });
                             } else {
                                 alert("Lưu đơn hàng thất bại: " + result.message);
                             }

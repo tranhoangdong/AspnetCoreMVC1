@@ -4,14 +4,15 @@ using eShopSolution.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
 using System.Reflection.Emit;
 
 namespace eShopsolution.Data.EF
 {
     public class EShopDbContext : IdentityDbContext<ApplicationUser>
-    {  
-        public EShopDbContext( DbContextOptions options) : base(options)
-        {   
+    {
+        public EShopDbContext(DbContextOptions options) : base(options)
+        {
         }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Image> Images { get; set; }
@@ -19,13 +20,14 @@ namespace eShopsolution.Data.EF
         public virtual DbSet<RoomAndTable> RoomAndTables { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-
-
+        public virtual DbSet<Order> Orders { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new OrderConfiguration());
+            builder.ApplyConfiguration(new OrderDetailConfiguration());
 
             // TODO: refactor
             builder.Entity<Image>(entity =>
@@ -56,23 +58,37 @@ namespace eShopsolution.Data.EF
                 entity.Property(e => e.Id).HasColumnType("int");
 
             });
-            builder.Entity<OrderDetail>(entity =>
-            {
-                entity.ToTable("OrderDetail");
 
-                entity.Property(e => e.Id).HasColumnType("int");
-
-            });
             builder.Entity<Image>()
               .HasOne(e => e.product)
               .WithMany(e => e.Images)
               .HasForeignKey(e => e.ProductId)
               .IsRequired();
-             builder.Entity<Product>()
-              .HasOne(e => e.Category)
-              .WithMany(e => e.Products)
-              .HasForeignKey(e => e.CategoryId)
-              .IsRequired();
+
+            builder.Entity<Product>()
+             .HasOne(e => e.Category)
+             .WithMany(e => e.Products)
+             .HasForeignKey(e => e.CategoryId)
+             .IsRequired();
+
+            builder.Entity<OrderDetail>()
+            .HasOne(e => e.Product)
+            .WithMany(e => e.OrderDetails)
+            .HasForeignKey(e => e.ProductId)
+            .IsRequired();
+
+            builder.Entity<OrderDetail>()
+           .HasOne(e => e.Order)
+           .WithMany(e => e.OrderDetails)
+           .HasForeignKey(e => e.OrderId)
+           .IsRequired();
+
+            builder.Entity<Order>()
+           .HasOne(e => e.RoomAndTable)
+           .WithMany(e => e.Orders)
+           .HasForeignKey(e => e.RoomAndTableId)
+           .IsRequired();
+
             builder.Entity<RoomAndTable>()
              .HasOne(e => e.Status)
              .WithMany(e => e.RoomAndTables)
@@ -83,11 +99,11 @@ namespace eShopsolution.Data.EF
 
             builder.Entity<ApplicationUser>(entity =>
             {
-                entity.ToTable("User",  "Identity");
+                entity.ToTable("User", "Identity");
             });
             builder.Entity<IdentityRole>(entity =>
             {
-                entity.ToTable( "Role", "Identity");
+                entity.ToTable("Role", "Identity");
             });
             builder.Entity<IdentityUserRole<string>>(entity =>
             {

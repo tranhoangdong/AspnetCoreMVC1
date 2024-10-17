@@ -83,9 +83,8 @@ namespace eShopSolution.Web.Controllers
             }
             return new List<CartItem>();
         }
-
         [HttpPost]
-        public  IActionResult SaveOrder(int ban)
+        public IActionResult SaveOrder(int ban)
         {
             var cartItems = GetCartItems();
             var roomAndTable = _roomAndTableServices.GetNameTable(ban);
@@ -94,26 +93,15 @@ namespace eShopSolution.Web.Controllers
                 return Json(new { success = false, message = "Bàn không tồn tại!" });
             }
 
-            var orderDetails = new List<OrderDetailDTO>();
-
-            foreach (var orderDetail in cartItems)
+            var totalAmount = cartItems.Sum(item => item.quantity * item.product.Price);
+            var orderDTO = new OrderDTO
             {
-                var orderDetailDTO = new OrderDetailDTO
-                {
-                    Name = orderDetail.product.Name,
-                    Price = orderDetail.product.Price,
-                    TableName = roomAndTable.Name,
-                    Time = DateTime.Now,
-                    Quantity = orderDetail.quantity,
-                    Tongtien = orderDetail.quantity * orderDetail.product.Price
-                };
-
-                orderDetails.Add(orderDetailDTO);
-            }
-
-             _orderDetailService.AddOrderDetail(orderDetails);
-
-            return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!" });
+                RoomAndTableId = roomAndTable.Id,
+                OrderTime = DateTime.Now,
+                TotalAmount = totalAmount
+            };
+            var orderId = _orderDetailService.AddOrder(orderDTO);
+            return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!", orderId = orderId });
         }
 
 
@@ -144,6 +132,33 @@ namespace eShopSolution.Web.Controllers
             };
 
             return View(checkoutViewModel);
+        }
+        [HttpPost]
+        public IActionResult SaveOrderDetails(int ban, int orderId)
+        {
+            var cartItems = GetCartItems(); 
+            var orderDetails = new List<OrderDetailDTO>();
+
+            foreach (var cartItem in cartItems)
+            {
+                var orderDetailDto = new OrderDetailDTO
+                {
+                    OrderId = orderId, 
+                    ProductId = cartItem.product.Id,
+                    Quantity = cartItem.quantity,
+                    Price = cartItem.product.Price,
+                    Total = cartItem.quantity * cartItem.product.Price
+                };
+
+                orderDetails.Add(orderDetailDto);
+            }
+            _orderDetailService.AddOrderDetail(orderDetails);
+
+            return Json(new JsonResultResponse
+            {
+                success = true,
+                message = "Chi tiết đơn hàng đã được lưu"
+            });
         }
 
 

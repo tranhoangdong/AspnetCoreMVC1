@@ -9,5 +9,6 @@ namespace eShopSolution.Data.Entities
         public int quantity { set; get; }
         public decimal ThanhTien { get; set; }
         public Product product { set; get; }
+        public Order order { get; set; }
     }
 }
