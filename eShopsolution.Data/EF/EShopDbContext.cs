@@ -65,30 +65,6 @@ namespace eShopsolution.Data.EF
               .HasForeignKey(e => e.ProductId)
               .IsRequired();
 
-            builder.Entity<Product>()
-             .HasOne(e => e.Category)
-             .WithMany(e => e.Products)
-             .HasForeignKey(e => e.CategoryId)
-             .IsRequired();
-
-            builder.Entity<OrderDetail>()
-            .HasOne(e => e.Product)
-            .WithMany(e => e.OrderDetails)
-            .HasForeignKey(e => e.ProductId)
-            .IsRequired();
-
-            builder.Entity<OrderDetail>()
-           .HasOne(e => e.Order)
-           .WithMany(e => e.OrderDetails)
-           .HasForeignKey(e => e.OrderId)
-           .IsRequired();
-
-            builder.Entity<Order>()
-           .HasOne(e => e.RoomAndTable)
-           .WithMany(e => e.Orders)
-           .HasForeignKey(e => e.RoomAndTableId)
-           .IsRequired();
-
             builder.Entity<RoomAndTable>()
              .HasOne(e => e.Status)
              .WithMany(e => e.RoomAndTables)

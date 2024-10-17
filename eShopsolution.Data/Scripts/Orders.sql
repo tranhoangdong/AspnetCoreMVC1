@@ -7,3 +7,7 @@
     Note NVARCHAR(250),                    
     FOREIGN KEY (RoomAndTableId) REFERENCES RoomAndTable(Id) 
 );
+
+ALTER TABLE Orders
+ADD IsPaid BIT NOT NULL DEFAULT 0;
+

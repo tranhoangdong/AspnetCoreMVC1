@@ -12,6 +12,6 @@ namespace eShopSolution.Application.IService
     {
         List<RoomAndTableDTO> GetAllRoomAndTable();
         Task<RoomAndTableDTO> AddRoomAndTableAsync(RoomAndTableDTO roomandtableDto);
-        RoomAndTable GetNameTable(int ban);
+        string GetNameTable(int ban);
     }
 }
