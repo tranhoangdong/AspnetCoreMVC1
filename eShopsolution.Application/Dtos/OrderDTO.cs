@@ -12,6 +12,6 @@ namespace eShopSolution.Application.Dtos
         public decimal TotalAmount { get; set; }
         public string Status { get; set; }
         public string Note { get; set; }
-        List<OrderDetailDTO> OrderDetailDTOs { get; set; }
+        public List<OrderDetailDTO> OrderDetailDTOs { get; set; }
     }
 }
