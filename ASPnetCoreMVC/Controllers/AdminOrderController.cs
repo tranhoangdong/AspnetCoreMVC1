@@ -1,4 +1,5 @@
-﻿using eShopSolution.Application.IService;
+﻿using eShopSolution.Application.Dtos;
+using eShopSolution.Application.IService;
 using eShopSolution.Web.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -26,31 +27,27 @@ namespace eShopSolution.Web.Controllers
                 Id = o.Id,
                 RoomAndTableId = o.RoomAndTableId,
                 TotalAmount = o.TotalAmount,
-                OrderTime = o.OrderTime,
+                OrderTime = o.OrderTime, 
+                IsPaid = o.IsPaid
             }).ToList();
-
             return View(orderViewModels);
         }
-        public IActionResult Details(int id)
+        [HttpPost]
+        public IActionResult PayOrder(int id)
         {
             var order = _orderDetailService.GetOrderById(id);
-            if (order == null) return NotFound();
-
-            var orderDetailViewModel = new OrderDetailsViewModel
+            if (order != null && !order.IsPaid)  
             {
-                Id = order.Id,
-                RoomAndTableId = order.RoomAndTableId,
-                OrderTime = order.OrderTime,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status,
-                OrderDetails = order.OrderDetails.Select(od => new OrderItemViewModel
+                order.IsPaid = true;
+                var oderDto = new OrderDTO
                 {
-                    Quantity = od.Quantity,
-                    Price = od.Price,
-                    Total = od.Total
-                }).ToList()
-            };
-            return View(orderDetailViewModel);
+                    Id = order.Id,
+                    IsPaid = order.IsPaid,
+                };
+                _orderDetailService.UpdateOrder(oderDto);
+            }
+          
+            return RedirectToAction("Index");  
         }
     }
 }

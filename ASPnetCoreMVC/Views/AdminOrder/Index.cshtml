@@ -21,13 +21,14 @@
                 <td>@order.RoomAndTableId</td>
                 <td>@order.TotalAmount</td>
                 <td>@order.OrderTime</td>
+                <td>@(order.IsPaid ? "Đã thanh toán" : "Chưa thanh toán")</td>
                 <td>
-                    <a href="@Url.Action("Details", "AdminOrder", new { id = order.Id })">Chi tiết</a>
-                    <form asp-action="UpdateStatus" method="post">
-                        <input type="hidden" name="id" value="@order.Id" />
-
-                        <button type="submit">Cập nhật</button>
-                    </form>
+                    @if (!order.IsPaid)
+                    {
+                        <form asp-action="PayOrder" method="post">
+                            <input type="hidden" name="id" value="@order.Id" />
+                            <button type="submit">Thanh toán</button>
+                        </form>}
                 </td>
             </tr>
         }

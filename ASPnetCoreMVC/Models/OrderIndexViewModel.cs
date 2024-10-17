@@ -11,5 +11,6 @@ namespace eShopSolution.Web.Models
         public int RoomAndTableId { get; set; }
         public decimal TotalAmount { get; set; }
         public DateTime OrderTime { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

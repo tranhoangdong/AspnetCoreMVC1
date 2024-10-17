@@ -26,4 +26,4 @@ namespace eShopSolution.Web.Models
         public decimal Total { get; set; }
     }
 }
-}
+

@@ -28,9 +28,23 @@ namespace eShopSolution.Application.Service
                 RoomAndTableId = o.RoomAndTableId,
                 OrderTime = o.OrderTime,
                 TotalAmount = o.TotalAmount,
+                IsPaid = o.IsPaid
             }).ToList();
         }
-
+        public OrderDTO GetOrderById(int id)
+        {
+            return _eShopDbContext.Orders
+                .Where(o => o.Id == id)
+                .Select(o => new OrderDTO
+                {
+                    Id = o.Id,
+                    RoomAndTableId = o.RoomAndTableId,
+                    OrderTime = o.OrderTime,
+                    TotalAmount = o.TotalAmount,
+                    IsPaid = o.IsPaid  
+        })
+                .FirstOrDefault();
+        }
         public int AddOrder(OrderDTO orderDTOs)
         {
             try
@@ -59,57 +73,17 @@ namespace eShopSolution.Application.Service
                 throw;
             }
         }
-        //public void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs)
-        //{
-        //    try
-        //    {
-        //        var orderDetails = new List<OrderDetail>();
-        //        foreach (var orderDetailDTO in orderDetailDTOs)
-        //        {
-        //            var orderDetail = new OrderDetail
-        //            {
-        //                OrderId = orderDetailDTO.OrderId,
-        //                ProductId = orderDetailDTO.ProductId,
-        //                Quantity = orderDetailDTO.Quantity,
-        //                Price = orderDetailDTO.Price,
-        //                Total = orderDetailDTO.Total
-        //            };
 
-        //            orderDetails.Add(orderDetail);
-        //            _eShopDbContext.OrderDetails.Add(orderDetail);
-        //        }
-
-        //        _eShopDbContext.SaveChanges();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        throw;
-        //    }
-        //}
-        public OrderDTO GetOrderById(int id)
+        public void UpdateOrder(OrderDTO orderDTO)
         {
-            var order = _eShopDbContext.Orders.Include(x => x.OrderDetails).FirstOrDefault(x => x.Id == id);
-            if (order == null)
+            var order = _eShopDbContext.Orders.Find(orderDTO.Id);
+            if (order != null)
             {
-                return null;
+                order.IsPaid = orderDTO.IsPaid;  
+                _eShopDbContext.SaveChanges();  
             }
-
-            return new OrderDTO
-            {
-                Id = order.Id,
-                RoomAndTableId = order.RoomAndTableId,
-                OrderTime = order.OrderTime,
-                TotalAmount = order.TotalAmount,
-                OrderDetailDTOs = order.OrderDetails.Select(od => new OrderDetailDTO
-                {
-                    ProductId = od.ProductId,
-                    ProductName = od.Product.Name,
-                    Quantity = od.Quantity,
-                    Price = od.Price,
-                    Total = od.Total
-                }).ToList()
-            };
         }
+
+       
     }
 }
