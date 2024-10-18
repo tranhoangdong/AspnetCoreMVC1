@@ -31,36 +31,32 @@ namespace eShopSolution.Application.Service
                 IsPaid = o.IsPaid
             }).ToList();
         }
-        public OrderDTO GetOrderById(int id)
+        public void PayOrder(int id)
         {
-            return _eShopDbContext.Orders
-                .Where(o => o.Id == id)
-                .Select(o => new OrderDTO
-                {
-                    Id = o.Id,
-                    RoomAndTableId = o.RoomAndTableId,
-                    OrderTime = o.OrderTime,
-                    TotalAmount = o.TotalAmount,
-                    IsPaid = o.IsPaid  
-        })
-                .FirstOrDefault();
+            var order = _eShopDbContext.Orders.Find(id);
+            if (order != null && !order.IsPaid)
+            {
+                order.IsPaid = true; 
+                _eShopDbContext.SaveChanges();
+            }
         }
         public int AddOrder(OrderDTO orderDTOs)
         {
             try
             {
+                var totalAmount = orderDTOs.OrderDetailDTOs.Sum(odt => odt.Quantity * odt.Price);
                 var order = new Order
                 {
                     RoomAndTableId = orderDTOs.RoomAndTableId,
                     OrderTime = orderDTOs.OrderTime,
-                    TotalAmount = orderDTOs.TotalAmount,
+                    TotalAmount = totalAmount,
                     OrderDetails = orderDTOs.OrderDetailDTOs.Select(odt => new OrderDetail
                     {
                         OrderId = odt.OrderId,
                         ProductId = odt.ProductId,
                         Quantity = odt.Quantity,
                         Price = odt.Price,
-                        Total = odt.Total
+                        Total = odt.Quantity * odt.Price
                     }).ToList()
                 };
                 _eShopDbContext.Orders.Add(order);
@@ -71,16 +67,6 @@ namespace eShopSolution.Application.Service
             {
                 Console.WriteLine(ex.Message);
                 throw;
-            }
-        }
-
-        public void UpdateOrder(OrderDTO orderDTO)
-        {
-            var order = _eShopDbContext.Orders.Find(orderDTO.Id);
-            if (order != null)
-            {
-                order.IsPaid = orderDTO.IsPaid;  
-                _eShopDbContext.SaveChanges();  
             }
         }
 

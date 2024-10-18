@@ -10,7 +10,6 @@ namespace eShopSolution.Application.IService
     {
         int AddOrder(OrderDTO orderDTOs);
         List<OrderDTO> GetAllOrders();
-        OrderDTO GetOrderById(int id);
-        void UpdateOrder(OrderDTO orderDTO);
+        void PayOrder(int id);
     }
 }

@@ -93,18 +93,15 @@ namespace eShopSolution.Web.Controllers
                 return Json(new { success = false, message = "Bàn không tồn tại!" });
             }
 
-            var totalAmount = cartItems.Sum(item => item.quantity * item.product.Price);
             var orderDTO = new OrderDTO
             {
                 RoomAndTableId = ban,
                 OrderTime = DateTime.Now,
-                TotalAmount = totalAmount,
                 OrderDetailDTOs = cartItems.Select(item => new OrderDetailDTO
                 {
                     ProductId = item.product.Id,
                     Quantity = item.quantity,
                     Price = item.product.Price,
-                    Total = item.quantity * item.product.Price
                 }).ToList()
 
             };
@@ -144,34 +141,6 @@ namespace eShopSolution.Web.Controllers
 
             return View(checkoutViewModel);
         }
-        //[HttpPost]
-        //public IActionResult SaveOrderDetails(int ban, int orderId)
-        //{
-        //    var cartItems = GetCartItems(); 
-        //    var orderDetails = new List<OrderDetailDTO>();
-
-        //    foreach (var cartItem in cartItems)
-        //    {
-        //        var orderDetailDto = new OrderDetailDTO
-        //        {
-        //            OrderId = orderId, 
-        //            ProductId = cartItem.product.Id,
-        //            Quantity = cartItem.quantity,
-        //            Price = cartItem.product.Price,
-        //            Total = cartItem.quantity * cartItem.product.Price
-        //        };
-
-        //        orderDetails.Add(orderDetailDto);
-        //    }
-        //    _orderDetailService.AddOrderDetail(orderDetails);
-
-        //    return Json(new JsonResultResponse
-        //    {
-        //        success = true,
-        //        message = "Chi tiết đơn hàng đã được lưu"
-        //    });
-        //}
-
 
     }
 }

@@ -35,19 +35,8 @@ namespace eShopSolution.Web.Controllers
         [HttpPost]
         public IActionResult PayOrder(int id)
         {
-            var order = _orderDetailService.GetOrderById(id);
-            if (order != null && !order.IsPaid)  
-            {
-                order.IsPaid = true;
-                var oderDto = new OrderDTO
-                {
-                    Id = order.Id,
-                    IsPaid = order.IsPaid,
-                };
-                _orderDetailService.UpdateOrder(oderDto);
-            }
-          
-            return RedirectToAction("Index");  
+            _orderDetailService.PayOrder(id); 
+            return RedirectToAction("Index");
         }
     }
 }
