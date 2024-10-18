@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace eShopSolution.Application.Dtos
+namespace eShopSolution.Web.Models
 {
-    public class OrderDetailDTO
+    public class OrderItemViewModel
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
@@ -12,6 +13,5 @@ namespace eShopSolution.Application.Dtos
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public decimal Total { get; set; }
-        public string ProductName { get;  set; }
     }
 }

@@ -62,8 +62,8 @@ namespace eShopSolution.Web.Controllers
             var roomAndTable = _roomAndTableServices.GetNameTable(ban);
             var roomAndTableViewModel = new RoomAndTableViewModel
             {
-                Id = roomAndTable.Id,
-                Name = roomAndTable.Name,
+                Id = ban,
+                Name = roomAndTable,
             };
             var allProductViewModel = new AllProductViewModel
             {
@@ -93,15 +93,23 @@ namespace eShopSolution.Web.Controllers
                 return Json(new { success = false, message = "Bàn không tồn tại!" });
             }
 
-            var totalAmount = cartItems.Sum(item => item.quantity * item.product.Price);
             var orderDTO = new OrderDTO
             {
-                RoomAndTableId = roomAndTable.Id,
+                RoomAndTableId = ban,
                 OrderTime = DateTime.Now,
-                TotalAmount = totalAmount
+                OrderDetailDTOs = cartItems.Select(item => new OrderDetailDTO
+                {
+                    ProductId = item.product.Id,
+                    Quantity = item.quantity,
+                    Price = item.product.Price,
+                }).ToList()
+
             };
-            var orderId = _orderDetailService.AddOrder(orderDTO);
-            return Json(new { success = true, message = "Đơn hàng đã được lưu thành công!", orderId = orderId });
+            _orderDetailService.AddOrder(orderDTO);
+            return Json(new JsonResultResponse
+            { success = true,
+              message = "Đơn hàng đã được lưu thành công!",
+             });
         }
 
 
@@ -124,8 +132,8 @@ namespace eShopSolution.Web.Controllers
             }
             var checkoutViewModel = new CheckoutViewModel
             {
-                BanId = roomAndTable.Id,
-                banName = roomAndTable.Name,
+                BanId = ban,
+                banName = roomAndTable,
                 OrderTime = DateTime.Now,
                 CartItems = cartItems,
                 TotalAmount = totalAmount
@@ -133,34 +141,6 @@ namespace eShopSolution.Web.Controllers
 
             return View(checkoutViewModel);
         }
-        [HttpPost]
-        public IActionResult SaveOrderDetails(int ban, int orderId)
-        {
-            var cartItems = GetCartItems(); 
-            var orderDetails = new List<OrderDetailDTO>();
-
-            foreach (var cartItem in cartItems)
-            {
-                var orderDetailDto = new OrderDetailDTO
-                {
-                    OrderId = orderId, 
-                    ProductId = cartItem.product.Id,
-                    Quantity = cartItem.quantity,
-                    Price = cartItem.product.Price,
-                    Total = cartItem.quantity * cartItem.product.Price
-                };
-
-                orderDetails.Add(orderDetailDto);
-            }
-            _orderDetailService.AddOrderDetail(orderDetails);
-
-            return Json(new JsonResultResponse
-            {
-                success = true,
-                message = "Chi tiết đơn hàng đã được lưu"
-            });
-        }
-
 
     }
 }

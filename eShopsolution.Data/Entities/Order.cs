@@ -11,6 +11,7 @@ namespace eShopSolution.Data.Entities
         public DateTime OrderTime { get; set; } 
         public decimal TotalAmount { get; set; }  
         public string Note { get; set; }
+        public bool IsPaid { get; set; }
         public RoomAndTable RoomAndTable { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }

@@ -3,7 +3,7 @@
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
 using eShopSolution.Data.Entities;
-
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +19,45 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
+
+        public List<OrderDTO> GetAllOrders()
+        {
+            return _eShopDbContext.Orders.Select(o => new OrderDTO
+            {
+                Id = o.Id,
+                RoomAndTableId = o.RoomAndTableId,
+                OrderTime = o.OrderTime,
+                TotalAmount = o.TotalAmount,
+                IsPaid = o.IsPaid
+            }).ToList();
+        }
+        public void PayOrder(int id)
+        {
+            var order = _eShopDbContext.Orders.Find(id);
+            if (order != null && !order.IsPaid)
+            {
+                order.IsPaid = true; 
+                _eShopDbContext.SaveChanges();
+            }
+        }
         public int AddOrder(OrderDTO orderDTOs)
         {
             try
             {
+                var totalAmount = orderDTOs.OrderDetailDTOs.Sum(odt => odt.Quantity * odt.Price);
                 var order = new Order
                 {
                     RoomAndTableId = orderDTOs.RoomAndTableId,
                     OrderTime = orderDTOs.OrderTime,
-                    TotalAmount = orderDTOs.TotalAmount,
+                    TotalAmount = totalAmount,
+                    OrderDetails = orderDTOs.OrderDetailDTOs.Select(odt => new OrderDetail
+                    {
+                        OrderId = odt.OrderId,
+                        ProductId = odt.ProductId,
+                        Quantity = odt.Quantity,
+                        Price = odt.Price,
+                        Total = odt.Quantity * odt.Price
+                    }).ToList()
                 };
                 _eShopDbContext.Orders.Add(order);
                 _eShopDbContext.SaveChanges();
@@ -39,33 +69,7 @@ namespace eShopSolution.Application.Service
                 throw;
             }
         }
-        public void AddOrderDetail(List<OrderDetailDTO> orderDetailDTOs)
-        {
-            try
-            {
-                var orderDetails = new List<OrderDetail>();
-                foreach (var orderDetailDTO in orderDetailDTOs)
-                {
-                    var orderDetail = new OrderDetail
-                    {
-                        OrderId = orderDetailDTO.OrderId,
-                        ProductId = orderDetailDTO.ProductId,
-                        Quantity = orderDetailDTO.Quantity,
-                        Price = orderDetailDTO.Price,
-                        Total = orderDetailDTO.Total
-                    };
 
-                    orderDetails.Add(orderDetail);
-                    _eShopDbContext.OrderDetails.Add(orderDetail);
-                }
-
-                _eShopDbContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw;
-            }
-        }
+       
     }
 }
