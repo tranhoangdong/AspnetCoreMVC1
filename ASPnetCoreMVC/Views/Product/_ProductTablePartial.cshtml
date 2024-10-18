@@ -1,42 +1,86 @@
 ﻿@model IEnumerable<eShopSolution.Web.Models.ProductDetailViewModel>
+@{
+    int totalProducts = Model.Count();
+    int pageSize = 10;
+    int totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+}
 
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th><input type="checkbox" name="selectAll" id="selectAll" /></th>
-            <th>Tên sản phẩm</th>
-            <th>Giá</th>
-            <th>Tồn kho</th>
-            <th> Danh mục</th>
-            <th>Chỉnh sửa / Xóa</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var product in Model)
+<div id="productTableContainer">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th><input type="checkbox" name="selectAll" id="selectAll" /></th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Tồn kho</th>
+                <th>Danh mục</th>
+                <th>Chỉnh sửa / Xóa</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var product in Model)
+                {
+                    <tr>
+                        <td><input type="checkbox" class="productCheckbox" value="@product.ID" /></td>
+                        <td>@product.Name</td>
+                        <td>@product.Price.ToString("C")</td>
+                        <td>@product.Stock</td>
+                        <td>@product.CategoryName</td>
+                        <td>
+                            <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
+                            <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@product.ID" />
+                                <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td><input type="checkbox" class="productCheckbox" value="@product.ID" /></td>
-                    <td>@product.Name</td>
-                    <td>@product.Price.ToString("C")</td>
-                    <td>@product.Stock</td>
-                    <td>@product.CategoryName</td>
-                    <td>
-                        <a href="javascript:void(0)" class="btn-edit" data-id="@product.ID">Chỉnh sửa</a>
-                        <form asp-controller="Product" asp-action="DeleteProduct" method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="@product.ID" />
-                            <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
-                        </form>
-                    </td>
+                    <td colspan="6">Không có sản phẩm nào được tìm thấy.</td>
                 </tr>
             }
+        </tbody>
+    </table>
+</div>
+
+<div id="paginationContainer">
+    @for (int i = 1; i <= totalPages; i++)
+    {
+        <a href="javascript:void(0)" class="pagination-link" data-page="@i">@i</a>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+       $('.pagination-link').on('click', function () {
+    var pageNumber = $(this).data('page');
+    var pageSize = 10; 
+
+    if (pageNumber <= 0 || pageSize <= 0) {
+        console.error("Page number and page size must be greater than zero.");
+        return; 
+    }
+
+    $.ajax({
+        url: '@Url.Action("LoadProductTable", "Product")',
+        type: 'GET',
+        data: {
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+        },
+        success: function (data) {
+            $('#productTableContainer').html(data);
+        },
+        error: function (xhr, status, error) {
+            console.error("Có lỗi xảy ra khi tải sản phẩm:", error);
         }
-        else
-        {
-            <tr>
-                <td colspan="4">Không có sản phẩm nào được tìm thấy.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    });
+});
+
+    });
+</script>

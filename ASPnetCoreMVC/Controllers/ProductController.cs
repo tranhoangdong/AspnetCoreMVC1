@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.Service;
+using System;
 
 namespace eShopSolution.Web.Controllers
 {
@@ -22,7 +23,7 @@ namespace eShopSolution.Web.Controllers
             _roomAndtableservices = roomAndTableServices;
         }
 
-        public IActionResult LoadProductTable(int? categoryId , string priceFilter, string sortColumn, string sortOrder, string name)
+        public IActionResult LoadProductTable(int pageNumber, int pageSize, int? categoryId , string priceFilter, string sortColumn, string sortOrder, string name)
         {
             var getAllProductsDTO = new GetAllProductsDTO
             {
@@ -32,15 +33,19 @@ namespace eShopSolution.Web.Controllers
                 sortOrder = sortOrder,
                 name = name
             };
-            var products = _productService.GetAllProducts(getAllProductsDTO);
+            var (products, totalProducts) = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
             var productViewModels = products.Select(p => new ProductDetailViewModel
             {
                 ID = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Stock = p.Stock,
-                CategoryName = p.Category?.Name
+                CategoryName = p.Category?.Name,
+                TotalProducts = totalProducts, 
+                CurrentPage = pageNumber
             }).ToList();
+
+            ViewBag.TotalProducts = totalProducts;
             return PartialView("_ProductTablePartial", productViewModels);
         }
 
