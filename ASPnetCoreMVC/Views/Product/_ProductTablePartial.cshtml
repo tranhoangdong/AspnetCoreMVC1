@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<eShopSolution.Web.Models.ProductDetailViewModel>
 @{
-    int totalProducts = Model.Count();
+    int totalProducts = 100;
     int pageSize = 10;
     int totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
 }
