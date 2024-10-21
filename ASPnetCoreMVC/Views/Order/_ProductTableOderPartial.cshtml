@@ -1,12 +1,18 @@
 ﻿@model IEnumerable<eShopSolution.Web.Models.OrderViewModel>
 
+@{
+    int totalProducts = 100;
+    int pageSize = 10;
+    int totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+}
+
 <div class="row gx-4 gx-lg-5 justify-content-start">
     @if (Model != null && Model.Any())
     {
-     
+
         var productCount = Model.Count();
-        var productsPerRow = 4; 
-        var lastRowCount = productCount % productsPerRow; 
+        var productsPerRow = 4;
+        var lastRowCount = productCount % productsPerRow;
 
         var index = 0;
         foreach (var product in Model)
@@ -35,3 +41,15 @@
         }
     }
 </div>
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="#" data-page="@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>}

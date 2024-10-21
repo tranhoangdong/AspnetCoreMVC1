@@ -19,7 +19,7 @@
                 }
                 <!-- Cart-->
                 <div class="d-flex-card col-sm-2 float-end">
-                    <button id="view-cart" data-banId ="@Model.RoomAndTable.Id" class="btn btn-outline-dark">
+                    <button id="view-cart" data-banId="@Model.RoomAndTable.Id" class="btn btn-outline-dark">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -103,21 +103,32 @@
             $("#count-card").text(saveCount);
 
 
-            function loadProductTable() {
-                var categoryDropdown = $('#categoryDropdown').val();
 
-                $.ajax({
-                    url: '@Url.Action("LoadProductTable", "Order")',
-                    type: 'GET',
-                    data: {
-                        categoryId: categoryDropdown
-                    },
-                    success: function (data) {
-                        $('#productTableContainer').html(data);
-                    },
-                    error: function () {
-                        alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
-                    }
+    function loadProductTable(pageNumber = 1) {
+        var categoryDropdown = $('#categoryDropdown').val();
+
+        $.ajax({
+            url: '@Url.Action("LoadProductTable", "Order")',
+            type: 'GET',
+            data: {
+                categoryId: categoryDropdown,
+                pageNumber: pageNumber,
+                pageSize: 10
+            },
+            success: function (data) {
+                $('#productTableContainer').html(data);
+                attachPaginationEvent();
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
+            }
+        });
+            }
+            function attachPaginationEvent() {
+                $(document).on('click', '.pagination .page-link', function (e) {
+                    e.preventDefault();
+                    var pageNumber = $(this).data('page');
+                    loadProductTable(pageNumber);
                 });
             }
 
@@ -128,7 +139,7 @@
                     url: '/Cart/GetCartItemCount',
                     type: 'GET',
                     success: function (response) {
-                        $("#count-card").text(response.count); 
+                        $("#count-card").text(response.count);
                     },
                     error: function (xhr, status, error) {
                         console.log("Có lỗi xảy ra khi cập nhật số lượng giỏ hàng: " + error);
@@ -159,6 +170,7 @@
                 e.preventDefault();
                 loadProductTable();
             });
+            attachPaginationEvent();
         });
     </script>
 </body>
