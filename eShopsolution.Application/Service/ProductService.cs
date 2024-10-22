@@ -193,7 +193,6 @@ namespace eShopSolution.Application.Service
                     existingProduct.Stock = stock;
                 }
             }
-
             await _eShopDbContext.SaveChangesAsync();
             return true;
         }

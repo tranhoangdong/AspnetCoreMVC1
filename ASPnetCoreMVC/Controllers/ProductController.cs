@@ -48,7 +48,22 @@ namespace eShopSolution.Web.Controllers
             ViewBag.TotalProducts = totalProducts;
             return PartialView("_ProductTablePartial", productViewModels);
         }
+        [HttpPost]
+        public JsonResult AddCategory(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return Json(new { success = false, message = "Tên loại sản phẩm không được để trống." });
+            }
+            var newCategory = new CategoryDTO
+            {
+                Name = name
+            };
 
+            _categoryService.AddCategorys(newCategory);
+
+            return Json(new { success = true, categoryId = newCategory.Id });
+        }
         public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
             var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel

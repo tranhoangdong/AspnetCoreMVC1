@@ -2,6 +2,8 @@
 
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
+using eShopSolution.Data.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +35,18 @@ namespace eShopSolution.Application.Service
 
         }
 
-
+        public CategoryDTO AddCategorys(CategoryDTO categoryDTO)
+        {
+            var category = new Category
+            {
+                Id = categoryDTO.Id,
+                Name = categoryDTO.Name
+            };
+            _eShopDbContext.Categories.Add(category);
+            _eShopDbContext.SaveChanges();
+            categoryDTO.Id = category.Id;
+            return categoryDTO;
+        }
 
     }
 }
