@@ -35,13 +35,14 @@ namespace eShopSolution.Web.Controllers
 
         }
         public const string CARTKEY = "cart";
-        public IActionResult LoadProductTable(int? categoryId)
+        public IActionResult LoadProductTable(int pageNumber, int pageSize, int? categoryId)
         {
             var getAllProductsDTO = new GetAllProductsDTO
             {
                 categoryId = categoryId
             };
-            var products = _productService.GetAllProducts(getAllProductsDTO);
+            var (products, totalProducts) = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
+
             var orderViewModels = products.Select(p => new OrderViewModel
             {
                 Id = p.Id,
@@ -49,6 +50,9 @@ namespace eShopSolution.Web.Controllers
                 Price = p.Price,
                 CategoryName = p.Category?.Name
             }).ToList();
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+            ViewBag.CurrentPage = pageNumber;
+
             return PartialView("_ProductTableOderPartial", orderViewModels);
         }
 

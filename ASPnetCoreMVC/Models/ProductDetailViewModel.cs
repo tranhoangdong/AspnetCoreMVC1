@@ -9,6 +9,8 @@
         public int Stock { get; set; } = 0;
         public string CategoryName { get; set; }
         public int CategoryId { get; set; }
-        
+        public int TotalProducts { get; set; }
+        public int CurrentPage { get; set; }
+
     }
 }

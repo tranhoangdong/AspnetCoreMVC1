@@ -153,6 +153,8 @@
                     url: '@Url.Action("LoadProductTable", "Product")',
                     type: 'GET',
                     data: {
+                        pageNumber: 1,
+                        pageSize: 10,
                         name: name,
                         priceFilter: priceFilter,
                         sortColumn: sortColumn,
@@ -306,9 +308,9 @@
                 });
 
             });
-            loadProductTable();
 
             loadProductTable();
+
             $('form.search-bar').on('submit', function (e) {
                 e.preventDefault();
                 loadProductTable();

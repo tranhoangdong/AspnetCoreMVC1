@@ -11,6 +11,9 @@ namespace eShopSolution.Application.Dtos
         public string sortColumn { get; set; }
         public string sortOrder { get; set; }
         public string name { get; set; }
+        public int TotalProducts { get; set; } 
+        public int CurrentPage { get; set; } 
+        public int TotalPages { get; set; } 
     }
 
 }
