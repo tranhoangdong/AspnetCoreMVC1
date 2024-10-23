@@ -35,17 +35,15 @@ namespace eShopSolution.Application.Service
 
         }
 
-        public CategoryDTO AddCategorys(CategoryDTO categoryDTO)
+        public void AddCategorys(string name)
         {
             var category = new Category
             {
-                Id = categoryDTO.Id,
-                Name = categoryDTO.Name
+                Name = name
             };
             _eShopDbContext.Categories.Add(category);
             _eShopDbContext.SaveChanges();
-            categoryDTO.Id = category.Id;
-            return categoryDTO;
+            return;
         }
 
     }

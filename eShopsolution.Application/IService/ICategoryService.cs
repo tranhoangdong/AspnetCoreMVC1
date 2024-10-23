@@ -6,6 +6,6 @@ namespace eShopSolution.Application.IService
     public interface ICategoryService
     {
         List<CategoryDTO> GetAllCategory(bool filterProducts = false);
-        CategoryDTO AddCategorys(CategoryDTO categoryDTO);
+        void AddCategorys(string name);
     }
 }

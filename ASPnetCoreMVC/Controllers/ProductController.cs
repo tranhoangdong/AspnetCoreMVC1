@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.Service;
 using System;
+using eShopSolution.Data.Entities;
 
 namespace eShopSolution.Web.Controllers
 {
@@ -53,17 +54,20 @@ namespace eShopSolution.Web.Controllers
         {
             if (string.IsNullOrEmpty(name))
             {
-                return Json(new { success = false, message = "Tên loại sản phẩm không được để trống." });
+                return Json(new JsonResultResponse
+                {
+                    success = false,
+                    message = "Tên loại sản phẩm không được để trống."
+                });
             }
-            var newCategory = new CategoryDTO
+            _categoryService.AddCategorys(name);
+            return Json(new JsonResultResponse
             {
-                Name = name
-            };
-
-            _categoryService.AddCategorys(newCategory);
-
-            return Json(new { success = true, categoryId = newCategory.Id });
+                success = true,
+                message = "Loại sản phẩm đã được thêm thành công."
+            });
         }
+
         public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
             var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel
