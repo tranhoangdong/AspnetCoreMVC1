@@ -2,6 +2,8 @@
 
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
+using eShopSolution.Data.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +35,16 @@ namespace eShopSolution.Application.Service
 
         }
 
-
+        public void AddCategorys(string name)
+        {
+            var category = new Category
+            {
+                Name = name
+            };
+            _eShopDbContext.Categories.Add(category);
+            _eShopDbContext.SaveChanges();
+            return;
+        }
 
     }
 }
