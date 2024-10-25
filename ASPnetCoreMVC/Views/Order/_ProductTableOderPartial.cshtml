@@ -1,12 +1,14 @@
 ﻿@model IEnumerable<eShopSolution.Web.Models.OrderViewModel>
 
+
+
 <div class="row gx-4 gx-lg-5 justify-content-start">
     @if (Model != null && Model.Any())
     {
-     
+
         var productCount = Model.Count();
-        var productsPerRow = 4; 
-        var lastRowCount = productCount % productsPerRow; 
+        var productsPerRow = 4;
+        var lastRowCount = productCount % productsPerRow;
 
         var index = 0;
         foreach (var product in Model)

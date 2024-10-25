@@ -1,8 +1,9 @@
-﻿@model IEnumerable<eShopSolution.Web.Models.ProductDetailViewModel>
+﻿@model eShopSolution.Web.Models.ProductListViewModel
+
 @{
     int totalProducts = 100;
-    int pageSize = 10;
-    int totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+    int pageSize = 10; 
+    int totalPages = (int)Math.Ceiling((double)totalProducts / pageSize); 
 }
 
 <div id="productTableContainer">
@@ -18,9 +19,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model != null && Model.Any())
+            @if (Model.Products != null && Model.Products.Any())
             {
-                foreach (var product in Model)
+                foreach (var product in Model.Products)
                 {
                     <tr>
                         <td><input type="checkbox" class="productCheckbox" value="@product.ID" /></td>
@@ -48,39 +49,41 @@
     </table>
 </div>
 
-<div id="paginationContainer">
-    @for (int i = 1; i <= totalPages; i++)
-    {
-        <a href="javascript:void(0)" class="pagination-link" data-page="@i">@i</a>
-    }
-</div>
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a href="javascript:void(0)" class="page-link" data-page="@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
 
 <script>
     $(document).ready(function () {
-       $('.pagination-link').on('click', function () {
-    var pageNumber = $(this).data('page');
-    var pageSize = 10; 
+        $('.page-link').on('click', function () {
+            var pageNumber = $(this).data('page');
+            var pageSize = 10;
+            if (pageNumber <= 0 || pageSize <= 0) {
+                console.error("Page number and page size must be greater than zero.");
+                return;
+            }
 
-    if (pageNumber <= 0 || pageSize <= 0) {
-        console.error("Page number and page size must be greater than zero.");
-        return; 
-    }
-
-    $.ajax({
-        url: '@Url.Action("LoadProductTable", "Product")',
-        type: 'GET',
-        data: {
-            pageNumber: pageNumber,
-            pageSize: pageSize,
-        },
-        success: function (data) {
-            $('#productTableContainer').html(data);
-        },
-        error: function (xhr, status, error) {
-            console.error("Có lỗi xảy ra khi tải sản phẩm:", error);
-        }
-    });
-});
-
+            $.ajax({
+                url: '@Url.Action("LoadProductTable", "Product")',
+                type: 'GET',
+                data: {
+                    pageNumber: pageNumber,
+                    pageSize: pageSize,
+                },
+                success: function (data) {
+                    $('#productTableContainer').html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra khi tải sản phẩm:", error);
+                }
+            });
+        });
     });
 </script>
