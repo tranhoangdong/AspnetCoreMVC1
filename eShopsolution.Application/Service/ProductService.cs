@@ -22,49 +22,44 @@ namespace eShopSolution.Application.Service
 
         public (List<Product> Products, int TotalProducts) GetAllProducts(int pageNumber, int pageSize,GetAllProductsDTO getAllProductsDTO)
         {
-            var name = getAllProductsDTO.name;
-            var categoryId = getAllProductsDTO.categoryId;
-            var priceFilter = getAllProductsDTO.priceFilter;
-            var sortColumn = getAllProductsDTO.sortColumn;
-            var sortOrder = getAllProductsDTO.sortOrder;
 
             var products = _eShopDbContext.Products.Include(p => p.Category).AsQueryable();
 
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(getAllProductsDTO.name))
             {
-                products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+                products = products.Where(x => x.Name.Contains(getAllProductsDTO.name, StringComparison.OrdinalIgnoreCase));
             }
-            if (categoryId.HasValue)
+            if (getAllProductsDTO.categoryId.HasValue)
             {
-                products = products.Where(p => p.CategoryId == categoryId.Value);
+                products = products.Where(p => p.CategoryId == getAllProductsDTO.categoryId.Value);
             }
-            if (priceFilter == "above100")
+            if (getAllProductsDTO.priceFilter == "above100")
             {
                 products = products.Where(p => p.Price > 100);
             }
-            else if (priceFilter == "below100")
+            else if (getAllProductsDTO.priceFilter == "below100")
             {
                 products = products.Where(p => p.Price <= 100);
             }
 
-            if (sortColumn == "price")
+            if (getAllProductsDTO.sortColumn == "price")
             {
-                if (sortOrder == "asc")
+                if (getAllProductsDTO.sortOrder == "asc")
                 {
                     products = products.OrderBy(p => p.Price);
                 }
-                else if (sortOrder == "desc")
+                else if (getAllProductsDTO.sortOrder == "desc")
                 {
                     products = products.OrderByDescending(p => p.Price);
                 }
             }
-            else if (sortColumn == "stock")
+            else if (getAllProductsDTO.sortColumn == "stock")
             {
-                if (sortOrder == "asc")
+                if (getAllProductsDTO.sortOrder == "asc")
                 {
                     products = products.OrderBy(p => p.Stock);
                 }
-                else if (sortOrder == "desc")
+                else if (getAllProductsDTO.sortOrder == "desc")
                 {
                     products = products.OrderByDescending(p => p.Stock);
                 }
