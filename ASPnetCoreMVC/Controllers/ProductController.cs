@@ -62,7 +62,7 @@ namespace eShopSolution.Web.Controllers
 
                 return PartialView("_ProductTablePartial", model);
             }
-            catch (Exception )
+            catch (Exception ex )
             {
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi tải sản phẩm. Vui lòng thử lại sau." });
             }
