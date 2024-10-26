@@ -20,7 +20,7 @@ namespace eShopSolution.Application.Service
         }
 
 
-        public (List<Product> Products, int TotalProducts) GetAllProducts(int pageNumber, int pageSize,GetAllProductsDTO getAllProductsDTO)
+        public GetAllProductResuftDTO GetAllProducts(int pageNumber, int pageSize,GetAllProductsDTO getAllProductsDTO)
         {
 
             var products = _eShopDbContext.Products.Include(p => p.Category).AsQueryable();
@@ -70,7 +70,21 @@ namespace eShopSolution.Application.Service
             }
             var totalProducts = products.Count();
             var pagedProducts = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            return (pagedProducts, totalProducts);
+            var productResults = pagedProducts.Select(p => new ProductResuftDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Stock = p.Stock,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category?.Name,
+            }).ToList();
+
+            return new GetAllProductResuftDTO
+            {
+                TotalProducts = totalProducts,
+                PagedProducts = productResults
+            };
         }
     
         public Product GetProductbyId(int productId)

@@ -41,26 +41,26 @@ namespace eShopSolution.Web.Controllers
                     sortOrder = sortOrder,
                     name = name
                 };
-            var (products, totalProducts) = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
-                var productViewModels = products.Select(p => new ProductDetailViewModel
+                var resultDTO = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
+                var productViewModels = resultDTO.PagedProducts.Select(p => new ProductDetailViewModel
                 {
                     ID = p.Id,
                     Name = p.Name,
                     Price = p.Price,
                     Stock = p.Stock,
-                    CategoryName = p.Category?.Name,
+                    CategoryName = p.CategoryName
                 }).ToList();
 
                 var model = new ProductListViewModel
                 {
                     Products = productViewModels,
                     CurrentPage = pageNumber,
-                    TotalProducts = totalProducts
+                    TotalProducts = resultDTO.TotalProducts
                 };
 
                 return PartialView("_ProductTablePartial", model);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi tải sản phẩm. Vui lòng thử lại sau." });
             }
