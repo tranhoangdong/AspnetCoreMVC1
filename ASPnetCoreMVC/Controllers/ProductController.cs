@@ -24,31 +24,50 @@ namespace eShopSolution.Web.Controllers
             _roomAndtableservices = roomAndTableServices;
         }
 
-        public IActionResult LoadProductTable(int pageNumber, int pageSize, int? categoryId , string priceFilter, string sortColumn, string sortOrder, string name)
+        public IActionResult LoadProductTable(int pageNumber, int? categoryId, string priceFilter, string sortColumn, string sortOrder, string name)
         {
-            var getAllProductsDTO = new GetAllProductsDTO
+            const int pageSize = 10;
+            try
             {
-                categoryId = categoryId,
-                priceFilter = priceFilter,
-                sortColumn = sortColumn,
-                sortOrder = sortOrder,
-                name = name
-            };
-            var (products, totalProducts) = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
-            var productViewModels = products.Select(p => new ProductDetailViewModel
-            {
-                ID = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Stock = p.Stock,
-                CategoryName = p.Category?.Name,
-                TotalProducts = totalProducts, 
-                CurrentPage = pageNumber
-            }).ToList();
+                if (pageNumber < 1 )
+                {
+                    throw new ArgumentException("Page number and page size must be greater than zero.");
+                }
 
-            ViewBag.TotalProducts = totalProducts;
-            return PartialView("_ProductTablePartial", productViewModels);
+                var getAllProductsDTO = new GetAllProductsDTO
+                {
+                    categoryId = categoryId,
+                    priceFilter = priceFilter,
+                    sortColumn = sortColumn,
+                    sortOrder = sortOrder,
+                    name = name
+                };
+                var resultDTO = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
+                var productViewModels = resultDTO.PagedProducts.Select(p => new ProductDetailViewModel
+                {
+                    ID = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Stock = p.Stock,
+                    CategoryName = p.CategoryName
+                }).ToList();
+
+                var model = new ProductListViewModel
+                {
+                    Products = productViewModels,
+                    CurrentPage = pageNumber,
+                    TotalProducts = resultDTO.TotalProducts,
+                    PageSize = pageSize
+                };
+
+                return PartialView("_ProductTablePartial", model);
+            }
+            catch (Exception )
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi khi tải sản phẩm. Vui lòng thử lại sau." });
+            }
         }
+
         [HttpPost]
         public JsonResult AddCategory(string name)
         {

@@ -4,10 +4,15 @@ using System.Text;
 
 namespace eShopSolution.Application.Dtos
 {
-    public class ProductDTO1
+    public class ProductResuftDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
     }
+   
+  
 }

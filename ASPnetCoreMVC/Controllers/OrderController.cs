@@ -41,16 +41,17 @@ namespace eShopSolution.Web.Controllers
             {
                 categoryId = categoryId
             };
-            var (products, totalProducts) = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
+            var resultDTO = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
 
-            var orderViewModels = products.Select(p => new OrderViewModel
+
+            var orderViewModels = resultDTO.PagedProducts.Select(p => new OrderViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
-                CategoryName = p.Category?.Name
+                CategoryName = p.CategoryName
             }).ToList();
-            ViewBag.TotalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+            ViewBag.TotalPages = (int)Math.Ceiling((double)resultDTO.TotalProducts / pageSize);
             ViewBag.CurrentPage = pageNumber;
 
             return PartialView("_ProductTableOderPartial", orderViewModels);

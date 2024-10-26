@@ -20,54 +20,37 @@ namespace eShopSolution.Application.Service
         }
 
 
-        public (List<Product> Products, int TotalProducts) GetAllProducts(int pageNumber, int pageSize,GetAllProductsDTO getAllProductsDTO)
+        public GetAllProductResuftDTO GetAllProducts(int pageNumber, int pageSize,GetAllProductsDTO getAllProductsDTO)
         {
-            var name = getAllProductsDTO.name;
-            var categoryId = getAllProductsDTO.categoryId;
-            var priceFilter = getAllProductsDTO.priceFilter;
-            var sortColumn = getAllProductsDTO.sortColumn;
-            var sortOrder = getAllProductsDTO.sortOrder;
 
             var products = _eShopDbContext.Products.Include(p => p.Category).AsQueryable();
 
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(getAllProductsDTO.name))
             {
-                products = products.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+                products = products.Where(x => x.Name.Contains(getAllProductsDTO.name, StringComparison.OrdinalIgnoreCase));
             }
-            if (categoryId.HasValue)
+            if (getAllProductsDTO.categoryId.HasValue)
             {
-                products = products.Where(p => p.CategoryId == categoryId.Value);
+                products = products.Where(p => p.CategoryId == getAllProductsDTO.categoryId.Value);
             }
-            if (priceFilter == "above100")
+            if (getAllProductsDTO.priceFilter == "above100")
             {
                 products = products.Where(p => p.Price > 100);
             }
-            else if (priceFilter == "below100")
+            else if (getAllProductsDTO.priceFilter == "below100")
             {
                 products = products.Where(p => p.Price <= 100);
             }
 
-            if (sortColumn == "price")
+            switch (getAllProductsDTO.sortColumn)
             {
-                if (sortOrder == "asc")
-                {
-                    products = products.OrderBy(p => p.Price);
-                }
-                else if (sortOrder == "desc")
-                {
-                    products = products.OrderByDescending(p => p.Price);
-                }
-            }
-            else if (sortColumn == "stock")
-            {
-                if (sortOrder == "asc")
-                {
-                    products = products.OrderBy(p => p.Stock);
-                }
-                else if (sortOrder == "desc")
-                {
-                    products = products.OrderByDescending(p => p.Stock);
-                }
+                case "price":
+                    products = getAllProductsDTO.sortOrder == "asc" ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
+                    break;
+
+                case "stock":
+                    products = getAllProductsDTO.sortOrder == "asc" ? products.OrderBy(p => p.Stock) : products.OrderByDescending(p => p.Stock);
+                    break;
             }
             if (pageNumber < 1 || pageSize < 1)
             {
@@ -75,7 +58,21 @@ namespace eShopSolution.Application.Service
             }
             var totalProducts = products.Count();
             var pagedProducts = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            return (pagedProducts, totalProducts);
+            var productResults = pagedProducts.Select(p => new ProductResuftDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Stock = p.Stock,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category?.Name,
+            }).ToList();
+
+            return new GetAllProductResuftDTO
+            {
+                TotalProducts = totalProducts,
+                PagedProducts = productResults
+            };
         }
     
         public Product GetProductbyId(int productId)
