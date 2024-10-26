@@ -42,27 +42,15 @@ namespace eShopSolution.Application.Service
                 products = products.Where(p => p.Price <= 100);
             }
 
-            if (getAllProductsDTO.sortColumn == "price")
+            switch (getAllProductsDTO.sortColumn)
             {
-                if (getAllProductsDTO.sortOrder == "asc")
-                {
-                    products = products.OrderBy(p => p.Price);
-                }
-                else if (getAllProductsDTO.sortOrder == "desc")
-                {
-                    products = products.OrderByDescending(p => p.Price);
-                }
-            }
-            else if (getAllProductsDTO.sortColumn == "stock")
-            {
-                if (getAllProductsDTO.sortOrder == "asc")
-                {
-                    products = products.OrderBy(p => p.Stock);
-                }
-                else if (getAllProductsDTO.sortOrder == "desc")
-                {
-                    products = products.OrderByDescending(p => p.Stock);
-                }
+                case "price":
+                    products = getAllProductsDTO.sortOrder == "asc" ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
+                    break;
+
+                case "stock":
+                    products = getAllProductsDTO.sortOrder == "asc" ? products.OrderBy(p => p.Stock) : products.OrderByDescending(p => p.Stock);
+                    break;
             }
             if (pageNumber < 1 || pageSize < 1)
             {

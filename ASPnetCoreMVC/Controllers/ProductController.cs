@@ -24,11 +24,12 @@ namespace eShopSolution.Web.Controllers
             _roomAndtableservices = roomAndTableServices;
         }
 
-        public IActionResult LoadProductTable(int pageNumber, int pageSize, int? categoryId, string priceFilter, string sortColumn, string sortOrder, string name)
+        public IActionResult LoadProductTable(int pageNumber, int? categoryId, string priceFilter, string sortColumn, string sortOrder, string name)
         {
+            const int pageSize = 10;
             try
             {
-                if (pageNumber < 1 || pageSize < 1)
+                if (pageNumber < 1 )
                 {
                     throw new ArgumentException("Page number and page size must be greater than zero.");
                 }
@@ -55,7 +56,8 @@ namespace eShopSolution.Web.Controllers
                 {
                     Products = productViewModels,
                     CurrentPage = pageNumber,
-                    TotalProducts = resultDTO.TotalProducts
+                    TotalProducts = resultDTO.TotalProducts,
+                    PageSize = pageSize
                 };
 
                 return PartialView("_ProductTablePartial", model);
