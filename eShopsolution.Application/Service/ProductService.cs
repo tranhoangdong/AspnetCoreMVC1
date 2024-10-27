@@ -126,11 +126,15 @@ namespace eShopSolution.Application.Service
                 _eShopDbContext.Images.RemoveRange(images);
             }
             var product = _eShopDbContext.Products.FirstOrDefault(x => x.Id == productId);
-            if (product != null)
+            var orderDetails = _eShopDbContext.OrderDetails.Where(od => od.ProductId == productId);
+            if (product != null && orderDetails != null)
             {
+                _eShopDbContext.OrderDetails.RemoveRange(orderDetails);
                 _eShopDbContext.Products.Remove(product);
                 _eShopDbContext.SaveChanges();
             }
+          
+           
         }
 
         public IEnumerable<Product> GetPagedProducts(int pageNumber, int pageSize)
