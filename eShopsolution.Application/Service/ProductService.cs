@@ -27,7 +27,13 @@ namespace eShopSolution.Application.Service
 
             if (!string.IsNullOrEmpty(getAllProductsDTO.name))
             {
-                products = products.Where(x => x.Name.Contains(getAllProductsDTO.name, StringComparison.OrdinalIgnoreCase));
+                products = products.Where(x => x.Name.Contains(getAllProductsDTO.name));
+            }
+
+            if (!string.IsNullOrEmpty(getAllProductsDTO.name))
+            {
+                var nameToSearch = getAllProductsDTO.name.ToLower();
+                products = products.Where(x => x.Name.ToLower().Contains(nameToSearch));
             }
             if (getAllProductsDTO.categoryId.HasValue)
             {
