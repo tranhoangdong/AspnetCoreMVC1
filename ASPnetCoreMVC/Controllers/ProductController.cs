@@ -150,10 +150,9 @@ namespace eShopSolution.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCategory(CategoryViewModel categoryViewModel)
+        public JsonResult AddCategory(CategoryViewModel categoryViewModel)
         {
-            try
-            {
+           
                 if (!ModelState.IsValid)
                 {
                     return Json(new JsonResultResponse { success = false, message = "Dữ liệu không hợp lệ." });
@@ -165,11 +164,7 @@ namespace eShopSolution.Web.Controllers
                 _categoryService.AddCategorys(cateoryDTO);
 
                 return Json(new JsonResultResponse { success = true, message = "lưu category thành công" });
-            }
-            catch( Exception ex)
-            {
-                return StatusCode(500, new { message = "Đã xảy raaaaaaa" });
-            }
+          
         }
 
         public IActionResult CreateProduct()
