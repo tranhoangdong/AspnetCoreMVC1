@@ -206,7 +206,7 @@ namespace eShopSolution.Web.Controllers
             }
 
             _productService.DeleteProduct(id); 
-            return RedirectToAction("GetAllProduct");
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> GetBulkUpdate(string ids)
