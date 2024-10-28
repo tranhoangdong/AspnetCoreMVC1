@@ -20,9 +20,20 @@ namespace eShopSolution.Application.Service
             _eShopDbContext = eShopDbContext;
         }
 
-        public List<OrderDTO> GetAllOrders()
+        public List<OrderDTO> GetAllOrders(GetOrderDTO getOrderDTO)
         {
-            return _eShopDbContext.Orders.Select(o => new OrderDTO
+            var orders = _eShopDbContext.Orders.AsQueryable();
+            if (getOrderDTO.Idban > 0)
+            {
+                orders = orders.Where(o => o.RoomAndTableId == getOrderDTO.Idban);
+            }
+            if (getOrderDTO.IdOrder > 0)
+            {
+                orders = orders.Where(o => o.Id == getOrderDTO.IdOrder);
+            }
+
+
+            return orders.Select(o => new OrderDTO
             {
                 Id = o.Id,
                 RoomAndTableId = o.RoomAndTableId,

@@ -19,9 +19,14 @@ namespace eShopSolution.Web.Controllers
         {
             _orderDetailService = orderDetailService;
         }
-        public IActionResult Index()
+        public IActionResult LoadOrder(int idban, int idOrder)
         {
-            var orders = _orderDetailService.GetAllOrders();
+            var getOrderDTO = new GetOrderDTO
+            {
+                Idban = idban,
+                IdOrder = idOrder
+            };
+            var orders = _orderDetailService.GetAllOrders(getOrderDTO);
             var orderViewModels = orders.Select(o => new OrderIndexViewModel
             {
                 Id = o.Id,
@@ -30,8 +35,13 @@ namespace eShopSolution.Web.Controllers
                 OrderTime = o.OrderTime, 
                 IsPaid = o.IsPaid
             }).ToList();
-            return View(orderViewModels);
+            return PartialView("_IndexPartial", orderViewModels);
         }
+        public IActionResult Index(int idban, int idOrder)
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult PayOrder(int id)
         {
