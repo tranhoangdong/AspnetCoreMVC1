@@ -19,12 +19,14 @@ namespace eShopSolution.Web.Controllers
         {
             _orderDetailService = orderDetailService;
         }
-        public IActionResult LoadOrder(int idban, int idOrder)
+        public IActionResult LoadOrder(int idban, int idOrder, string statusOrder)
         {
             var getOrderDTO = new GetOrderDTO
             {
                 Idban = idban,
-                IdOrder = idOrder
+                IdOrder = idOrder,
+                StatusOrder = statusOrder
+
             };
             var orders = _orderDetailService.GetAllOrders(getOrderDTO);
             var orderViewModels = orders.Select(o => new OrderIndexViewModel

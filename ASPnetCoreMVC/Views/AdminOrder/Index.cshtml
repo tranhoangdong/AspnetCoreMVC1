@@ -15,6 +15,14 @@
             <label for="idban">Mã đơn hàng:</label>
             <input type="text" id="idOrder" name="name" class="form-control" placeholder="Nhập mã đơn hàng ..." />
         </div>
+        <div class="form-group-sortOder">
+            <label for="sortOrder">Trạng Thái:</label>
+            <select id="statusOrder" name="statusOrder" class="form-control">
+                <option value="">-- Chọn --</option>
+                <option value="paid">Đã thanh toán</option>
+                <option value="notyetpaid">Chưa thanh toán</option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary search-order">Tìm kiếm</button>
     </form>
 
@@ -30,13 +38,15 @@
         function loadOrder() {
             var idban = $('#idban').val();
             var idOrder = $('#idOrder').val();
+            var statusOrder = $('#statusOrder').val();
             console.log("idban:", idban, "idOrder:", idOrder);
             $.ajax({
                 url: '@Url.Action("LoadOrder", "AdminOrder")',
                 type: 'GET',
                 data: {
                     idban: idban,
-                    idOrder: idOrder
+                    idOrder: idOrder,
+                    statusOrder: statusOrder
                 },
                 success: function (data) {
                     $('#OrderTableContainer').html(data);
@@ -47,7 +57,9 @@
 
             });
         };
-
+        $('#statusOrder').on('change', function (e) {
+            e.preventDefault();
+        });
         loadOrder();
 
         $('.search-order').on('click', function (e) {

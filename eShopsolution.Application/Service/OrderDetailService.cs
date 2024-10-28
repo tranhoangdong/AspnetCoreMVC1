@@ -31,7 +31,11 @@ namespace eShopSolution.Application.Service
             {
                 orders = orders.Where(o => o.Id == getOrderDTO.IdOrder);
             }
-
+            if (!string.IsNullOrEmpty(getOrderDTO.StatusOrder))
+            {
+                bool isPaid = getOrderDTO.StatusOrder == "paid";
+                orders = orders.Where(o => o.IsPaid == isPaid);
+            }
 
             return orders.Select(o => new OrderDTO
             {

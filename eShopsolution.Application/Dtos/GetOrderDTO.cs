@@ -8,5 +8,6 @@ namespace eShopSolution.Application.Dtos
     {
         public int Idban { get; set; }
         public int IdOrder { get; set; }
+        public string StatusOrder { get; set; }
     }
 }
