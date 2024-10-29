@@ -36,6 +36,14 @@ namespace eShopSolution.Application.Service
                 bool isPaid = getOrderDTO.StatusOrder == "paid";
                 orders = orders.Where(o => o.IsPaid == isPaid);
             }
+            if (getOrderDTO.StartDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderTime >= getOrderDTO.StartDate.Value);
+            }
+            if (getOrderDTO.EndDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderTime < getOrderDTO.EndDate.Value.AddDays(1));
+            }
 
             return orders.Select(o => new OrderDTO
             {

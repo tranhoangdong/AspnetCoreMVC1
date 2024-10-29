@@ -9,5 +9,8 @@ namespace eShopSolution.Application.Dtos
         public int Idban { get; set; }
         public int IdOrder { get; set; }
         public string StatusOrder { get; set; }
+        public DateTime? EndDate  { get; set;}
+        public DateTime? StartDate { get; set; }
+
     }
 }
