@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <form asp-action="GetAllProduct" method="get" class="search-bar">
+    <form class="search-bar">
         <div class="container-fluid">
             <h2 class=" mb-4">Danh sách hàng hóa</h2>
             <div class="row">
@@ -40,27 +40,21 @@
                                     <option value="@category.Id">@category.Name</option>
                                 }
                             </select>
-                            <button type="button" class="btn btn-success" id="btn-addcategory">Thêm</button>
-                            <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+                            <a href="javascript:void(0)" id="btnAddcategory" class="btn btn-success">Thêm</a>
+                            <div class="modal fade" id="addCategory" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="addCategoryModalLabel">Thêm loại sản phẩm</h5>
+                                            <h5 class="modal-title" id="addCategoryModalLabel">Thêm sản phẩm mới</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <div id="modalCategoryContent">
-                                                <form id="addCategoryForm">
-                                                    <div class="form-group">
-                                                        <label for="categoryName">Tên loại sản phẩm:</label>
-                                                        <input type="text" id="categoryName" name="categoryName" class="form-control" required />
-                                                    </div>
-                                                    <button type="submit" class="btn btn-primary">Lưu</button>
-                                                </form>
+                                            <div id="CategorymodalContent">
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -106,6 +100,9 @@
         <div id="productTableContainer"></div>
     </div>
     <!-- Modal -->
+
+
+
     <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -226,7 +223,6 @@
                     url: '@Url.Action("CreateProduct", "Product")',
                     type: 'GET',
                     success: function (data) {
-                        debugger;
                         console.log("Form đã được tải thành công");
                         $('#modalContent').html(data);
                         $('#addProductModal').modal('show');
@@ -239,7 +235,51 @@
 
                 });
             });
+                    $(document).on('click', '#submitCategory', function (event) {
+                        event.preventDefault();
+                        var formData = {
+                            Name: $('#Namee').val()
+                        };
+                        console.log(formData);
+                        $.ajax({
+                            url: '@Url.Action("AddCategory", "Product")',
+                            type: 'POST',
+                            data: formData,
+                            success: function (response) {
+                                if (response.success) {
+                                    alert(response.message);
+                                    $('#addCategory').modal('hide');
+                                } else {
+                                    alert(response.message);
+                                }
+                            },
+                            error: function () {
+                                alert('Có lỗi xảy ra! Vui lòng thử lại.');
+                            }
+                        });
+                    });
 
+
+
+
+            $('#btnAddcategory').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("Addcategory", "Product")',
+                    type: 'GET',
+                    success: function (data) {
+                        debugger;
+                        console.log("Form đã được tải thành công");
+                        $('#CategorymodalContent').html(data);
+                        $('#addCategory').modal('show');
+
+                    },
+                    error: function () {
+                        console.log("Lỗi khi tải form");
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    }
+
+                });
+            });
 
             $(document).on('click', '#selectAll', function (e) {
                 debugger;
@@ -279,7 +319,6 @@
 
             $(document).on('click', '#btnUpdateBulk', function (e) {
                 e.preventDefault();
-                debugger;
                 var selectedProductIds = $("input[name='productIds']").map(function () {
                     return $(this).val();
                 }).get();
@@ -339,35 +378,6 @@
             });
 
 
-            $('#btn-addcategory').on('click', function () {
-                $('#addCategoryModal').modal('show');
-            });
-
-            $('#addCategoryForm').on('submit', function (e) {
-                e.preventDefault(); 
-                var categoryName = $('#categoryName').val(); 
-                $.ajax({
-                    url: '/Product/AddCategory',
-                    type: 'POST',
-                    data: {
-                        name: categoryName
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            debugger;
-                            $('#addCategoryModal').modal('hide');
-                            $('#categoryDropdown').append('<option value="' + response.categoryId + '">' + categoryName + '</option>');
-                            alert('Thêm loại sản phẩm thành công!');
-                        } else {
-                            alert('Thêm thất bại: ' + response.message);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                    }
-                });
-            });
-         
 
         });
     </script>

@@ -67,25 +67,7 @@ namespace eShopSolution.Web.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi tải sản phẩm. Vui lòng thử lại sau." });
             }
         }
-
-        [HttpPost]
-        public JsonResult AddCategory(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                return Json(new JsonResultResponse
-                {
-                    success = false,
-                    message = "Tên loại sản phẩm không được để trống."
-                });
-            }
-            _categoryService.AddCategorys(name);
-            return Json(new JsonResultResponse
-            {
-                success = true,
-                message = "Loại sản phẩm đã được thêm thành công."
-            });
-        }
+      
 
         public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
@@ -159,6 +141,30 @@ namespace eShopSolution.Web.Controllers
             }
             
             return Ok();
+        }
+        [HttpGet]
+        public IActionResult Addcategory()
+        {
+            return PartialView("_AddcategoryPartial");
+
+        }
+
+        [HttpPost]
+        public JsonResult AddCategory(CategoryViewModel categoryViewModel)
+        {
+           
+                if (!ModelState.IsValid)
+                {
+                    return Json(new JsonResultResponse { success = false, message = "Dữ liệu không hợp lệ." });
+                }
+                var cateoryDTO = new CategoryDTO
+                {
+                    Name = categoryViewModel.Name
+                };
+                _categoryService.AddCategorys(cateoryDTO);
+
+                return Json(new JsonResultResponse { success = true, message = "lưu category thành công" });
+          
         }
 
         public IActionResult CreateProduct()

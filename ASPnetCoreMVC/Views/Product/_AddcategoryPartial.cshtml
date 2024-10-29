@@ -1,0 +1,17 @@
+﻿@model eShopSolution.Web.Models.CategoryViewModel
+
+
+    <div class="form-group row">
+        <label for="Name" class="col-sm-2 col-form-label">Tên sản phẩm:</label>
+        <div class="col-sm-10">
+            <input type="text" id="Namee" name="Name" asp-for="Name" class="form-control" required />
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-sm-10 offset-sm-2">
+            <button type="submit" class="btn btn-success" id="submitCategory">Cập nhật</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        </div>
+    </div>
