@@ -237,21 +237,20 @@
             });
                     $(document).on('click', '#submitCategory', function (event) {
                         event.preventDefault();
+                        var categoryName = $('#CategoryName').val().trim();
+                        if (categoryName === "") {
+                            alert('Tên sản phẩm là bắt buộc.');
+                            return; 
+                        }
                         var formData = {
-                            Name: $('#CategoryName ').val()
+                            Name: categoryName
                         };
-                        console.log(formData);
                         $.ajax({
                             url: '@Url.Action("AddCategory", "Product")',
                             type: 'POST',
                             data: formData,
                             success: function (response) {
                                 debugger;
-
-                                console.log(response);
-                                console.log(typeof response.success);
-                                debugger;
-
                                 if (response.success) {
                                     $('#addCategory').modal('hide');
                                 } else {
