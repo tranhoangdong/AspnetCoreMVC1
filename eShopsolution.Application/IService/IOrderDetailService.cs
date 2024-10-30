@@ -9,7 +9,7 @@ namespace eShopSolution.Application.IService
     public interface IOrderDetailService
     {
         int AddOrder(OrderDTO orderDTOs);
-        List<OrderDTO> GetAllOrders();
+        List<OrderDTO> GetAllOrders(GetOrderDTO getOrderDTO);
         void PayOrder(int id);
     }
 }

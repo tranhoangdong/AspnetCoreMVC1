@@ -238,7 +238,7 @@
                     $(document).on('click', '#submitCategory', function (event) {
                         event.preventDefault();
                         var formData = {
-                            Name: $('#Namee').val()
+                            Name: $('#Namecategory').val()
                         };
                         console.log(formData);
                         $.ajax({
@@ -246,12 +246,18 @@
                             type: 'POST',
                             data: formData,
                             success: function (response) {
+                                debugger;
+
+                                console.log(response);
+                                console.log(typeof response.success);
+                                debugger;
+
                                 if (response.success) {
-                                    alert(response.message);
                                     $('#addCategory').modal('hide');
                                 } else {
-                                    alert(response.message);
                                 }
+                                alert(response.message);
+
                             },
                             error: function () {
                                 alert('Có lỗi xảy ra! Vui lòng thử lại.');
