@@ -44,6 +44,10 @@ namespace eShopSolution.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
             [Required]
             [Display(Name = "Email / Username")]
             public string Email { get; set; }
