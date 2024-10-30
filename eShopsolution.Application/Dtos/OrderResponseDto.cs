@@ -4,7 +4,7 @@ using System.Text;
 
 namespace eShopSolution.Application.Dtos
 {
-    public  class OrderDTO
+    public  class OrderResponseDto
     {
         public int Id { get; set; }
         public int RoomAndTableId { get; set; }

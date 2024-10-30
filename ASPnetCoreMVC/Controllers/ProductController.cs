@@ -71,7 +71,7 @@ namespace eShopSolution.Web.Controllers
 
         public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
-            var categories = _categoryService.GetAllCategory().Select(x => new CategoryViewModel
+            var categories = _categoryService.GetAllCategories().Select(x => new CategoryViewModel
             {
                 Id = x.Id,
                 Name = x.Name
@@ -92,7 +92,7 @@ namespace eShopSolution.Web.Controllers
             {
                 return NotFound();
             }
-            var categories = _categoryService.GetAllCategory().Select(c => new CategoryViewModel
+            var categories = _categoryService.GetAllCategories().Select(c => new CategoryViewModel
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -158,7 +158,7 @@ namespace eShopSolution.Web.Controllers
                     return Json(new JsonResultResponse { success = false, message = "Dữ liệu không hợp lệ." });
                 }
 
-                _categoryService.AddCategorys(name);
+                _categoryService.AddCategories(name);
 
                 return Json(new JsonResultResponse { success = true, message = "lưu category thành công" });
           
@@ -166,7 +166,7 @@ namespace eShopSolution.Web.Controllers
 
         public IActionResult CreateProduct()
         {
-            var  category = _categoryService.GetAllCategory().Select( c => new CategoryViewModel
+            var  category = _categoryService.GetAllCategories().Select( c => new CategoryViewModel
             {
                 Id = c.Id,
                 Name = c.Name,

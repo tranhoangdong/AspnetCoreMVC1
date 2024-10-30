@@ -59,7 +59,7 @@ namespace eShopSolution.Web.Controllers
 
         public IActionResult Index(int? categoryId, int ban)
         {
-            var categories = _categoryService.GetAllCategory(true).Select(x => new CategoryViewModel
+            var categories = _categoryService.GetAllCategories(true).Select(x => new CategoryViewModel
             {
                 Id = x.Id,
                 Name = x.Name
@@ -98,7 +98,7 @@ namespace eShopSolution.Web.Controllers
                 return Json(new { success = false, message = "Bàn không tồn tại!" });
             }
 
-            var orderDTO = new OrderDTO
+            var orderResponseDto = new OrderResponseDto
             {
                 RoomAndTableId = ban,
                 OrderTime = DateTime.Now,
@@ -110,7 +110,7 @@ namespace eShopSolution.Web.Controllers
                 }).ToList()
 
             };
-            _orderDetailService.AddOrder(orderDTO);
+            _orderDetailService.AddOrder(orderResponseDto);
             return Json(new JsonResultResponse
             { success = true,
               message = "Đơn hàng đã được lưu thành công!",

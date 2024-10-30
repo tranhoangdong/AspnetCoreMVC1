@@ -18,7 +18,7 @@ namespace eShopSolution.Application.Service
             _eShopDbContext = eShopDbContext;
         }
 
-        public List<CategoryDTO> GetAllCategory( bool filterProducts = false)
+        public List<CategoryDTO> GetAllCategories( bool filterProducts = false)
         {
             var query = _eShopDbContext.Categories.AsQueryable();
 
@@ -35,7 +35,7 @@ namespace eShopSolution.Application.Service
 
         }
 
-        public void AddCategorys(string name)
+        public void AddCategories(string name)
         {
             var category = new Category 
             {

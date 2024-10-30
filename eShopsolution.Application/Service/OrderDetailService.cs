@@ -20,24 +20,32 @@ namespace eShopSolution.Application.Service
             _eShopDbContext = eShopDbContext;
         }
 
-        public List<OrderDTO> GetAllOrders(GetOrderDTO getOrderDTO)
+        public List<OrderResponseDto> GetAllOrders(OrderRequestDto orderRequestDto)
         {
             var orders = _eShopDbContext.Orders.AsQueryable();
-            if (getOrderDTO.Idban > 0)
+            if (orderRequestDto.BanId > 0)
             {
-                orders = orders.Where(o => o.RoomAndTableId == getOrderDTO.Idban);
+                orders = orders.Where(o => o.RoomAndTableId == orderRequestDto.BanId);
             }
-            if (getOrderDTO.IdOrder > 0)
+            if (orderRequestDto.OrderId > 0)
             {
-                orders = orders.Where(o => o.Id == getOrderDTO.IdOrder);
+                orders = orders.Where(o => o.Id == orderRequestDto.OrderId);
             }
-            if (!string.IsNullOrEmpty(getOrderDTO.StatusOrder))
+            if (!string.IsNullOrEmpty(orderRequestDto.OrderStatus))
             {
-                bool isPaid = getOrderDTO.StatusOrder == "paid";
+                bool isPaid = orderRequestDto.OrderStatus == "paid";
                 orders = orders.Where(o => o.IsPaid == isPaid);
             }
+            if (orderRequestDto.StartDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderTime >= orderRequestDto.StartDate.Value);
+            }
+            if (orderRequestDto.EndDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderTime < orderRequestDto.EndDate.Value.AddDays(1));
+            }
 
-            return orders.Select(o => new OrderDTO
+            return orders.Select(o => new OrderResponseDto
             {
                 Id = o.Id,
                 RoomAndTableId = o.RoomAndTableId,
@@ -55,7 +63,7 @@ namespace eShopSolution.Application.Service
                 _eShopDbContext.SaveChanges();
             }
         }
-        public int AddOrder(OrderDTO orderDTOs)
+        public int AddOrder(OrderResponseDto orderDTOs)
         {
             try
             {

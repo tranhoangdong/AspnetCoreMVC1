@@ -23,6 +23,18 @@
                 <option value="notyetpaid">Chưa thanh toán</option>
             </select>
         </div>
+        <div class="form-group">
+            <label for="startDate">Ngày bắt đầu:</label>
+            <input type="date" id="startDate" name="startDate" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="endDate">Ngày kết thúc:</label>
+            <input type="date" id="endDate" name="endDate" class="form-control" />
+        </div>
+
+
+
         <button type="submit" class="btn btn-primary search-order">Tìm kiếm</button>
     </form>
 
@@ -39,6 +51,8 @@
             var idban = $('#idban').val();
             var idOrder = $('#idOrder').val();
             var statusOrder = $('#statusOrder').val();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
             console.log("idban:", idban, "idOrder:", idOrder);
             $.ajax({
                 url: '@Url.Action("LoadOrder", "AdminOrder")',
@@ -46,7 +60,9 @@
                 data: {
                     idban: idban,
                     idOrder: idOrder,
-                    statusOrder: statusOrder
+                    statusOrder: statusOrder,
+                     startDate: startDate,
+                    endDate: endDate
                 },
                 success: function (data) {
                     $('#OrderTableContainer').html(data);
