@@ -4,11 +4,11 @@ using System.Text;
 
 namespace eShopSolution.Application.Dtos
 {
-    public class GetOrderDTO
+    public class OrderRequestDto
     {
-        public int Idban { get; set; }
-        public int IdOrder { get; set; }
-        public string StatusOrder { get; set; }
+        public int BanId { get; set; }
+        public int OrderId { get; set; }
+        public string OrderStatus { get; set; }
         public DateTime? EndDate  { get; set;}
         public DateTime? StartDate { get; set; }
 

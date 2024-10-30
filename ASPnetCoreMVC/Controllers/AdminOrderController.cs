@@ -21,11 +21,11 @@ namespace eShopSolution.Web.Controllers
         }
         public IActionResult LoadOrder(int idban, int idOrder, string statusOrder, DateTime? startDate, DateTime? endDate)
         {
-            var getOrderDTO = new GetOrderDTO
+            var getOrderDTO = new OrderRequestDto
             {
-                Idban = idban,
-                IdOrder = idOrder,
-                StatusOrder = statusOrder,
+                BanId = idban,
+                OrderId = idOrder,
+                OrderStatus = statusOrder,
                 StartDate = startDate,
                 EndDate = endDate
             };
