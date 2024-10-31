@@ -42,7 +42,7 @@ namespace eShopSolution.Web.Controllers
                     sortOrder = sortOrder,
                     name = name
                 };
-                var resultDTO = _productService.GetAllProducts(pageNumber, pageSize, getAllProductsDTO);
+                var resultDTO = _productService.GetAllProducts(getAllProductsDTO,pageNumber,pageSize);
                 var productViewModels = resultDTO.PagedProducts.Select(p => new ProductDetailViewModel
                 {
                     ID = p.Id,

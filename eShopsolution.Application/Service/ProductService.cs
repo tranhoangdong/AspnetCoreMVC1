@@ -20,7 +20,7 @@ namespace eShopSolution.Application.Service
         }
 
 
-        public GetAllProductResuftDTO GetAllProducts(int pageNumber, int pageSize,GetAllProductsDTO getAllProductsDTO)
+        public GetAllProductResuftDTO GetAllProducts(GetAllProductsDTO getAllProductsDTO , int pageNumber = 1, int pageSize = 10)
         {
 
             var products = _eShopDbContext.Products.Include(p => p.Category).AsQueryable();
