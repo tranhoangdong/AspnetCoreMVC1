@@ -3,6 +3,7 @@
     Name NVARCHAR(50) NOT NULL
 );
 
+EXEC sp_rename 'Status.statusId', 'Id', 'COLUMN';
 
 INSERT INTO Status (Name)
 VALUES 
