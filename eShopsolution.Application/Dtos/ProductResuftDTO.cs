@@ -4,7 +4,7 @@ using System.Text;
 
 namespace eShopSolution.Application.Dtos
 {
-    public class ProductResuftDTO
+    public class ProductResuftDTO : PagingDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

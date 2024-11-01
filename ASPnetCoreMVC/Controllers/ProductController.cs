@@ -34,15 +34,16 @@ namespace eShopSolution.Web.Controllers
                     throw new ArgumentException("Page number and page size must be greater than zero.");
                 }
 
-                var getAllProductsDTO = new GetAllProductsDTO
+                var productsRequestDto = new ProductsRequestDto
                 {
                     categoryId = categoryId,
                     priceFilter = priceFilter,
                     sortColumn = sortColumn,
                     sortOrder = sortOrder,
-                    name = name
+                    name = name,
+                    pageNumber = pageNumber
                 };
-                var resultDTO = _productService.GetAllProducts(getAllProductsDTO,pageNumber,pageSize);
+                var resultDTO = _productService.GetAllProducts(productsRequestDto);
                 var productViewModels = resultDTO.PagedProducts.Select(p => new ProductDetailViewModel
                 {
                     ID = p.Id,

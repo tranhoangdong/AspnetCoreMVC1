@@ -37,7 +37,7 @@ namespace eShopSolution.Web.Controllers
         public const string CARTKEY = "cart";
         public IActionResult LoadProductTable(int? categoryId)
         {
-            var getAllProductsDTO = new GetAllProductsDTO
+            var getAllProductsDTO = new ProductsRequestDto
             {
                 categoryId = categoryId
             };
