@@ -1,7 +1,7 @@
 ﻿@model eShopSolution.Web.Models.ProductListViewModel
 
 @{
-    int totalProducts = 100;
+    int totalProducts = Model.TotalProducts;
     int pageSize = 10;
     int totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
 }
