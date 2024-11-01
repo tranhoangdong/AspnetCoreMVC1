@@ -20,50 +20,50 @@ namespace eShopSolution.Application.Service
         }
 
 
-        public GetAllProductResuftDTO GetAllProducts(GetAllProductsDTO getAllProductsDTO , int pageNumber = 1, int pageSize = 10)
+        public GetAllProductResuftDTO GetAllProducts(ProductsRequestDto productsRequestDto) 
         {
 
-            var products = _eShopDbContext.Products.Include(p => p.Category).AsQueryable();
+            var products = _eShopDbContext.Products.Include(p => p.Category).Where(p => p.IsDeleted == false || p.IsDeleted == null).AsQueryable();
 
-            if (!string.IsNullOrEmpty(getAllProductsDTO.name))
+            if (!string.IsNullOrEmpty(productsRequestDto.name))
             {
-                products = products.Where(x => x.Name.Contains(getAllProductsDTO.name));
+                products = products.Where(x => x.Name.Contains(productsRequestDto.name));
             }
 
-            if (!string.IsNullOrEmpty(getAllProductsDTO.name))
+            if (!string.IsNullOrEmpty(productsRequestDto.name))
             {
-                var nameToSearch = getAllProductsDTO.name.ToLower();
+                var nameToSearch = productsRequestDto.name.ToLower();
                 products = products.Where(x => x.Name.ToLower().Contains(nameToSearch));
             }
-            if (getAllProductsDTO.categoryId.HasValue)
+            if (productsRequestDto.categoryId.HasValue)
             {
-                products = products.Where(p => p.CategoryId == getAllProductsDTO.categoryId.Value);
+                products = products.Where(p => p.CategoryId == productsRequestDto.categoryId.Value);
             }
-            if (getAllProductsDTO.priceFilter == "above100")
+            if (productsRequestDto.priceFilter == "above100")
             {
                 products = products.Where(p => p.Price > 100);
             }
-            else if (getAllProductsDTO.priceFilter == "below100")
+            else if (productsRequestDto.priceFilter == "below100")
             {
                 products = products.Where(p => p.Price <= 100);
             }
 
-            switch (getAllProductsDTO.sortColumn)
+            switch (productsRequestDto.sortColumn)
             {
                 case "price":
-                    products = getAllProductsDTO.sortOrder == "asc" ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
+                    products = productsRequestDto.sortOrder == "asc" ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
                     break;
 
                 case "stock":
-                    products = getAllProductsDTO.sortOrder == "asc" ? products.OrderBy(p => p.Stock) : products.OrderByDescending(p => p.Stock);
+                    products = productsRequestDto.sortOrder == "asc" ? products.OrderBy(p => p.Stock) : products.OrderByDescending(p => p.Stock);
                     break;
             }
-            if (pageNumber < 1 || pageSize < 1)
+            if (productsRequestDto.pageNumber < 1 || productsRequestDto.pageSize < 1)
             {
                 throw new ArgumentException("Page number and page size must be greater than zero.");
             }
             var totalProducts = products.Count();
-            var pagedProducts = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var pagedProducts = products.Skip((productsRequestDto.pageNumber - 1) * productsRequestDto.pageSize).Take(productsRequestDto.pageSize).ToList();
             var productResults = pagedProducts.Select(p => new ProductResuftDTO
             {
                 Id = p.Id,
@@ -129,8 +129,8 @@ namespace eShopSolution.Application.Service
             var orderDetails = _eShopDbContext.OrderDetails.Where(od => od.ProductId == productId);
             if (product != null && orderDetails != null)
             {
+                product.IsDeleted = true;
                 _eShopDbContext.OrderDetails.RemoveRange(orderDetails);
-                _eShopDbContext.Products.Remove(product);
                 _eShopDbContext.SaveChanges();
             }
           

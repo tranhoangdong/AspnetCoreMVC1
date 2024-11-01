@@ -9,7 +9,7 @@ namespace eShopSolution.Application.IService
 {
    public interface IProductService
     {
-        GetAllProductResuftDTO GetAllProducts(GetAllProductsDTO getAllProductsDTO, int pageNumber = 1, int pageSize = 10);
+        GetAllProductResuftDTO GetAllProducts(ProductsRequestDto productsRequestDto);
         Product GetProductbyId(int productId);
         public void DeleteProduct(int productId);
         Task<bool> UpdateProductAsync(ProductDTO productDto);

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace eShopSolution.Application.Dtos
 {
-    public class GetAllProductsDTO
+    public class ProductsRequestDto : PagingDto
     {
         public int? categoryId { get; set; }
         public string priceFilter { get; set; }
@@ -12,8 +12,7 @@ namespace eShopSolution.Application.Dtos
         public string sortOrder { get; set; }
         public string name { get; set; }
         public int TotalProducts { get; set; } 
-        public int CurrentPage { get; set; } 
-        public int TotalPages { get; set; } 
+       
     }
 
 }
