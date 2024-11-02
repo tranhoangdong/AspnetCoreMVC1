@@ -54,6 +54,19 @@ namespace eShopSolution.Application.Service
                 IsPaid = o.IsPaid
             }).ToList();
         }
+        public List<OrderDetailsDTO> OrderDetails(int orderId)
+        {
+            var orderDetails = _eShopDbContext.OrderDetails.Where(o => o.OrderId == orderId).Select(o => new OrderDetailsDTO
+            {
+                Id = o.Id,
+                Price = o.Price,
+                ProductId = o.ProductId,
+                Quantity = o.Quantity,
+                Total = o.Total
+            }).ToList();
+            return orderDetails;
+        }
+
         public void PayOrder(int id)
         {
             var order = _eShopDbContext.Orders.Find(id);

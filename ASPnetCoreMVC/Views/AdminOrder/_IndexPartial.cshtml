@@ -11,6 +11,8 @@
                 <th>Thời gian đặt</th>
                 <th>Trạng thái</th>
                 <th>Hành động</th>
+                <th>Xem chi tiết đơn hàng</th>
+
             </tr>
         </thead>
         <tbody>
@@ -25,10 +27,13 @@
                 <td>
                     @if (!order.IsPaid)
                     {
-                    <form asp-action="PayOrder" method="post">
-                        <input type="hidden" name="id" value="@order.Id" />
-                        <button type="submit">Thanh toán</button>
-                    </form>}
+                        <form asp-action="PayOrder" method="post">
+                            <input type="hidden" name="id" value="@order.Id" />
+                            <button type="submit">Thanh toán</button>
+                        </form>}
+                </td>
+                <td>
+                    <button class="btn btn-info view-details" data-id="@order.Id">Xem chi tiết</button>
                 </td>
             </tr>
             }

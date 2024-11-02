@@ -11,5 +11,6 @@ namespace eShopSolution.Application.IService
         int AddOrder(OrderResponseDto orderDTOs);
         List<OrderResponseDto> GetAllOrders(OrderRequestDto getOrderDTO);
         void PayOrder(int id);
+        List<OrderDetailsDTO> OrderDetails(int orderId);
     }
 }
