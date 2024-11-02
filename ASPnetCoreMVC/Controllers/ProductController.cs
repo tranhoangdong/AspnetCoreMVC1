@@ -52,7 +52,10 @@ namespace eShopSolution.Web.Controllers
                     Stock = p.Stock,
                     CategoryName = p.CategoryName
                 }).ToList();
-
+                if (pageNumber > productsRequestDto.TotalPages && productsRequestDto.TotalPages > 0)
+                {
+                    pageNumber = productsRequestDto.TotalPages;
+                }
                 var model = new ProductListViewModel
                 {
                     Products = productViewModels,
