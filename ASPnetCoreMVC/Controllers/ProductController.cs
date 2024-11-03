@@ -41,7 +41,8 @@ namespace eShopSolution.Web.Controllers
                     sortColumn = sortColumn,
                     sortOrder = sortOrder,
                     name = name,
-                    pageNumber = pageNumber
+                    pageNumber = pageNumber,
+                    CurrentPage = pageNumber
                 };
                 var resultDTO = _productService.GetAllProducts(productsRequestDto);
                 var productViewModels = resultDTO.PagedProducts.Select(p => new ProductDetailViewModel
