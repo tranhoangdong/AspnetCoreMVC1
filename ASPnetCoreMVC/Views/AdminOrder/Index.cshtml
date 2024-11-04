@@ -54,6 +54,14 @@
             var startDate = $('#startDate').val();
             var endDate = $('#endDate').val();
             console.log("idban:", idban, "idOrder:", idOrder);
+            if (idban && isNaN(idban)) {
+                alert("Mã bàn phải là một số nguyên. Vui lòng nhập lại.");
+                return;
+            }
+            if (idOrder && isNaN(idOrder)) {
+                alert("Mã đơn hàng phải là một số nguyên. Vui lòng nhập lại.");
+                return;
+            }
             $.ajax({
                 url: '@Url.Action("LoadOrder", "AdminOrder")',
                 type: 'GET',
