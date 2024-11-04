@@ -161,24 +161,32 @@
     <script>
 
         $(document).ready(function () {
+            var currentFilters = {
+                name: '',
+                priceFilter: '',
+                sortColumn: '',
+                sortOrder: '',
+                categoryId: ''
+            };
 
             function loadProductTable() {
-                var name = $('#name').val();
-                var priceFilter = $('#priceFilter').val();
-                var sortColumn = $('#sortColumn').val();
-                var sortOrder = $('#sortOrder').val();
-                var categoryDropdown = $('#categoryDropdown').val();
+                currentFilters.name = $('#name').val();
+                currentFilters.priceFilter = $('#priceFilter').val();
+                currentFilters.sortColumn = $('#sortColumn').val();
+                currentFilters.sortOrder = $('#sortOrder').val();
+                currentFilters.categoryId = $('#categoryDropdown').val();
+
 
                 $.ajax({
                     url: '@Url.Action("LoadProductTable", "Product")',
                     type: 'GET',
                     data: {
-                        pageNumber: 1,
-                        name: name,
-                        priceFilter: priceFilter,
-                        sortColumn: sortColumn,
-                        sortOrder: sortOrder,
-                        categoryId: categoryDropdown
+                        pageNumber: 1 ,
+                        name: currentFilters.name,
+                        priceFilter: currentFilters.priceFilter,
+                        sortColumn: currentFilters.sortColumn,
+                        sortOrder: currentFilters.sortOrder,
+                        categoryId: currentFilters.categoryId
                     },
                     success: function (data) {
                         $('#productTableContainer').html(data);
