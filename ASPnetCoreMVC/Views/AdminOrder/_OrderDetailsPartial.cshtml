@@ -1,0 +1,23 @@
+﻿@model List<GetOrderDetailsViewmodel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+            <th>Tổng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model)
+        {
+            <tr>
+                <td>@detail.ProductId</td>
+                <td>@detail.Quantity</td>
+                <td>@detail.Price</td>
+                <td>@detail.Total</td>
+            </tr>
+        }
+    </tbody>
+</table>

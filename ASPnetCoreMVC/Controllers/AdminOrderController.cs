@@ -51,5 +51,20 @@ namespace eShopSolution.Web.Controllers
             _orderDetailService.PayOrder(id); 
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public IActionResult OrderDetails(int orderId)
+        {
+            var orderDetails = _orderDetailService.OrderDetails(orderId);
+            var getorderDetailViewModels = orderDetails.Select(od => new GetOrderDetailsViewmodel
+            {
+                Id = od.Id,
+                ProductId = od.ProductId,
+                Quantity = od.Quantity,
+                Price = od.Price,
+                Total = od.Total
+            }).ToList();
+
+            return PartialView("_OrderDetailsPartial", getorderDetailViewModels);
+        }
     }
 }
