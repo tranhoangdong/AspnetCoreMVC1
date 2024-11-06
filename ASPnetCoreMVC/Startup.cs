@@ -2,6 +2,8 @@
 using eShopSolution.Application.IService;
 using eShopSolution.Application.Service;
 using eShopSolution.Data.Entities;
+
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -42,7 +44,14 @@ namespace eShopSolution.Web
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IRoomAndTableServices, RoomAndTableServices>();
             services.AddTransient<IOrderDetailService, OrderDetailService>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+          .AddCookie(options =>
+          {
+              options.LoginPath = "/Account/Login"; 
+            });
 
+            services.AddAuthorization();
+            services.AddControllersWithViews();
 
             services.AddDistributedMemoryCache();           
             services.AddSession(cfg => {                   
