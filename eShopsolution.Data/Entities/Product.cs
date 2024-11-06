@@ -11,7 +11,7 @@ namespace eShopSolution.Data.Entities
         public decimal Price { get; set; }
         public int Stock { get; set; } = 0;
         public int CategoryId { get; set; }
-        public bool? IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
         public ICollection<Image> Images { get; set; }
         public Category Category { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
