@@ -126,11 +126,9 @@ namespace eShopSolution.Application.Service
                 _eShopDbContext.Images.RemoveRange(images);
             }
             var product = _eShopDbContext.Products.FirstOrDefault(x => x.Id == productId);
-            var orderDetails = _eShopDbContext.OrderDetails.Where(od => od.ProductId == productId);
-            if (product != null && orderDetails != null)
+            if (product != null )
             {
                 product.IsDeleted = true;
-                _eShopDbContext.OrderDetails.RemoveRange(orderDetails);
                 _eShopDbContext.SaveChanges();
             }
           
