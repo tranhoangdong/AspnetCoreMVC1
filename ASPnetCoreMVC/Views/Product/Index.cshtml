@@ -320,6 +320,7 @@
                             debugger;
                             $('#bulkUpdateProductModalContent').html(data);
                             $('#bulkUpdateProductModal').modal('show');
+
                         },
                         error: function (xhr, status, error) {
                             alert('Cập nhật thất bại!');
@@ -330,6 +331,7 @@
                 }
             });
 
+            btnUpdateBulk
             $(document).on('click', '#btnUpdateBulk', function (e) {
                 e.preventDefault();
                 var selectedProductIds = $("input[name='productIds']").map(function () {
@@ -350,8 +352,9 @@
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
                     success: function (response) {
-                        debugger;
                         console.log("Form submitted successfully");
+                        $('#bulkUpdateProductModal').modal('hide');
+
                         loadProductTable();
 
                         console.log("ID sản phẩm chỉnh sửa: " + selectedProductIds.join(','));
