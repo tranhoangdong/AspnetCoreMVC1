@@ -1,6 +1,7 @@
 ﻿using eShopSolution.Data.Entities;
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace eShopSolution.Data.Entities
 {
@@ -10,6 +11,7 @@ namespace eShopSolution.Data.Entities
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; } = 0;
+        [Required(ErrorMessage = "Category is required.")]
         public int CategoryId { get; set; }
         public bool? IsDeleted { get; set; } = false;
         public ICollection<Image> Images { get; set; }

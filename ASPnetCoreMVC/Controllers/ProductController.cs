@@ -7,6 +7,7 @@ using eShopSolution.Application.Dtos;
 using eShopSolution.Application.Service;
 using System;
 using eShopSolution.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eShopSolution.Web.Controllers
 {
@@ -72,8 +73,8 @@ namespace eShopSolution.Web.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi tải sản phẩm. Vui lòng thử lại sau." });
             }
         }
-      
 
+        [Authorize]
         public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
         {
             var categories = _categoryService.GetAllCategories().Select(x => new CategoryViewModel
