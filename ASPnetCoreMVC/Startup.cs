@@ -1,4 +1,7 @@
-﻿using eShopsolution.Data.EF;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+
+using eShopsolution.Data.EF;
 using eShopSolution.Application.IService;
 using eShopSolution.Application.Service;
 using eShopSolution.Data.Entities;
@@ -42,7 +45,7 @@ namespace eShopSolution.Web
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IRoomAndTableServices, RoomAndTableServices>();
             services.AddTransient<IOrderDetailService, OrderDetailService>();
-
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             services.AddDistributedMemoryCache();           
             services.AddSession(cfg => {                   
