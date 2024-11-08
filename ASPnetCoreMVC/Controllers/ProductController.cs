@@ -74,7 +74,7 @@ namespace eShopSolution.Web.Controllers
         }
       
 
-        public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
+        public IActionResult Index()
         {
             var categories = _categoryService.GetAllCategories().Select(x => new CategoryViewModel
             {
