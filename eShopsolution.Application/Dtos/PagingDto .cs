@@ -6,8 +6,7 @@ namespace eShopSolution.Application.Dtos
 {
     public class PagingDto
     {
-        public int pageNumber { get; set; } = 1;
-        public int pageSize { get; set; } = 10;
+        public int PageNumber { get; set; } = 1;
 
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 10;

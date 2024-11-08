@@ -39,7 +39,7 @@ namespace eShopSolution.Web.Controllers
         {
             var getAllProductsDTO = new ProductsRequestDto
             {
-                categoryId = categoryId
+                CategoryId = categoryId
             };
             var resultDTO = _productService.GetAllProducts(getAllProductsDTO);
 
