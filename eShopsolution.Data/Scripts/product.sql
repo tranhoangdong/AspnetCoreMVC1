@@ -1,0 +1,9 @@
+﻿ALTER TABLE Product
+DROP CONSTRAINT DF__Product__IsDelet__66603565;
+
+ALTER TABLE Product
+DROP COLUMN IsDeleted;
+
+
+ALTER TABLE Product
+ADD IsDeleted BIT NOT NULL DEFAULT 0;
