@@ -14,6 +14,8 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
+using eShopSolution.Application.Common;
+
 namespace eShopSolution.Web.Controllers
 {
     public class OrderController : Controller
@@ -34,7 +36,6 @@ namespace eShopSolution.Web.Controllers
 
 
         }
-        public const string CARTKEY = "cart";
         public IActionResult LoadProductTable(int? categoryId)
         {
             var getAllProductsDTO = new ProductsRequestDto
@@ -79,7 +80,7 @@ namespace eShopSolution.Web.Controllers
         List<CartItem> GetCartItems()
         {
             var session = HttpContext.Session;
-            string jsoncart = session.GetString(CARTKEY);
+            string jsoncart = session.GetString(Constants.CARTKEY);
             if (jsoncart != null)
             {
                 return JsonConvert.DeserializeObject<List<CartItem>>(jsoncart);
