@@ -7,7 +7,11 @@ using eShopSolution.Application.Dtos;
 using eShopSolution.Application.Service;
 using System;
 using eShopSolution.Data.Entities;
+
+using Microsoft.AspNetCore.Authorization;
+
 using System.Collections.Generic;
+
 
 namespace eShopSolution.Web.Controllers
 {
@@ -74,9 +78,13 @@ namespace eShopSolution.Web.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi tải sản phẩm. Vui lòng thử lại sau." });
             }
         }
-      
+
+
+        [Authorize]
+       
 
         public IActionResult Index()
+
         {
             var categories = _categoryService.GetAllCategories().Select(x => new CategoryViewModel
             {
