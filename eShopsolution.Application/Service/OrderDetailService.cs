@@ -105,7 +105,24 @@ namespace eShopSolution.Application.Service
                 throw;
             }
         }
+        public List<OrderDetailsDTO> GetOrderDetailsByOrderId(int orderId)
+        {
+            var orderDetails = _eShopDbContext.OrderDetails
+                .Where(od => od.OrderId == orderId)
+                .Select(od => new OrderDetailsDTO
+                {
+                    Id = od.Id,
+                    OrderId = od.OrderId,
+                    ProductId = od.ProductId,
+                    Quantity = od.Quantity,
+                    Price = od.Price,
+                    Total = od.Total
+                })
+                .ToList();
 
-       
+            return orderDetails;
+        }
+
+
     }
 }

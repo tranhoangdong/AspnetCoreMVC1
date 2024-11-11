@@ -6,9 +6,9 @@ using System.Text;
 
 namespace eShopSolution.Application.Dtos
 {
-    public class GetAllProductResuftDTO : PagingDto
+    public class GetAllProductResultDTO : PagingDto
     {
         public int TotalProducts { get; set; }
-        public List<ProductResuftDTO> PagedProducts { get; set; }
+        public List<ProductResultDTO> PagedProducts { get; set; }
     }
 }

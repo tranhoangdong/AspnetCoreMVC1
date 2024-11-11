@@ -6,11 +6,11 @@ namespace eShopSolution.Application.Dtos
 {
     public class ProductsRequestDto : PagingDto
     {
-        public int? categoryId { get; set; }
-        public string priceFilter { get; set; }
-        public string sortColumn { get; set; }
-        public string sortOrder { get; set; }
-        public string name { get; set; }
+        public int? CategoryId { get; set; }
+        public string PriceFilter { get; set; }
+        public string SortColumn { get; set; }
+        public string SortOrder { get; set; }
+        public string Name { get; set; }
         public int TotalProducts { get; set; } 
        
     }
