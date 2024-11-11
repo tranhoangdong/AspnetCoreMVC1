@@ -1,4 +1,7 @@
-﻿using eShopsolution.Data.EF;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+
+using eShopsolution.Data.EF;
 using eShopSolution.Application.IService;
 using eShopSolution.Application.Service;
 using eShopSolution.Data.Entities;
@@ -44,6 +47,7 @@ namespace eShopSolution.Web
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IRoomAndTableServices, RoomAndTableServices>();
             services.AddTransient<IOrderDetailService, OrderDetailService>();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
           .AddCookie(options =>
           {
@@ -52,6 +56,9 @@ namespace eShopSolution.Web
 
             services.AddAuthorization();
             services.AddControllersWithViews();
+
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
 
             services.AddDistributedMemoryCache();           
             services.AddSession(cfg => {                   

@@ -7,7 +7,11 @@ using eShopSolution.Application.Dtos;
 using eShopSolution.Application.Service;
 using System;
 using eShopSolution.Data.Entities;
+
 using Microsoft.AspNetCore.Authorization;
+
+using System.Collections.Generic;
+
 
 namespace eShopSolution.Web.Controllers
 {
@@ -37,23 +41,24 @@ namespace eShopSolution.Web.Controllers
 
                 var productsRequestDto = new ProductsRequestDto
                 {
-                    categoryId = categoryId,
-                    priceFilter = priceFilter,
-                    sortColumn = sortColumn,
-                    sortOrder = sortOrder,
-                    name = name,
-                    pageNumber = pageNumber,
+                    CategoryId = categoryId,
+                    PriceFilter = priceFilter,
+                    SortColumn = sortColumn,
+                    SortOrder = sortOrder,
+                    Name = name,
+                    PageNumber = pageNumber,
                     CurrentPage = pageNumber
                 };
                 var resultDTO = _productService.GetAllProducts(productsRequestDto);
-                var productViewModels = resultDTO.PagedProducts.Select(p => new ProductDetailViewModel
+                var productViewModels = resultDTO.PagedProducts?
+                .Select(p => new ProductDetailViewModel
                 {
                     ID = p.Id,
                     Name = p.Name,
                     Price = p.Price,
                     Stock = p.Stock,
                     CategoryName = p.CategoryName
-                }).ToList();
+                }).ToList() ?? new List<ProductDetailViewModel>();
                 if (pageNumber > productsRequestDto.TotalPages && productsRequestDto.TotalPages > 0)
                 {
                     pageNumber = productsRequestDto.TotalPages;
@@ -74,8 +79,12 @@ namespace eShopSolution.Web.Controllers
             }
         }
 
+
         [Authorize]
-        public IActionResult Index(string name, string priceFilter, string sortColumn, string sortOrder, int? categoryId)
+       
+
+        public IActionResult Index()
+
         {
             var categories = _categoryService.GetAllCategories().Select(x => new CategoryViewModel
             {

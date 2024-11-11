@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DinkToPdfIncludesDependencies" Version="1.0.8" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.1" />
     <PackageReference Include="Handlebars.Net.Extension.NewtonsoftJson" Version="1.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.32" />

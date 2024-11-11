@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using eShopsolution.Data.EF;
 using System;
+using eShopSolution.Application.Common;
 
 namespace eShopSolution.Web.Controllers
 {
@@ -27,7 +28,6 @@ namespace eShopSolution.Web.Controllers
             _categoryService = categoryService;
             _eShopDbContext = eShopDbContext;
         }
-        public const string CARTKEY = "cart";
 
         [HttpGet]
         public IActionResult GetCartItemCount()
@@ -40,7 +40,7 @@ namespace eShopSolution.Web.Controllers
         List<CartItem> GetCartItems()
         {
             var session = HttpContext.Session;
-            string jsoncart = session.GetString(CARTKEY);
+            string jsoncart = session.GetString(Constants.CARTKEY);
             if (jsoncart != null)
             {
                 return JsonConvert.DeserializeObject<List<CartItem>>(jsoncart);
@@ -50,14 +50,14 @@ namespace eShopSolution.Web.Controllers
         void ClearCart()
         {
             var session = HttpContext.Session;
-            session.Remove(CARTKEY);
+            session.Remove(Constants.CARTKEY);
         }
 
         void SaveCartSession(List<CartItem> ls)
         {
             var session = HttpContext.Session;
             string jsoncart = JsonConvert.SerializeObject(ls);
-            session.SetString(CARTKEY, jsoncart);
+            session.SetString(Constants.CARTKEY, jsoncart);
         }
         [HttpPost]
         public IActionResult AddToCart(int productid)
