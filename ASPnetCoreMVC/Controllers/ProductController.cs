@@ -79,7 +79,6 @@ namespace eShopSolution.Web.Controllers
             }
         }
 
-
         [Authorize]
         public IActionResult Index()
 
