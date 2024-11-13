@@ -1,2 +1,1 @@
-﻿ALTER TABLE TenBang
-ADD IsDeleted BIT DEFAULT 0;
+
