@@ -1,0 +1,3 @@
+﻿//20.Phân biệt == và phương thức Equals
+//Equals là phương thức được kế thừa từ class cơ sở Object và có thể bị ghi đè trong các class con. Equal so sánh theo kiểu tham chiếu nội dung của đối tượng.
+//== là toán tử so sánh bằng, dùng để so sánh theo kiểu dữ liệu giá trị như số nguyên, số thực, chuỗi, các kiểu dữ liệu nguyên thủy,...
