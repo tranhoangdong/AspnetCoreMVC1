@@ -8,3 +8,30 @@
 //Ví du:
 
 //string b = "Hello ITNavi với câu hỏi phỏng vấn C# hay!!";
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int x = 10;
+        int y = x; // Sao chép giá trị của x vào y
+        y = 20;
+
+        Console.WriteLine($"x = {x}"); // Kết quả: x = 10
+        Console.WriteLine($"y = {y}"); // Kết quả: y = 20
+    }
+}
+class Program
+{
+    static void Main()
+    {
+        int[] arr1 = { 1, 2, 3 };
+        int[] arr2 = arr1; // arr2 trỏ đến cùng vùng nhớ với arr1
+        arr2[0] = 10;
+
+        Console.WriteLine($"arr1[0] = {arr1[0]}"); // Kết quả: arr1[0] = 10
+        Console.WriteLine($"arr2[0] = {arr2[0]}"); // Kết quả: arr2[0] = 10
+    }
+}
