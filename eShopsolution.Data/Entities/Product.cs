@@ -11,7 +11,6 @@ namespace eShopSolution.Data.Entities
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; } = 0;
-        [Required(ErrorMessage = "Category is required.")]
         public int CategoryId { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<Image> Images { get; set; }

@@ -189,13 +189,25 @@ namespace eShopSolution.Web.Controllers
             };
             return PartialView("_CreateProductPartial", allproductviewmodel);
         }
-     
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDetailViewModel productViewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(productViewModel);
+                var categories = _categoryService.GetAllCategories()
+                    .Select(c => new CategoryViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList();
+
+                var allProductViewModel = new EditProductPartialViewModel
+                {
+                    Product = productViewModel,
+                    Categories = categories
+                };
+
+                return PartialView("_CreateProductPartial", allProductViewModel);
             }
 
             var productDto = new ProductDTO
@@ -206,10 +218,10 @@ namespace eShopSolution.Web.Controllers
                 CategoryId = productViewModel.CategoryId
             };
 
-            await _productService.AddProductAsync(productDto); 
-
+            await _productService.AddProductAsync(productDto);
             return RedirectToAction("Index");
         }
+
 
         [HttpPost]
         public IActionResult DeleteProduct(int id)
