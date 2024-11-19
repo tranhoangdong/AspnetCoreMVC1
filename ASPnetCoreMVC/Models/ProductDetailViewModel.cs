@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace eShopSolution.Web.Models
+﻿namespace eShopSolution.Web.Models
 {
     public class ProductDetailViewModel
     {
@@ -10,8 +8,6 @@ namespace eShopSolution.Web.Models
         public decimal Price { get; set; }
         public int Stock { get; set; } = 0;
         public string CategoryName { get; set; }
-        [Required(ErrorMessage = "Category is required.")]
-        [Display(Name = "Danh mục")]
         public int CategoryId { get; set; }
         public int TotalProducts { get; set; }
         public int CurrentPage { get; set; }
