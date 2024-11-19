@@ -186,6 +186,7 @@ namespace eShopSolution.Web.Controllers
             var allproductviewmodel = new EditProductPartialViewModel
             {
                 Categories = category,
+                Product = new ProductDetailViewModel()
             };
             return PartialView("_CreateProductPartial", allproductviewmodel);
         }
@@ -195,6 +196,7 @@ namespace eShopSolution.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                productViewModel.Categories = _categoryService.GetAllCategories()
                 return View(productViewModel);
             }
 
