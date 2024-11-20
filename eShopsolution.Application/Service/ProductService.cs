@@ -201,6 +201,16 @@ namespace eShopSolution.Application.Service
             await _eShopDbContext.SaveChangesAsync();
             return true;
         }
+        public List<CategoryDTO> GetAllCategories()
+        {
+            return _eShopDbContext.Categories
+                .Select(c => new CategoryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+        }
 
     }
 }
