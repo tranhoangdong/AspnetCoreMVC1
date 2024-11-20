@@ -62,14 +62,6 @@
 
 <script>
     $(document).ready(function () {
-        $('.page-link').on('click', function () {
-            var pageNumber = $(this).data('page');
-            var pageSize = 10;
-            if (pageNumber <= 0 || pageSize <= 0) {
-                console.error("Page number and page size must be greater than zero.");
-                return;
-            }
-
 
             $.ajax({
                 url: '@Url.Action("LoadProductTable", "Product")',

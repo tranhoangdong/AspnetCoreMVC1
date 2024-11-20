@@ -169,7 +169,7 @@
                 categoryId: ''
             };
 
-            function loadProductTable() {
+            function loadProductTable(pageNumber = 1) {
                 currentFilters.name = $('#name').val();
                 currentFilters.priceFilter = $('#priceFilter').val();
                 currentFilters.sortColumn = $('#sortColumn').val();
@@ -181,7 +181,7 @@
                     url: '@Url.Action("LoadProductTable", "Product")',
                     type: 'GET',
                     data: {
-                        pageNumber: 1 ,
+                        pageNumber: pageNumber ,
                         name: currentFilters.name,
                         priceFilter: currentFilters.priceFilter,
                         sortColumn: currentFilters.sortColumn,
@@ -197,7 +197,10 @@
                 });
             }
 
-
+            $(document).on('click', '.page-link', function () {
+                var pageNumber = $(this).data('page');
+                loadProductTable(pageNumber);
+            });
             $(document).on('click', '#btnUpdateProduct', function (e) {
                 e.preventDefault();
                 var productId = $(this).data('id');
