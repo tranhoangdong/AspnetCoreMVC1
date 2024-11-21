@@ -145,6 +145,33 @@ namespace eShopSolution.Web.Controllers
 
             return View(checkoutViewModel);
         }
+        [HttpPost]
+        public IActionResult AddToFavorites(int productId)
+        {
+            var favorites = HttpContext.Session.GetString("Favorites");
+            var favoriteList = string.IsNullOrEmpty(favorites)
+                ? new List<int>()
+                : JsonConvert.DeserializeObject<List<int>>(favorites);
+
+            if (!favoriteList.Contains(productId))
+            {
+                favoriteList.Add(productId);
+                HttpContext.Session.SetString("Favorites", JsonConvert.SerializeObject(favoriteList));
+                return Json(new JsonResultResponse
+                {
+                    success = true,
+                    message = "Sản phẩm đã được thêm vào danh sách yêu thích!"
+                });
+            }
+            else
+            {
+                return Json(new JsonResultResponse
+                {
+                    success = false,
+                    message = "Sản phẩm đã có trong danh sách yêu thích!"
+                });
+            }
+        }
 
     }
 }

@@ -16,7 +16,9 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
-
+.favorite-active i {
+    color: red;
+}
 .btn-add {
     background-color: #28a745;
     color: white;
