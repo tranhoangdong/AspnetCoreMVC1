@@ -73,34 +73,13 @@
     <!-- fill data listproduct-->
     <div class="container">
         <h2>Danh sách sản phẩm</h2>
-        <div id="   "></div>
+        <div id="productTableContainer"></div>
     </div>
 
     <script>
 
         $(document).ready(function () {
 
-            $(document).on('click', '.add-to-favorites', function (e) {
-                e.preventDefault();
-                var productId = $(this).data('id');
-
-                $.ajax({
-                    url: '/Order/AddToFavorites',
-                    type: 'POST',
-                    data: { productId: productId },
-                    success: function (response) {
-                        if (response.success) {
-                            alert(response.message);
-                            $(`.add-to-favorites[data-id="${productId}"]`).addClass('favorite-active');
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Có lỗi xảy ra:', error);
-                    }
-                });
-            });
             $(document).on('click', "#view-cart", function (e) {
                 let banId = $(this).data('banid');
                 window.location.href = '/Cart/Cart?ban=' + banId;
@@ -190,12 +169,6 @@
                 loadProductTable();
             });
             attachPaginationEvent();
-
-
-          
-
-
-
         });
     </script>
 </body>
