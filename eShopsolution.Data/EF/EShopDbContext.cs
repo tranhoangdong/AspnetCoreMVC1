@@ -21,6 +21,8 @@ namespace eShopsolution.Data.EF
         public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Wishlist> Wishlists { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -28,6 +30,8 @@ namespace eShopsolution.Data.EF
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new OrderConfiguration());
             builder.ApplyConfiguration(new OrderDetailConfiguration());
+            builder.ApplyConfiguration(new WishlistConfiguration());
+
 
             // TODO: refactor
             builder.Entity<Image>(entity =>
