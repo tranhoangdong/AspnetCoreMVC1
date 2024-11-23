@@ -2,6 +2,7 @@
 
 using eShopSolution.Application.IService;
 using eShopSolution.Data.Entities;
+using eShopSolution.Web.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,21 +19,29 @@ namespace eShopSolution.Web.Controllers
     public class WishlistController : Controller
     {
         private readonly IWishlistService _wishlistService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WishlistController(IWishlistService wishlistService, UserManager<IdentityUser> userManager)
+        public WishlistController(IWishlistService wishlistService, UserManager<ApplicationUser> userManager)
         {
             _wishlistService = wishlistService;
             _userManager = userManager;
 
         }
-
         public IActionResult Index()
         {
             var userId = _userManager.GetUserId(User);
-            var wishlist = _wishlistService.GetUserWishlist(userId);
-            return View(wishlist);
+            var wishlistDTOs = _wishlistService.GetUserWishlist(userId);
+
+            var wishlistViewModels = wishlistDTOs.Select(dto => new WishlistViewModel
+            {
+                ProductId = dto.ProductId,
+                ProductName = dto.ProductName,
+                ProductPrice = dto.ProductPrice
+            }).ToList();
+
+            return View(wishlistViewModels);
         }
+
         [HttpPost]
         public IActionResult Add(int productId)
         {

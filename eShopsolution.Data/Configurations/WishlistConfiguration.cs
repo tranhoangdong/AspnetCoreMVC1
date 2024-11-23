@@ -10,12 +10,23 @@ namespace eShopSolution.Data.Configurations
         public void Configure(EntityTypeBuilder<Wishlist> builder)
         {
             builder.ToTable("Wishlist");
-            builder.Property(e => e.Id).HasColumnType("int");
+            builder.Property(e => e.Id)
+                .HasColumnType("int")
+                .IsRequired();
+            builder.Property(w => w.ProductId)
+                .HasColumnType("int")
+                .IsRequired();
 
-            builder.HasOne<Product>()
-             .WithMany(e => e.Wishlists)
-             .HasForeignKey(e => e.ProductId)
-             .IsRequired();
+            builder.Property(w => w.CreatedAt)
+                .HasColumnType("datetime")
+                .IsRequired();
+
+            builder.HasOne(w => w.Product)
+                .WithMany(p => p.Wishlists)
+                .HasForeignKey(w => w.ProductId)
+                .OnDelete(DeleteBehavior.Cascade) 
+                .IsRequired();
         }
     }
+
 }

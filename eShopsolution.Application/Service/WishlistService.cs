@@ -4,6 +4,8 @@ using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
 using eShopSolution.Data.Entities;
 
+using Microsoft.EntityFrameworkCore;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,13 +19,19 @@ namespace eShopSolution.Application.Service
         {
             _eShopDbContext = eShopDbContext;
         }
-        public List<Product> GetUserWishlistAsync(string userId)
+        public List<WishlistDTO> GetUserWishlist(string userId)
         {
             return _eShopDbContext.Wishlists
-                .Where(w => w.UserId == userId)
-                .Select(w => w.Product)
+                .Where(w => w.UserId == userId).Include(w => w.Product)
+                .Select(w => new WishlistDTO
+                {
+                    ProductId = w.Product.Id,
+                    ProductName = w.Product.Name,
+                    ProductPrice = w.Product.Price
+                })
                 .ToList();
         }
+
 
         public void AddToWishlist (string userId, int productId)
         {
