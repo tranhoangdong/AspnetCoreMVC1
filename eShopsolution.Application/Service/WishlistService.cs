@@ -35,7 +35,9 @@ namespace eShopSolution.Application.Service
 
         public void AddToWishlist (string userId, int productId)
         {
-            if (!_eShopDbContext.Wishlists.Any(w => w.UserId == userId && w.ProductId == productId))
+            bool isAlreadyInWishlist = _eShopDbContext.Wishlists.Any(w => w.UserId == userId && w.ProductId == productId);
+
+            if (!isAlreadyInWishlist)
             {
                 var wishlist = new Wishlist
                 {
@@ -44,7 +46,7 @@ namespace eShopSolution.Application.Service
                 };
 
                 _eShopDbContext.Wishlists.Add(wishlist);
-                 _eShopDbContext.SaveChanges();
+                _eShopDbContext.SaveChanges();
             }
         }
         public void RemoveFromWishlist(string userId, int productId)
