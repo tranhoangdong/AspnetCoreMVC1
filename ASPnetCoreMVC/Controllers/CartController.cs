@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using eShopsolution.Data.EF;
 using System;
 using eShopSolution.Application.Common;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace eShopSolution.Web.Controllers
 {
@@ -36,7 +38,16 @@ namespace eShopSolution.Web.Controllers
             var count = cart.Sum(item => item.quantity);
             return Json(new { count }); 
         }
-
+        List<Wishlist> GetWishlistItems()
+        {
+            var session = HttpContext.Session;
+            string jsoncart = session.GetString(Constants.CARTKEY);
+            if (jsoncart != null)
+            {
+                return JsonConvert.DeserializeObject<List<Wishlist>>(jsoncart);
+            }
+            return new List<Wishlist>();
+        }
         List<CartItem> GetCartItems()
         {
             var session = HttpContext.Session;
@@ -87,6 +98,33 @@ namespace eShopSolution.Web.Controllers
             });
         }
         [HttpPost]
+        public IActionResult AddToWishlist(int productid)
+        {
+            var product = _eShopDbContext.Products
+                .Where(p => p.Id == productid)
+                .FirstOrDefault();
+            if (product == null)
+                return NotFound("Không có sản phẩm");
+
+            var cart = GetCartItems();
+            var cartitem = cart.Find(p => p.product.Id == productid);
+            if (cartitem != null)
+            {
+                cartitem.quantity++;
+            }
+            else
+            {
+                cart.Add(new CartItem() { quantity = 1, product = product });
+            }
+
+            SaveCartSession(cart);
+            return Json(new JsonResultResponse
+            {
+                success = true,
+                message = "Đã thêm vào giỏ hàng"
+            });
+        }
+        [HttpPost]
         public IActionResult RemoveCart(int productid)
         {
             var cart = GetCartItems();
@@ -127,9 +165,40 @@ namespace eShopSolution.Web.Controllers
         {
             return View(GetCartItems());
         }
+        public IActionResult Wishlist()
+        {
+            return View(GetWishlistItems());
+        }
 
-      
-      
+        [HttpPost]
+        public IActionResult ToggleFavorite(int productId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+
+            var existingFavorite =  _eShopDbContext.Wishlists
+                .FirstOrDefault(f => f.ProductId == productId && f.UserId == userId);
+
+            if (existingFavorite != null)
+            {
+                _eShopDbContext.Wishlists.Remove(existingFavorite);
+               _eShopDbContext.SaveChanges();
+                return Json(new { success = true, isFavorite = false });
+            }
+            else
+            {
+                var favorite = new Wishlist
+                {
+                    ProductId = productId,
+                    UserId = userId,
+                    CreatedAt = DateTime.Now
+                };
+                _eShopDbContext.Wishlists.Add(favorite);
+                _eShopDbContext.SaveChanges();
+                return Json(new JsonResultResponse 
+                { success = true, isFavorite = true });
+            }
+        }
+
 
     }
 }

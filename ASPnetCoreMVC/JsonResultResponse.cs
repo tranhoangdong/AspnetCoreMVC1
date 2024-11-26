@@ -11,5 +11,6 @@ namespace eShopSolution.Web
         public string message { get; set; }
         public string data { get; set; }
         public int categoryId { get; set; }
+        public bool isFavorite { get; set; }
     }
 }
