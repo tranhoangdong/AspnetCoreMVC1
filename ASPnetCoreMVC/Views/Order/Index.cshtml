@@ -189,12 +189,10 @@
             $(document).on('click', '.add-wishlist', function (e) {
                 e.preventDefault(); 
                 var productId = $(this).data("id");
-
                 if (!productId) {
                     alert("Không tìm thấy ID sản phẩm!");
                     return;
                 }
-
                 $.ajax({
                     url: '/Cart/ToggleFavorite',
                     type: 'POST',
@@ -213,6 +211,27 @@
                             updateWishlistCount();
                         } else {
                             alert(response.message); 
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Có lỗi xảy ra: ", error);
+                        alert("Đã xảy ra lỗi. Vui lòng thử lại sau!");
+                    }
+                });
+            });
+            $(document).on('click', '.remove-wishlist', function () {
+                var productId = $(this).data("id");
+
+                $.ajax({
+                    url: '/Cart/RemoveFavorite',
+                    type: 'POST',
+                    data: { productId: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload(); 
+                        } else {
+                            alert("Không thể xóa sản phẩm khỏi danh sách yêu thích!");
                         }
                     },
                     error: function (xhr, status, error) {
