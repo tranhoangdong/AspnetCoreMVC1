@@ -38,20 +38,20 @@ namespace eShopSolution.Web.Controllers
             var count = cart.Sum(item => item.quantity);
             return Json(new { count }); 
         }
-        public IActionResult Wishlist()
-        {
-            var wishlistItems = GetWishlistItems();
+        //public IActionResult Wishlist()
+        //{
+        //    var wishlistItems = GetWishlistItems();
 
-            var viewModel = wishlistItems.Select(item => new WishlistViewModel
-            {
-                ProductId = item.ProductId,
-                ProductName = item.Product.Name, 
-                ProductPrice = item.Product.Price, 
-                CreatedAt = item.CreatedAt
-            }).ToList();
+        //    var viewModel = wishlistItems.Select(item => new WishlistViewModel
+        //    {
+        //        ProductId = item.ProductId,
+        //        ProductName = item.Product.Name, 
+        //        ProductPrice = item.Product.Price, 
+        //        CreatedAt = item.CreatedAt
+        //    }).ToList();
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
         private List<Wishlist> GetWishlistItems()
         {
@@ -181,7 +181,10 @@ namespace eShopSolution.Web.Controllers
         {
             return View(GetCartItems());
         }
-       
+        public IActionResult WishList()
+        {
+            return View(GetWishlistItems());
+        }
         [HttpPost]
         public IActionResult ToggleFavorite(int productId)
         {
