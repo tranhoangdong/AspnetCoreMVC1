@@ -166,6 +166,19 @@
                     }
                 });
             }
+            loadProductTable();
+            function updateWishListCount() {
+                $.ajax({
+                    url: '/Cart/GetWishItemCount',
+                    type: 'GET',
+                    success: function (response) {
+                        $("#count-card").text(response.count);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Có lỗi xảy ra khi cập nhật số lượng giỏ hàng: " + error);
+                    }
+                });
+            }
 
             $(document).on('click', '#add-card', function (e) {
                 var productId = $(this).data("id");
@@ -197,26 +210,17 @@
                 $.ajax({
                     url: '/Cart/AddToWishlist',
                     type: 'POST',
-                    data: { productId: productId }, 
+                    data: { productid: productId },
                     success: function (response) {
                         if (response.success) {
-                            var button = $(`[data-id="${productId}"]`);
-                            if (response.isFavorite) {
-                                button.text("Bỏ yêu thích"); 
-                                button.addClass("favorited"); 
-                            } else {
-                                button.text("Thêm vào yêu thích");
-                                button.removeClass("favorited");
-                            }
-                            alert(response.message); 
-                            updateWishlistCount();
+                            alert(response.message);
+                            updateWishListCount();
                         } else {
-                            alert(response.message); 
+                            alert(response.message);
                         }
                     },
                     error: function (xhr, status, error) {
-                        console.error("Có lỗi xảy ra: ", error);
-                        alert("Đã xảy ra lỗi. Vui lòng thử lại sau!");
+                        console.log("Có lỗi xảy ra: " + error);
                     }
                 });
             });

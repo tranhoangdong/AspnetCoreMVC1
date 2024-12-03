@@ -38,22 +38,16 @@ namespace eShopSolution.Web.Controllers
             var count = cart.Sum(item => item.quantity);
             return Json(new { count }); 
         }
-        //public IActionResult Wishlist()
-        //{
-        //    var wishlistItems = GetWishlistItems();
 
-        //    var viewModel = wishlistItems.Select(item => new WishlistViewModel
-        //    {
-        //        ProductId = item.ProductId,
-        //        ProductName = item.Product.Name, 
-        //        ProductPrice = item.Product.Price, 
-        //        CreatedAt = item.CreatedAt
-        //    }).ToList();
+        [HttpGet]
+        public IActionResult GetWishItemCount()
+        {
+            var cart = GetWishlistItems();
+            var count = cart.Sum(item => item.quantity);
+            return Json(new { count });
+        }
 
-        //    return View(viewModel);
-        //}
-
-        private List<Wishlist> GetWishlistItems()
+        public List<Wishlist> GetWishlistItems()
         {
             var session = HttpContext.Session;
             string jsoncart = session.GetString(Constants.CARTKEY);
