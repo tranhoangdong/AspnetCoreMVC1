@@ -45,9 +45,11 @@
 
 <script>
     function generateQRCode(button) {
-        debugger;
         var id = $(button).data('id');  
-        var url = 'https://localhost:5001/Order/Index?ban=' + id;
+        var url = 'https://localhost:44393/Order/Index?ban=' + id;
+        console.log("RoomAndTable ID: ", id);
+        debugger;
+
         var $qrcodeDiv = $('#qrcode-' + id); 
         $qrcodeDiv.empty();  
         QRCode.toDataURL(url, function (err, url) {

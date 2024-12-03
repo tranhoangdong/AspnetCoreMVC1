@@ -17,5 +17,6 @@ namespace eShopSolution.Data.Entities
         public ICollection<Image> Images { get; set; }
         public Category Category { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<Wishlist> Wishlists { get; set; }
     }
 }

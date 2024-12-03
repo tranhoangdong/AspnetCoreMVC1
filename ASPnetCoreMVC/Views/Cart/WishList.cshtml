@@ -1,0 +1,35 @@
+﻿@model List<eShopSolution.Data.Entities.Wishlist>
+
+
+<h2>Danh sách yêu thích</h2>
+
+@if (!Model.Any())
+{
+    <p>Không có sản phẩm nào trong danh sách yêu thích!</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Ngày thêm</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var wishlist in Model)
+            {
+                <tr>
+                    <td>@wishlist.Product.Name</td>
+                    <td>@wishlist.Product.Price.ToString("C")</td>
+                    <td>@wishlist.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <button class="btn btn-danger remove-wishlist" data-id="@wishlist.ProductId">Xóa</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

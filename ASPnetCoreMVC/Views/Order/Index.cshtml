@@ -18,13 +18,18 @@
                     <h2 class="mb-4 col-sm-10"> Tên bàn: @Model.RoomAndTable.Name</h2>
                 }
                 <!-- Cart-->
-                <div class="d-flex-card col-sm-2 float-end">
-                    <button id="view-cart" data-banId="@Model.RoomAndTable.Id" class="btn btn-outline-dark">
-                        <i class="bi-cart-fill me-1"></i>
-                        Cart
-                        <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                    </button>
-                </div>
+            <div class="d-flex-card col-sm-2 float-end">
+                <button id="view-cart" data-banId="@Model.RoomAndTable.Id" class="btn btn-outline-dark">
+                    <i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span id="count-card" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                </button>
+                <button id="view-favorites" data-banId="@Model.RoomAndTable.Id" class="btn btn-outline-dark">
+                    <i class="bi-heart-fill me-1"></i>
+                    Yêu thích
+                    <span id="count-favorites" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                </button>
+            </div>
 
             </div>
             <div class="row">
@@ -84,6 +89,10 @@
                 let banId = $(this).data('banid');
                 window.location.href = '/Cart/Cart?ban=' + banId;
             });
+            $(document).on('click', "#view-favorites", function (e) {
+                let banId = $(this).data('banid');
+                window.location.href = '/Cart/Wishlist?ban=' + banId;
+            });
 
 
             function addToCart() {
@@ -92,19 +101,32 @@
                 currentCount += 1;
                 cartCountElement.innerText = currentCount;
                 sessionStorage.setItem('cardCount', currentCount);
-
-
             }
+            function addToWishlist() {
+                var wishlistCountElement = document.getElementById("count-favorites");
+                let currentCount = parseInt(sessionStorage.getItem('wishlistCount')) || 0;
+                currentCount += 1;
+                wishlistCountElement.innerText = currentCount;
+                sessionStorage.setItem('wishlistCount', currentCount);
+            }
+
             $(document).on('click', '#add-card', function (e) {
                 addToCart();
             });
 
+
+            $(document).on('click', '#add-wishlist', function (e) {
+                addToWishlist();
+            });
+
+
             var saveCount = parseInt(sessionStorage.getItem('cardCount')) || 0;
             $("#count-card").text(saveCount);
 
+            var savewishlistCount = parseInt(sessionStorage.getItem('wishlistCount')) || 0;
+            $("#count-favorites").text(savewishlistCount);
 
-
-    function loadProductTable(pageNumber = 1) {
+       function loadProductTable(pageNumber = 1) {
         var categoryDropdown = $('#categoryDropdown').val();
 
         $.ajax({
@@ -164,6 +186,62 @@
                     }
                 });
             });
+            $(document).on('click', '.add-wishlist', function (e) {
+                e.preventDefault(); 
+                var productId = $(this).data("id");
+                debugger;
+                if (!productId) {
+                    alert("Không tìm thấy ID sản phẩm!");
+                    return;
+                }
+                $.ajax({
+                    url: '/Cart/AddToWishlist',
+                    type: 'POST',
+                    data: { productId: productId }, 
+                    success: function (response) {
+                        if (response.success) {
+                            var button = $(`[data-id="${productId}"]`);
+                            if (response.isFavorite) {
+                                button.text("Bỏ yêu thích"); 
+                                button.addClass("favorited"); 
+                            } else {
+                                button.text("Thêm vào yêu thích");
+                                button.removeClass("favorited");
+                            }
+                            alert(response.message); 
+                            updateWishlistCount();
+                        } else {
+                            alert(response.message); 
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Có lỗi xảy ra: ", error);
+                        alert("Đã xảy ra lỗi. Vui lòng thử lại sau!");
+                    }
+                });
+            });
+            $(document).on('click', '.remove-wishlist', function () {
+                var productId = $(this).data("id");
+
+                $.ajax({
+                    url: '/Cart/RemoveFavorite',
+                    type: 'POST',
+                    data: { productId: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload(); 
+                        } else {
+                            alert("Không thể xóa sản phẩm khỏi danh sách yêu thích!");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Có lỗi xảy ra: ", error);
+                        alert("Đã xảy ra lỗi. Vui lòng thử lại sau!");
+                    }
+                });
+            });
+
             $('#submit-Category').on('click', function (e) {
                 e.preventDefault();
                 loadProductTable();
