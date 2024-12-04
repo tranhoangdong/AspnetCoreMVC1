@@ -81,32 +81,29 @@ namespace eShopSolution.Web.Controllers
             session.SetString(Constants.CARTKEY, jsoncart);
         }
         [HttpPost]
-        public IActionResult AddToCart(int productid)
+        public IActionResult AddToCart(int productId)
         {
-            var product = _eShopDbContext.Products
-                .Where(p => p.Id == productid)
-                .FirstOrDefault();
+            var product = _eShopDbContext.Products.FirstOrDefault(p => p.Id == productId);
             if (product == null)
-                return NotFound("Không có sản phẩm");
+            {
+                return Json(new JsonResultResponse { success = false, message = "Sản phẩm không tồn tại." });
+            }
 
             var cart = GetCartItems();
-            var cartitem = cart.Find(p => p.product.Id == productid);
-            if (cartitem != null)
+            var cartItem = cart.FirstOrDefault(p => p.product.Id == productId);
+            if (cartItem != null)
             {
-                cartitem.quantity++;
+                cartItem.quantity++;
             }
             else
             {
-                cart.Add(new CartItem() { quantity = 1, product = product });
+                cart.Add(new CartItem { quantity = 1, product = product });
             }
 
             SaveCartSession(cart);
-            return Json(new JsonResultResponse 
-            {
-                success = true,
-                message = "Đã thêm vào giỏ hàng" 
-            });
+            return Json(new JsonResultResponse { success = true, message = "Đã thêm vào giỏ hàng." });
         }
+
         [HttpPost]
         public IActionResult AddToWishlist(int productid)
         {
