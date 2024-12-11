@@ -38,22 +38,16 @@ namespace eShopSolution.Web.Controllers
             var count = cart.Sum(item => item.quantity);
             return Json(new { count }); 
         }
-        //public IActionResult Wishlist()
-        //{
-        //    var wishlistItems = GetWishlistItems();
 
-        //    var viewModel = wishlistItems.Select(item => new WishlistViewModel
-        //    {
-        //        ProductId = item.ProductId,
-        //        ProductName = item.Product.Name, 
-        //        ProductPrice = item.Product.Price, 
-        //        CreatedAt = item.CreatedAt
-        //    }).ToList();
+        [HttpGet]
+        public IActionResult GetWishItemCount()
+        {
+            var cart = GetWishlistItems();
+            var count = cart.Sum(item => item.quantity);
+            return Json(new { count });
+        }
 
-        //    return View(viewModel);
-        //}
-
-        private List<Wishlist> GetWishlistItems()
+        public List<Wishlist> GetWishlistItems()
         {
             var session = HttpContext.Session;
             string jsoncart = session.GetString(Constants.CARTKEY);
@@ -87,32 +81,29 @@ namespace eShopSolution.Web.Controllers
             session.SetString(Constants.CARTKEY, jsoncart);
         }
         [HttpPost]
-        public IActionResult AddToCart(int productid)
+        public IActionResult AddToCart(int productId)
         {
-            var product = _eShopDbContext.Products
-                .Where(p => p.Id == productid)
-                .FirstOrDefault();
+            var product = _eShopDbContext.Products.FirstOrDefault(p => p.Id == productId);
             if (product == null)
-                return NotFound("Không có sản phẩm");
+            {
+                return Json(new JsonResultResponse { success = false, message = "Sản phẩm không tồn tại." });
+            }
 
             var cart = GetCartItems();
-            var cartitem = cart.Find(p => p.product.Id == productid);
-            if (cartitem != null)
+            var cartItem = cart.FirstOrDefault(p => p.product.Id == productId);
+            if (cartItem != null)
             {
-                cartitem.quantity++;
+                cartItem.quantity++;
             }
             else
             {
-                cart.Add(new CartItem() { quantity = 1, product = product });
+                cart.Add(new CartItem { quantity = 1, product = product });
             }
 
             SaveCartSession(cart);
-            return Json(new JsonResultResponse 
-            {
-                success = true,
-                message = "Đã thêm vào giỏ hàng" 
-            });
+            return Json(new JsonResultResponse { success = true, message = "Đã thêm vào giỏ hàng." });
         }
+
         [HttpPost]
         public IActionResult AddToWishlist(int productid)
         {
