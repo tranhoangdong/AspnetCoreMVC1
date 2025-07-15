@@ -108,7 +108,7 @@ namespace eShopSolution.Application.Service
         public List<OrderDetailsDTO> GetOrderDetailsByOrderId(int orderId)
         {
             var orderDetails = _eShopDbContext.OrderDetails
-                .Where(od => od.OrderId == orderId)
+                .Where(od => od.OrderId == orderId).Include(p=>p.Order)
                 .Select(od => new OrderDetailsDTO
                 {
                     Id = od.Id,
@@ -116,7 +116,10 @@ namespace eShopSolution.Application.Service
                     ProductId = od.ProductId,
                     Quantity = od.Quantity,
                     Price = od.Price,
-                    Total = od.Total
+                    Total = od.Total,
+                    RoomAndTableID = od.Order.RoomAndTableId,
+                    TotalAmount = od.Order.TotalAmount,
+                    OrderTime = od.Order.OrderTime
                 })
                 .ToList();
 

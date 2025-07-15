@@ -12,6 +12,8 @@ namespace eShopSolution.Application.Dtos
         public decimal Price { get; set; }
         public decimal Total { get; set; }
         public int OrderId { get; set; }
-
+        public int RoomAndTableID { get; set; }
+        public decimal TotalAmount { get; set; }
+        public DateTime OrderTime { get; set; }
     }
 }

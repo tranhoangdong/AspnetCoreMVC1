@@ -23,5 +23,6 @@ namespace eShopSolution.Web
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
     }
 }
