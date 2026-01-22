@@ -196,7 +196,7 @@ namespace eShopSolution.Web.Controllers
                 {
                     ProductId = productId,
                     UserId = userId,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 _eShopDbContext.Wishlists.Add(favorite);
                 _eShopDbContext.SaveChanges();

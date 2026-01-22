@@ -78,53 +78,106 @@ namespace eShopSolution.Web.Controllers
 
             using (var memoryStream = new MemoryStream())
             {
-                using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(memoryStream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true))
+                using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(
+                    memoryStream,
+                    DocumentFormat.OpenXml.WordprocessingDocumentType.Document,
+                    true))
                 {
                     MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
                     mainPart.Document = new Document();
                     Body body = mainPart.Document.AppendChild(new Body());
-                    Paragraph heading = new Paragraph(new Run(new Text("Chi Tiết Hóa Đơn")));
-                    heading.ParagraphProperties = new ParagraphProperties(new Justification() { Val = JustificationValues.Center });
+
+                    // Tiêu đề đẹp
+                    Run headingRun = new Run(new Text("CHI TIẾT HÓA ĐƠN"));
+                    headingRun.RunProperties = new RunProperties(
+                        new Bold(),
+                        new FontSize() { Val = "28" } // Font 14pt
+                    );
+                    Paragraph heading = new Paragraph(headingRun)
+                    {
+                        ParagraphProperties = new ParagraphProperties(
+                            new Justification() { Val = JustificationValues.Center }
+                        )
+                    };
                     body.AppendChild(heading);
 
-                    body.AppendChild(new Paragraph(new Run(new Text(""))));
+                    body.AppendChild(new Paragraph(new Run(new Text("")))); // dòng trống
 
+                    // Tạo bảng
                     Table table = new Table();
 
+                    // Thêm viền cho bảng
+                    TableProperties tableProperties = new TableProperties(
+                        new TableBorders(
+                            new TopBorder { Val = BorderValues.Single, Size = 4 },
+                            new BottomBorder { Val = BorderValues.Single, Size = 4 },
+                            new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                            new RightBorder { Val = BorderValues.Single, Size = 4 },
+                            new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                            new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                        )
+                    );
+                    table.AppendChild(tableProperties);
+
+                    // Hàng tiêu đề
                     TableRow headerRow = new TableRow();
                     headerRow.Append(
-                        CreateCell("Mã sản phẩm"),
-                        CreateCell("Số lượng"),
-                        CreateCell("Giá"),
-                        CreateCell("Tổng")
+                        CreateCell("Mã sản phẩm", true),
+                        CreateCell("Số lượng", true),
+                        CreateCell("Giá", true),
+                        CreateCell("Tổng", true),
+                        CreateCell("Bàn", true),
+                        CreateCell("Tổng tiền", true),
+                        CreateCell("Thời gian đặt", true)
                     );
                     table.AppendChild(headerRow);
 
+                    // Dữ liệu
                     foreach (var detail in orderDetails)
                     {
                         TableRow row = new TableRow();
                         row.Append(
                             CreateCell(detail.ProductId.ToString()),
                             CreateCell(detail.Quantity.ToString()),
-                            CreateCell(detail.Price.ToString("C")),
-                            CreateCell(detail.Total.ToString("C"))
+                            CreateCell(detail.Price.ToString("#,##0") + " ₫"),
+                            CreateCell(detail.Total.ToString("#,##0") + " ₫"),
+                            CreateCell(detail.RoomAndTableID.ToString()),
+                            CreateCell(detail.TotalAmount.ToString("#,##0") + " ₫"),
+                            CreateCell(detail.OrderTime.ToString("dd/MM/yyyy HH:mm"))
                         );
                         table.AppendChild(row);
                     }
+
                     body.AppendChild(table);
                     mainPart.Document.Save();
                 }
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
-
-                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "ChiTietHoaDon.docx");
+                return File(memoryStream.ToArray(),
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "ChiTietHoaDon.docx");
             }
         }
 
-        private TableCell CreateCell(string text)
+
+        private TableCell CreateCell(string text, bool isBold = false)
         {
-            return new TableCell(new Paragraph(new Run(new Text(text))));
+            Run run = new Run(new Text(text ?? ""));
+            if (isBold)
+            {
+                run.RunProperties = new RunProperties(new Bold());
+            }
+
+            Paragraph paragraph = new Paragraph(run)
+            {
+                ParagraphProperties = new ParagraphProperties(
+                    new Justification() { Val = JustificationValues.Center }
+                )
+            };
+
+            return new TableCell(paragraph);
         }
+
         public IActionResult ExportOrderDetailsToPdf(int orderId)
         {
             var orderDetails = _orderDetailService.GetOrderDetailsByOrderId(orderId);
