@@ -54,6 +54,8 @@ namespace eShopSolution.Web
             services.AddTransient<IRoomAndTableServices, RoomAndTableServices>();
             services.AddTransient<IOrderDetailService, OrderDetailService>();
             services.AddTransient<IWishlistService, WishlistService>();
+            services.AddTransient<IUserManagementService, UserManagementService>();
+
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
           .AddCookie(options =>

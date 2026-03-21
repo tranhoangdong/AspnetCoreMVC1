@@ -9,6 +9,5 @@ namespace eShopSolution.Web.Models
         public List<CategoryViewModel> Categories { get; set; }
         public ProductDetailViewModel Product { get; set; }
         public RoomAndTableViewModel RoomAndTable { get; set; }
-
     }
 }

@@ -23,7 +23,7 @@ namespace eShopSolution.Application.Service
         public GetAllProductResultDTO GetAllProducts(ProductsRequestDto productsRequestDto) 
         {
 
-            var products = _eShopDbContext.Products.Include(p => p.Category).Where(p => p.IsDeleted == false || p.IsDeleted == null).AsQueryable();
+            var products = _eShopDbContext.Products.Include(p => p.Category).Where(p => p.IsDeleted == false).AsQueryable();
 
             if (!string.IsNullOrEmpty(productsRequestDto.Name))
             {
