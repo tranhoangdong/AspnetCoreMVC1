@@ -22,6 +22,8 @@ namespace eShopsolution.Data.EF
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Wishlist> Wishlists { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+
 
 
 
@@ -74,6 +76,13 @@ namespace eShopsolution.Data.EF
              .WithMany(e => e.RoomAndTables)
              .HasForeignKey(e => e.StatusId)
              .IsRequired();
+
+            builder.Entity<Employee>()
+             .ToTable("Employee")
+             .HasOne(e => e.User)
+             .WithOne(u => u.Employee)
+             .HasForeignKey<Employee>(e => e.UserId);
+
 
             base.OnModelCreating(builder);
 
