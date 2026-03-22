@@ -19,29 +19,31 @@
     </div>
 </div>
 <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Quyền:</label>
+    <label for="Name" class="col-sm-2 col-form-label">Chọn role: </label>
     <div class="col-sm-10">
-        <select asp-for="RoleId" class="form-control">
-            <option value="">-- Chọn quyền --</option>
-            <option value="1">Admin</option>
-            <option value="2">Employee</option>
+        <select id="RoleDropdown" name="RoleId" asp-for="Role.RoleId" class="form-control">
+            <option value="">-- Chọn Role --</option>
+            @foreach (var role in Model.Roles)
+            {
+                <option value="@role.RoleId">@role.RoleName</option>
+            }
         </select>
+        </div>
     </div>
-</div>
-<div class="form-group row">
-    <label for="Position" class="col-sm-2 col-form-label">Vị trí: </label>
-    <div class="col-sm-10">
-        <input type="text" id="Position" name="Position" asp-for="Position" class="form-control" required />
+    <div class="form-group row">
+        <label for="Position" class="col-sm-2 col-form-label">Vị trí: </label>
+        <div class="col-sm-10">
+            <input type="text" id="Position" name="Position" asp-for="Position" class="form-control" required />
+        </div>
+    </div>    <div class="form-group row">
+        <label for="Salary" class="col-sm-2 col-form-label">Lương: </label>
+        <div class="col-sm-10">
+            <input type="number" id="Salary" name="Salary" asp-for="Salary" class="form-control" min="0" step="1000" required />
+        </div>
     </div>
-</div>    <div class="form-group row">
-    <label for="Salary" class="col-sm-2 col-form-label">Lương: </label>
-    <div class="col-sm-10">
-        <input type="number" id="Salary" name="Salary" asp-for="Salary" class="form-control" min="0" step="1000" required />
+    <div class="form-group row">
+        <div class="col-sm-10 offset-sm-2">
+            <button type="submit" class="btn btn-success" id="submitUser">Cập nhật</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        </div>
     </div>
-</div>
-<div class="form-group row">
-    <div class="col-sm-10 offset-sm-2">
-        <button type="submit" class="btn btn-success" id="submitUser">Cập nhật</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-    </div>
-</div>

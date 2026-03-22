@@ -49,12 +49,20 @@ namespace eShopSolution.Application.Service
         public async Task<UserDTO> GetUserInfo (string UserId)
         {
             var user = await _eShopDbContext.Users.FirstOrDefaultAsync(u => u.Id == UserId);
+            var roles =  (from r in _eShopDbContext.Roles
+                              select new RoleDTO
+                              {
+                                  RoleId = r.Id,
+                                  RoleName = r.Name
+                              }).ToList();
+
             var userDTO = new UserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                roledto = roles
             };
             return userDTO;
         }

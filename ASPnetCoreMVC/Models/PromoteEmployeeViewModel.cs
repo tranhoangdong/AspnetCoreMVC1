@@ -33,8 +33,9 @@ namespace eShopSolution.Web.Models
 
         [Required(ErrorMessage = "Role is required")]
         [Display(Name = "Role")]
-        public string Role { get; set; }  // "Employee" or "Admin"
 
         public string RoleId { get; set; }
+        public List<RoleUserViewModel> Roles { get; set; }
+        public RoleUserViewModel Role { get; set; }
     }
 }

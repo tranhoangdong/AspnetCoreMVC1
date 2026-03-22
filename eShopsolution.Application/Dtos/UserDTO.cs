@@ -15,6 +15,7 @@ namespace eShopSolution.Application.Dtos
         public decimal Salary { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<RoleDTO> roledto { get; set; }
     }
 }
 
