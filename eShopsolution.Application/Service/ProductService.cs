@@ -1,15 +1,11 @@
 ﻿using eShopsolution.Data.EF;
-
 using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
 using eShopSolution.Data.Entities;
-
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopSolution.Application.Service
@@ -17,29 +13,95 @@ namespace eShopSolution.Application.Service
     public class ProductService : IProductService
     {
         private readonly EShopDbContext _eShopDbContext;
-
+       
         public ProductService(EShopDbContext eShopDbContext)
         {
             _eShopDbContext = eShopDbContext;
         }
 
-        public List<Product> GetAllProducts()
+
+        public GetAllProductResultDTO GetAllProducts(ProductsRequestDto productsRequestDto) 
         {
-            return _eShopDbContext.Products.ToList();
+
+            var products = _eShopDbContext.Products.Include(p => p.Category).Where(p => p.IsDeleted == false).AsQueryable();
+
+            if (!string.IsNullOrEmpty(productsRequestDto.Name))
+            {
+                products = products.Where(x => x.Name.Contains(productsRequestDto.Name));
+            }
+
+            if (!string.IsNullOrEmpty(productsRequestDto.Name))
+            {
+                var nameToSearch = productsRequestDto.Name.ToLower();
+                products = products.Where(x => x.Name.ToLower().Contains(nameToSearch));
+            }
+            if (productsRequestDto.CategoryId.HasValue)
+            {
+                products = products.Where(p => p.CategoryId == productsRequestDto.CategoryId.Value);
+            }
+            if (productsRequestDto.PriceFilter == "above100")
+            {
+                products = products.Where(p => p.Price > 100);
+            }
+            else if (productsRequestDto.PriceFilter == "below100")
+            {
+                products = products.Where(p => p.Price <= 100);
+            }
+
+            switch (productsRequestDto.SortColumn)
+            {
+                case "price":
+                    products = productsRequestDto.SortOrder == "asc" ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
+                    break;
+
+                case "stock":
+                    products = productsRequestDto.SortOrder == "asc" ? products.OrderBy(p => p.Stock) : products.OrderByDescending(p => p.Stock);
+                    break;
+            }
+            if (productsRequestDto.PageNumber < 1 || productsRequestDto.PageSize < 1)
+            {
+                throw new ArgumentException("Page number and page size must be greater than zero.");
+            }
+            var totalProducts = products.Count();
+            var pagedProducts = products.Skip((productsRequestDto.PageNumber - 1) * productsRequestDto.PageSize).Take(productsRequestDto.PageSize).ToList();
+            var productResults = pagedProducts.Select(p => new ProductResultDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Stock = p.Stock,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category?.Name,
+            }).ToList();
+
+            return new GetAllProductResultDTO
+            {
+                TotalProducts = totalProducts,
+                PagedProducts = productResults
+            };
         }
-        public Product GetProductbyID(int productId)
+    
+        public Product GetProductbyId(int productId)
         {
-            return _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
+            return _eShopDbContext.Products.FirstOrDefault(x => x.Id == productId);
         }
-        public async Task<Product> AddProductAsync(Product product)
+        public async Task<ProductDTO> AddProductAsync(ProductDTO productDto)
         {
+            var product = new Product
+            {
+                Name = productDto.Name,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+                CategoryId = productDto.CategoryId,
+            };
             _eShopDbContext.Products.Add(product);
            await  _eShopDbContext.SaveChangesAsync();
-            return product;
+            return productDto;
         }
-        public async Task<bool> UpdateProductAsync(int id, ProductDTO productDto)
+      
+        public async Task<bool> UpdateProductAsync(ProductDTO productDto)
         {
-            var existingProduct = await _eShopDbContext.Products.FindAsync(id);
+            var existingProduct = await _eShopDbContext.Products.FindAsync(productDto.Id);
             if (existingProduct == null)
             {
                 return false;
@@ -48,22 +110,13 @@ namespace eShopSolution.Application.Service
             existingProduct.Name = productDto.Name;
             existingProduct.Price = productDto.Price;
             existingProduct.Stock = productDto.Stock;
+            existingProduct.CategoryId = productDto.CategoryId;
 
             _eShopDbContext.Products.Update(existingProduct);
             await _eShopDbContext.SaveChangesAsync();
 
             return true;
         }
-
-        //public void DeleteProduct(int productId) 
-        //{
-        //    var product = _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
-        //    {
-        //        if (product != null)
-        //            _eShopDbContext.Products.Remove(product);
-        //        _eShopDbContext.SaveChanges();
-        //    }
-        //}
 
         public void DeleteProduct(int productId)
         {
@@ -72,12 +125,14 @@ namespace eShopSolution.Application.Service
             {
                 _eShopDbContext.Images.RemoveRange(images);
             }
-            var product = _eShopDbContext.Products.FirstOrDefault(x => x.ID == productId);
-            if (product != null)
+            var product = _eShopDbContext.Products.FirstOrDefault(x => x.Id == productId);
+            if (product != null )
             {
-                _eShopDbContext.Products.Remove(product);
+                product.IsDeleted = true;
                 _eShopDbContext.SaveChanges();
             }
+          
+           
         }
 
         public IEnumerable<Product> GetPagedProducts(int pageNumber, int pageSize)
@@ -115,7 +170,47 @@ namespace eShopSolution.Application.Service
 
             return productDTOs;
         }
+        public List<Product> GetProduct(List<int> productid)
+        {
+            return _eShopDbContext.Products.Where(x => productid.Contains(x.Id)).ToList();
+        }
+        public async Task<List<ProductDTO>> GetNameProductByListIdAsync(List<int> productIds)
+        {
+            var products = await _eShopDbContext.Products
+                .Where(p => productIds.Contains(p.Id))
+                .Select(p => new ProductDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                }).ToListAsync();
+
+            return products;
+        }
+
+        public async Task<bool> BulkUpdateProductsAsync(List<int> productIds, int stock, decimal price)
+        {
+            foreach (var productId in productIds)
+            {
+                var existingProduct = await _eShopDbContext.Products.FindAsync(productId);
+                if (existingProduct != null)
+                {
+                    existingProduct.Price = price;
+                    existingProduct.Stock = stock;
+                }
+            }
+            await _eShopDbContext.SaveChangesAsync();
+            return true;
+        }
+        public List<CategoryDTO> GetAllCategories()
+        {
+            return _eShopDbContext.Categories
+                .Select(c => new CategoryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+        }
 
     }
-
 }

@@ -1,0 +1,129 @@
+﻿@model List<OrderIndexViewModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <form class="search-order">
+        <div class="form-group">
+            <label for="name">ID bàn:</label>
+            <input type="text" id="idban" name="name" class="form-control" placeholder="Nhập Id bàn..." />
+        </div>
+        <div class="form-group">
+            <label for="idban">Mã đơn hàng:</label>
+            <input type="text" id="idOrder" name="name" class="form-control" placeholder="Nhập mã đơn hàng ..." />
+        </div>
+        <div class="form-group-sortOder">
+            <label for="sortOrder">Trạng Thái:</label>
+            <select id="statusOrder" name="statusOrder" class="form-control">
+                <option value="">-- Chọn --</option>
+                <option value="paid">Đã thanh toán</option>
+                <option value="notyetpaid">Chưa thanh toán</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="startDate">Ngày bắt đầu:</label>
+            <input type="date" id="startDate" name="startDate" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="endDate">Ngày kết thúc:</label>
+            <input type="date" id="endDate" name="endDate" class="form-control" />
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary search-order">Tìm kiếm</button>
+    </form>
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="orderDetailsContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Danh sách sản phẩm</h2>
+        <div id="OrderTableContainer"></div>
+    </div>
+
+
+    <script>
+
+    $(document).ready(function () {
+        function loadOrder() {
+            var idban = $('#idban').val();
+            var idOrder = $('#idOrder').val();
+            var statusOrder = $('#statusOrder').val();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            console.log("idban:", idban, "idOrder:", idOrder);
+            if (idban && isNaN(idban)) {
+                alert("Mã bàn phải là một số nguyên. Vui lòng nhập lại.");
+                return;
+            }
+            if (idOrder && isNaN(idOrder)) {
+                alert("Mã đơn hàng phải là một số nguyên. Vui lòng nhập lại.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("LoadOrder", "AdminOrder")',
+                type: 'GET',
+                data: {
+                    idban: idban,
+                    idOrder: idOrder,
+                    statusOrder: statusOrder,
+                     startDate: startDate,
+                    endDate: endDate
+                },
+                success: function (data) {
+                    $('#OrderTableContainer').html(data);
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra khi tải danh sách sản phẩm.');
+                }
+
+            });
+        };
+        $('#statusOrder').on('change', function (e) {
+            e.preventDefault();
+        });
+        loadOrder();
+
+        $('.search-order').on('click', function (e) {
+            e.preventDefault();
+            loadOrder();
+        });
+        $(document).on('click', '.view-details', function (e) {
+            e.preventDefault();
+            var orderId = $(this).data('id');
+            $.ajax({
+                url: '@Url.Action("OrderDetails", "AdminOrder")',
+                type: 'GET',
+                data: { orderId: orderId },
+                success: function (data) {
+                    $('#orderDetailsContent').html(data);
+                    $('#orderDetailsModal').modal('show');
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra khi tải chi tiết đơn hàng.');
+                }
+            });
+        });
+    });
+
+    </script>
+</body>
+</html>

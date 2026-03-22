@@ -1,0 +1,12 @@
+﻿CREATE TABLE Orders (
+    Id INT PRIMARY KEY IDENTITY(1,1), 
+    RoomAndTableId INT NOT NULL,          
+    OrderTime DATETIME NOT NULL,           
+    TotalAmount DECIMAL(18, 2) NOT NULL,   
+    Note NVARCHAR(250),                    
+    FOREIGN KEY (RoomAndTableId) REFERENCES RoomAndTable(Id) 
+);
+
+ALTER TABLE Orders
+ADD IsPaid BIT NOT NULL DEFAULT 0;
+

@@ -1,58 +1,119 @@
-﻿using eShopSolution.Data.Emtyties;
+﻿using eShopSolution.Data.Configurations;
 using eShopSolution.Data.Entities;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using System;
-using System.Data;
+using System.Reflection.Emit;
 
 namespace eShopsolution.Data.EF
 {
-    public class EShopDbContext : IdentityDbContext<User, Roles, int>
+    public class EShopDbContext : IdentityDbContext<ApplicationUser>
     {
-            
-
-        public EShopDbContext( DbContextOptions options) : base(options)
-        {   
+        public EShopDbContext(DbContextOptions options) : base(options)
+        {
         }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Image> Images { get; set; }
-        
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<RoomAndTable> RoomAndTables { get; set; }
+        public virtual DbSet<Status> Statuses { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Wishlist> Wishlists { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
 
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            
-            modelBuilder.Entity<Product>(entity =>
-            {
-                entity.ToTable("Product");
+            builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new OrderConfiguration());
+            builder.ApplyConfiguration(new OrderDetailConfiguration());
+            builder.ApplyConfiguration(new WishlistConfiguration());
 
-                entity.Property(e => e.ID).HasColumnType("int");
 
-            });
-            modelBuilder.Entity<Image>(entity =>
+            // TODO: refactor
+            builder.Entity<Image>(entity =>
             {
                 entity.ToTable("Image");
 
                 entity.Property(e => e.ID).HasColumnType("int");
 
             });
-            modelBuilder.Entity<Image>()
+            builder.Entity<Category>(entity =>
+            {
+                entity.ToTable("Category");
+
+                entity.Property(e => e.Id).HasColumnType("int");
+
+            });
+            builder.Entity<RoomAndTable>(entity =>
+            {
+                entity.ToTable("RoomAndTable");
+
+                entity.Property(e => e.Id).HasColumnType("int");
+
+            });
+            builder.Entity<Status>(entity =>
+            {
+                entity.ToTable("Status");
+
+                entity.Property(e => e.Id).HasColumnType("int");
+
+            });
+
+            builder.Entity<Image>()
               .HasOne(e => e.product)
               .WithMany(e => e.Images)
               .HasForeignKey(e => e.ProductId)
               .IsRequired();
-            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
-            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
-            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
 
-            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
-            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
-            base.OnModelCreating(modelBuilder);
+            builder.Entity<RoomAndTable>()
+             .HasOne(e => e.Status)
+             .WithMany(e => e.RoomAndTables)
+             .HasForeignKey(e => e.StatusId)
+             .IsRequired();
+
+            builder.Entity<Employee>()
+             .ToTable("Employee")
+             .HasOne(e => e.User)
+             .WithOne(u => u.Employee)
+             .HasForeignKey<Employee>(e => e.UserId);
+
+
+            base.OnModelCreating(builder);
+
+            builder.Entity<ApplicationUser>(entity =>
+            {
+                entity.ToTable("User", "Identity");
+            });
+            builder.Entity<IdentityRole>(entity =>
+            {
+                entity.ToTable("Role", "Identity");
+            });
+            builder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.ToTable("UserRoles", "Identity");
+            });
+            builder.Entity<IdentityUserClaim<string>>(entity =>
+            {
+                entity.ToTable("UserClaims", "Identity");
+            });
+            builder.Entity<IdentityUserLogin<string>>(entity =>
+            {
+                entity.ToTable("UserLogins", "Identity");
+            });
+            builder.Entity<IdentityRoleClaim<string>>(entity =>
+            {
+                entity.ToTable("RoleClaims", "Identity");
+            });
+            builder.Entity<IdentityUserToken<string>>(entity =>
+            {
+                entity.ToTable("UserTokens", "Identity");
+            });
         }
-
     }
 }

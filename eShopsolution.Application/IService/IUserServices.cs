@@ -11,5 +11,6 @@ namespace eShopSolution.Application.IService
     {
         Task<string> Authecate(LoginRequest request);
         Task<bool> Register(RegisterRequest request);
+        GetAllUserResultDTO GetAllUser();
     }
 }
