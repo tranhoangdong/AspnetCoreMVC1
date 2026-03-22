@@ -1,4 +1,4 @@
-﻿using eShopSolution.Web.Models;
+﻿using ASPnetCoreMVC.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace eShopSolution.Web.Controllers
+namespace ASPnetCoreMVC.Controllers
 {
     public class HomeController : Controller
     {

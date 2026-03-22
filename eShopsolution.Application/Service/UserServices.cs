@@ -1,40 +1,34 @@
-﻿using eShopsolution.Data.EF;
-
-using eShopSolution.Application.Dtos;
+﻿using eShopSolution.Application.Dtos;
 using eShopSolution.Application.IService;
+using eShopSolution.Data.Emtyties;
 using eShopSolution.Data.Entities;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopSolution.Application.Service
 {
-
-
     public class UserServices : IUserServices
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _config;
         private readonly RoleManager<Roles> _roleManager;
-        private readonly EShopDbContext _eShopDbContext;
 
 
-        public UserServices(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, RoleManager<Roles> roleManager, EShopDbContext eShopDbContext)
+        public UserServices(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, RoleManager<Roles> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
             _roleManager = roleManager;
-            _eShopDbContext = eShopDbContext;
         }
         public async Task<string> Authecate(LoginRequest request)
         {
@@ -66,42 +60,22 @@ namespace eShopSolution.Application.Service
 
         public async Task<bool> Register(RegisterRequest request)
         {
-            var user = new ApplicationUser
+            var user = new User
             {
-                UserName = request.Username.Trim(),
+               UserName = request.Username.Trim(),
                 Email = request.Email,
                 PasswordHash = request.PasswordHash,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-
+               
             };
-            var result = await _userManager.CreateAsync(user, request.PasswordHash);
+           var result = await _userManager.CreateAsync(user, request.PasswordHash);
             if (result.Succeeded)
             {
                 return true;
             }
             return false;
 
-        }
-        public GetAllUserResultDTO GetAllUser()
-        {
-            var userDto = _eShopDbContext.Users.Select(u => new UserDTO
-            {
-                UserName = u.UserName,
-                Email = u.Email,
-                PhoneNumber = u.PhoneNumber,
-                Role = _eShopDbContext.UserRoles
-                .Where(ur => ur.UserId == u.Id)
-                .Join(_eShopDbContext.Roles,
-                ur => ur.RoleId,
-                r => r.Id,
-                (ur, r) => r.Name)
-            .FirstOrDefault()
-            }).ToList();
-            return new GetAllUserResultDTO
-            {
-                User = userDto
-            };
         }
     }
 }

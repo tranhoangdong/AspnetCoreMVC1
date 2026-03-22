@@ -32,7 +32,7 @@ namespace eShopSolution.Controllers
         [HttpGet("GetProductById/{id}")]
         public IActionResult GetProduct(int id)
         {
-            var product = _productService.GetProductbyId(id);
+            var product = _productService.GetProductbyID(id);
             if (product == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace eShopSolution.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            var productToDelete = _productService.GetProductbyId(id);
+            var productToDelete = _productService.GetProductbyID(id);
             if (productToDelete == null)
             {
                 return NotFound();
