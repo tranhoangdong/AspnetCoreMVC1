@@ -48,7 +48,12 @@ namespace eShopSolution.Web.Controllers
                 UserId = getuser.Id,
                 Email = getuser.Email,
                 UserName = getuser.UserName,
-                PhoneNumber = getuser.PhoneNumber
+                PhoneNumber = getuser.PhoneNumber,
+                Roles = getuser.roledto.Select(r => new RoleUserViewModel
+                {
+                    RoleId = r.RoleId,
+                    RoleName = r.RoleName
+                }).ToList()
             };
             return PartialView("_AddEmployeePartialView", getuserViewmodel);
         }
