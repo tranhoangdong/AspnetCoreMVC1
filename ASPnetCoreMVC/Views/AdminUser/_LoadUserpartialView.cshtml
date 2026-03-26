@@ -1,0 +1,28 @@
+﻿@model List<eShopSolution.Web.Models.UserViewModel>
+
+
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.Email</td>
+            <td>@user.PhoneNumber</td>
+            <td>@user.Role</td>
+            <td>
+                <a class="btn btn-sm btn-warning"
+                   asp-action="Edit"
+                   asp-route-id="@user.UserName">
+                    Edit
+                </a>
+                <a class="btn btn-sm btn-danger"
+                   asp-action="Delete"
+                   asp-route-id="@user.UserName">
+                    Delete
+                </a>
+                <button class="btn btn-sm btn-success btn-add-employee"
+                        data-userid="@user.UserId">
+                    + Employee
+                </button>
+            </td>
+        </tr>
+    }

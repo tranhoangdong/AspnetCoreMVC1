@@ -9,5 +9,6 @@ namespace eShopSolution.Web.Models
     {
        public List<UserViewModel> Userviewmodel { get; set; }
        public List<Role> Role { get; set; }
+        public List<RoleUserViewModel> Roles { get; set; }
     }
 }

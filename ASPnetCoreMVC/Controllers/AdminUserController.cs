@@ -32,10 +32,19 @@ namespace eShopSolution.Web.Controllers
                 UserName = u.UserName,
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
-                Role = u.Role
+                Role = u.Role,
             }).ToList();
-
-            return View(new AllUserViewModel { Userviewmodel = userViewmodel });
+            var roleUser = resultUser.Roledto.Select(ru => new RoleUserViewModel
+            {
+                RoleId = ru.RoleId,
+                RoleName = ru.RoleName
+            }).ToList();
+            var alluserviewmodel = new AllUserViewModel
+            {
+                Userviewmodel = userViewmodel,
+                Roles = roleUser
+            };
+            return View(alluserviewmodel);
         }
         [HttpGet]
         public async Task<IActionResult> AddEmployee (string UserId)
@@ -77,6 +86,26 @@ namespace eShopSolution.Web.Controllers
 
             return Json(new { success = false, message = result.Message });
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> LoadUser( string userName, string roleId)
+        {
+            var userrequestDto = new UserRequestDTO
+            {
+                UserName = userName,
+                RoleId = roleId
+            };
+            var user = await _userManagementService.LoadUser(userrequestDto);
+            var userviewmodel =  user.Select(u => new UserViewModel
+            {
+                Role = u.Role,
+                Email = u.Email,
+                PhoneNumber = u.PhoneNumber,
+                UserId = u.Id,
+                UserName = u.UserName
+            }).ToList();
+
+            return PartialView("_LoadUserpartialView", userviewmodel);
         }
       
     }
