@@ -9,6 +9,7 @@ namespace eShopSolution.Application.Dtos
         public List<UserDTO> User {get; set;}
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+        public List<RoleDTO> Roledto { get; set; }
     }
 
 }

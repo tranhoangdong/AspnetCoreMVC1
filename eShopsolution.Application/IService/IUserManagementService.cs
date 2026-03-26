@@ -12,5 +12,6 @@ namespace eShopSolution.Application.IService
         GetAllUserResultDTO GetAllUser();
         Task<ServiceResult> AddEmployee(PromoteEmployeeDTO promoteEmployeeDTO);
         Task<UserDTO> GetUserInfo(string UserId);
+        Task<List<UserDTO>> LoadUser(UserRequestDTO userRequestDTO);
     }
 }

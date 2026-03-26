@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -39,11 +40,17 @@ namespace eShopSolution.Application.Service
                           ur => ur.RoleId,
                           r => r.Id,
                           (ur, r) => r.Name)
-                    .FirstOrDefault()
+                    .FirstOrDefault(),
+            }).ToList();
+            var roleDto = _eShopDbContext.Roles.Select(r => new RoleDTO
+            {
+                RoleId = r.Id,
+                RoleName = r.Name
             }).ToList();
             return new GetAllUserResultDTO
                 {
-                   User = userDto
+                   User = userDto,
+                   Roledto = roleDto
                 };
         }
         public async Task<UserDTO> GetUserInfo (string UserId)
@@ -123,6 +130,39 @@ namespace eShopSolution.Application.Service
                     Message = "Them thanh cong "
                 };
            
+        }
+        public async Task<List<UserDTO>> LoadUser(UserRequestDTO userRequestDTO)
+        {
+            var query = from u in _eShopDbContext.Users
+                        join ur in _eShopDbContext.UserRoles
+                            on u.Id equals ur.UserId into urGroup
+                        from ur in urGroup.DefaultIfEmpty()
+
+                        join r in _eShopDbContext.Roles
+                            on ur.RoleId equals r.Id into rGroup
+                        from r in rGroup.DefaultIfEmpty()
+
+                        select new { u, ur, r };
+            if (!string.IsNullOrEmpty(userRequestDTO.UserName))
+            {
+                query = query.Where(x => x.u.UserName.Contains(userRequestDTO.UserName));
+            }
+
+            if (!string.IsNullOrEmpty(userRequestDTO.RoleId))
+            {
+                query = query.Where(x => x.ur.RoleId == userRequestDTO.RoleId);
+            }
+
+            var result = await query.Select(x => new UserDTO
+            {
+                Id = x.u.Id,
+                Email = x.u.Email,
+                UserName = x.u.UserName,
+                PhoneNumber = x.u.PhoneNumber,
+                Role = x.r.Name 
+            }).ToListAsync();
+
+            return result;
         }
     }
 }
