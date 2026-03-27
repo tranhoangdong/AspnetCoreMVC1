@@ -9,11 +9,10 @@
             <td>@user.PhoneNumber</td>
             <td>@user.Role</td>
             <td>
-                <a class="btn btn-sm btn-warning"
-                   asp-action="Edit"
-                   asp-route-id="@user.UserName">
+                <button class="btn btn-sm btn-warning btn-edit-employee"
+                        data-userid="@user.UserId">
                     Edit
-                </a>
+                </button>
                 <a class="btn btn-sm btn-danger"
                    asp-action="Delete"
                    asp-route-id="@user.UserName">

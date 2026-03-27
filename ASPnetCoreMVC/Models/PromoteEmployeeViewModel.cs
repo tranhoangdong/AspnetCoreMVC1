@@ -10,13 +10,13 @@ namespace eShopSolution.Web.Models
         public string UserId { get; set; }
 
         [Display(Name = "User Name")]
-        public string UserName { get; set; }   // readonly
+        public string UserName { get; set; }  
 
         [Display(Name = "Email")]
-        public string Email { get; set; }       // readonly
+        public string Email { get; set; }     
 
         [Display(Name = "Phone Number")]
-        public string PhoneNumber { get; set; } // pre-filled, editable
+        public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Full Name is required")]
         [Display(Name = "Full Name")]

@@ -84,12 +84,10 @@
 
 
                                     <td>
-                                        <a class="btn btn-sm btn-warning"
-                                           asp-action="Edit"
-                                           asp-route-id="@user.UserName">
+                                        <button class="btn btn-sm btn-warning btn-edit-employee" 
+                                                data-userid="@user.UserId">
                                             Edit
-                                        </a>
-
+                                        </button>
                                         <a class="btn btn-sm btn-danger"
                                            asp-action="Delete"
                                            asp-route-id="@user.UserName">
@@ -147,8 +145,51 @@
                                     alert('Có lỗi xảy ra! Vui lòng thử lại.');
                                 }
                             });
+                      });
+
+                        $(document).on('click', '.btn-edit-employee', function () {
+                            var userId = $(this).data('userid');
+                            $.ajax({
+                                    url: '@Url.Action("EditEmployee", "AdminUser")',
+                                    type: 'GET',
+                                    data: { userId: userId }, 
+                                success: function (data) {
+                                    console.log("Form đã được tải thành công");
+                                    $('#modalContent').html(data);
+                                    $('#addEmployeeModal').modal('show');
+                                },
+                                error: function () {
+                                    alert('Có lỗi xảy ra, vui lòng thử lại.');
+
+                                }
+                            });
                         });
 
+                        $(document).on('click', '#submitEditUser', function (e) {
+                            e.preventDefault();
+                            var formData  = {
+                                UserId: $('#UserId').val(),
+                                UserName: $('#UserName').val(),
+                                Email: $('#Email').val(),
+                                PhoneNumber: $('#PhoneNumber').val(),
+                                RoleId: $('#RoleDropdown').val()
+                            };
+                            $.ajax({
+                                url: '/AdminUser/EditEmployee',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(formData),
+                                success: function (response) {
+                                    console.log("Form submitted successfully");
+                                    $('#addEmployeeModal').modal('hide');
+                                    location.reload();
+                                },
+                                error: function () {
+                                    alert('Có lỗi xảy ra! Vui lòng thử lại.');
+                                }
+                            });
+
+                        });
                         function loadUser(){
                             var formData = {
                                 userName: $('#SearchName').val(),

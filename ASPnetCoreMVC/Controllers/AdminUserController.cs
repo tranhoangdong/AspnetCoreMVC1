@@ -107,6 +107,40 @@ namespace eShopSolution.Web.Controllers
 
             return PartialView("_LoadUserpartialView", userviewmodel);
         }
-      
+        [HttpGet]
+        public async Task<IActionResult> EditEmployee(string UserId)
+        {
+            var userinfo = await _userManagementService.GetUserInfo(UserId);
+            var promoUserViewmodel = new PromoteEmployeeViewModel
+            {
+                UserName = userinfo.UserName,
+                Email = userinfo.Email,
+                PhoneNumber = userinfo.PhoneNumber,
+                Roles = userinfo.roledto.Select(u => new RoleUserViewModel
+                {
+                    RoleId = u.RoleId,
+                    RoleName = u.RoleName
+                }).ToList()
+            };
+            return PartialView("_EditPartialView", promoUserViewmodel);
+         }
+
+        [HttpPost]
+        public async Task<IActionResult> EditEmployee([FromBody] PromoteEmployeeViewModel promoteEmployee)
+        {
+            var userrequetsDto = new PromoteEmployeeDTO
+            {
+                UserId = promoteEmployee.UserId,
+                UserName = promoteEmployee.UserName,
+                Email = promoteEmployee.Email,
+                PhoneNumber = promoteEmployee.PhoneNumber,
+                Role = promoteEmployee?.RoleId
+            };
+            var userreulst = await _userManagementService.EditEmployee(userrequetsDto);
+            if (userreulst.Success)
+                return Json(new { success = true, message = userreulst.Message });
+
+            return Json(new { success = false, message = userreulst.Message });
+        }
     }
 }
