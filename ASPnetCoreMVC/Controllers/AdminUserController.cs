@@ -134,13 +134,19 @@ namespace eShopSolution.Web.Controllers
                 UserName = promoteEmployee.UserName,
                 Email = promoteEmployee.Email,
                 PhoneNumber = promoteEmployee.PhoneNumber,
-                Role = promoteEmployee?.RoleId
+                RoleId = promoteEmployee?.RoleId
             };
             var userreulst = await _userManagementService.EditEmployee(userrequetsDto);
             if (userreulst.Success)
                 return Json(new { success = true, message = userreulst.Message });
 
             return Json(new { success = false, message = userreulst.Message });
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteEmployee(string userId)
+        {
+            var result = await _userManagementService.DeleteEmployee(userId);
+            return Json(result);
         }
     }
 }

@@ -14,5 +14,6 @@ namespace eShopSolution.Application.IService
         Task<UserDTO> GetUserInfo(string UserId);
         Task<List<UserDTO>> LoadUser(UserRequestDTO userRequestDTO);
         Task<ServiceResult> EditEmployee(PromoteEmployeeDTO promoteEmployeeDTO);
+        Task<ServiceResult> DeleteEmployee(string userId);
     }
 }
