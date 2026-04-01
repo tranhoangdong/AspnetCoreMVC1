@@ -13,6 +13,6 @@ namespace eShopSolution.Data.Entities
         public byte[] ProfilePicture { get; set; }
         [InverseProperty("User")]
         public Employee Employee { get; set; }
-       
+        public bool IsDeleted { get; set; } = false;
     }
 }

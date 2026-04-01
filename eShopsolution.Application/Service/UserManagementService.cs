@@ -28,7 +28,7 @@ namespace eShopSolution.Application.Service
         }
         public GetAllUserResultDTO GetAllUser()
         {
-            var userDto = _eShopDbContext.Users.Select(u => new UserDTO
+            var userDto = _eShopDbContext.Users.Where(u => u.IsDeleted == false).Select(u => new UserDTO
             {
                 Id = u.Id,
                 UserName = u.UserName,
@@ -55,7 +55,8 @@ namespace eShopSolution.Application.Service
         }
         public async Task<UserDTO> GetUserInfo(string UserId)
         {
-            var user = await _eShopDbContext.Users.FirstOrDefaultAsync(u => u.Id == UserId);
+            var user = await _eShopDbContext.Users.FirstOrDefaultAsync(u => u.Id == UserId && u.IsDeleted == false);
+            if (user == null) return null;
             var roles = (from r in _eShopDbContext.Roles
                          select new RoleDTO
                          {
@@ -117,7 +118,7 @@ namespace eShopSolution.Application.Service
                 };
                 _eShopDbContext.UserRoles.Add(newRole);
             }
-            var existingUser = await _eShopDbContext.Users.FirstOrDefaultAsync(u => u.Id == promoteEmployeeDTO.UserId);
+            var existingUser = await _eShopDbContext.Users.FirstOrDefaultAsync(u => u.Id == promoteEmployeeDTO.UserId && u.IsDeleted == false);
             if (existingUser != null)
             {
                 existingUser.PhoneNumber = promoteEmployeeDTO.PhoneNumber;
@@ -134,6 +135,7 @@ namespace eShopSolution.Application.Service
         public async Task<List<UserDTO>> LoadUser(UserRequestDTO userRequestDTO)
         {
             var query = from u in _eShopDbContext.Users
+                        where u.IsDeleted == false
                         join ur in _eShopDbContext.UserRoles
                             on u.Id equals ur.UserId into urGroup
                         from ur in urGroup.DefaultIfEmpty()
@@ -167,37 +169,38 @@ namespace eShopSolution.Application.Service
         public async Task<ServiceResult> EditEmployee(PromoteEmployeeDTO promoteEmployeeDTO)
         {
             var user = await _eShopDbContext.Users.FirstOrDefaultAsync(u => u.Id == promoteEmployeeDTO.UserId);
-            if (user != null)
-            {
+            if (user == null)
+                return new ServiceResult { Success = false, Message = "User không tồn tại" };
+
                 user.UserName = promoteEmployeeDTO.UserName;
                 user.Email = promoteEmployeeDTO.Email;
                 user.PhoneNumber = promoteEmployeeDTO.PhoneNumber;
                 _eShopDbContext.Users.Update(user);
-            }
             var existingUserRole = await _eShopDbContext.UserRoles
                .FirstOrDefaultAsync(ur => ur.UserId == promoteEmployeeDTO.UserId);
             if (existingUserRole == null)
             {
-                var userRole = new IdentityUserRole<string>
+                if (promoteEmployeeDTO.RoleId != null)
+                {
+                    _eShopDbContext.UserRoles.Add(new IdentityUserRole<string>
+                    {
+                        UserId = promoteEmployeeDTO.UserId,
+                        RoleId = promoteEmployeeDTO.RoleId
+                    });
+                }
+            }
+            else if (promoteEmployeeDTO.RoleId == null)
+            {
+                _eShopDbContext.UserRoles.Remove(existingUserRole);
+            }
+            else 
+            {
+                _eShopDbContext.UserRoles.Remove(existingUserRole);
+                _eShopDbContext.UserRoles.Add(new IdentityUserRole<string>
                 {
                     UserId = promoteEmployeeDTO.UserId,
                     RoleId = promoteEmployeeDTO.RoleId
-                };
-                _eShopDbContext.UserRoles.Add(userRole);
-            }
-            if (user != null && promoteEmployeeDTO.RoleId == null)
-            {
-                _eShopDbContext.UserRoles.Remove(existingUserRole);
-            }
-            else
-            {
-                _eShopDbContext.UserRoles.Remove(existingUserRole);
-                var newRole = new IdentityUserRole<string>
-                {
-                    UserId = promoteEmployeeDTO.UserId,
-                    RoleId = promoteEmployeeDTO.Role
-                };
-                _eShopDbContext.UserRoles.Add(newRole);
+                });
             }
             await _eShopDbContext.SaveChangesAsync();
             return new ServiceResult
@@ -206,6 +209,20 @@ namespace eShopSolution.Application.Service
                 Message = "Them thanh cong "
             };
 
+        }
+        public async Task<ServiceResult> DeleteEmployee(string userId)
+        {
+            var user = await _eShopDbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId && u.IsDeleted == false);
+
+            if (user == null)
+                return new ServiceResult { Success = false, Message = "User không tồn tại" };
+
+            user.IsDeleted = true;
+            _eShopDbContext.Users.Update(user);
+            await _eShopDbContext.SaveChangesAsync();
+
+            return new ServiceResult { Success = true, Message = "Xóa thành công" };
         }
     }
 }
