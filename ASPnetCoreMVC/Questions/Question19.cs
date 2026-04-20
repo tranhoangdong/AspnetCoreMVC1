@@ -1,0 +1,2 @@
+﻿//19.Phương thức private virtual có bị ghi đè không?
+//Không, bởi vì chúng không thể truy cập được bên ngoài class. Một phương thức private chỉ có thể truy cập được đối với class mà nó được định nghĩa.
